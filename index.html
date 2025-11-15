@@ -166,7 +166,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2025/10/28/%E6%9B%B4%E6%96%B0%E8%AE%A1%E5%88%92-todoList/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/11/15/%E6%9B%B4%E6%96%B0%E8%AE%A1%E5%88%92-todoList/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -180,7 +180,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/10/28/%E6%9B%B4%E6%96%B0%E8%AE%A1%E5%88%92-todoList/" class="post-title-link" itemprop="url">记录更新</a>
+            <a href="/2025/11/15/%E6%9B%B4%E6%96%B0%E8%AE%A1%E5%88%92-todoList/" class="post-title-link" itemprop="url">记录更新</a>
         </h2>
 
         <div class="post-meta">
@@ -190,7 +190,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2025-10-28 11:11:45" itemprop="dateCreated datePublished" datetime="2025-10-28T11:11:45+00:00">2025-10-28</time>
+              <time title="创建时间：2025-11-15 16:44:23" itemprop="dateCreated datePublished" datetime="2025-11-15T16:44:23+00:00">2025-11-15</time>
             </span>
 
           
@@ -204,7 +204,399 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="更新规划"><a href="#更新规划" class="headerlink" title="更新规划"></a>更新规划</h1><h3 id="weconnected项目"><a href="#weconnected项目" class="headerlink" title="weconnected项目"></a>weconnected项目</h3><h3 id="Java知识点及学习心得"><a href="#Java知识点及学习心得" class="headerlink" title="Java知识点及学习心得"></a>Java知识点及学习心得</h3><h3 id="Java8特性"><a href="#Java8特性" class="headerlink" title="Java8特性"></a>Java8特性</h3>
+          <h1><span id="更新规划">更新规划</span></h1><h3><span id="weconnected项目更新">weconnected项目更新</span></h3><h3><span id="java知识点及学习心得">Java知识点及学习心得</span></h3><h3><span id="java8特性">Java8特性</span></h3>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/11/14/SpringSecurity/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DarkYellowCat">
+      <meta itemprop="description" content="记录学习与成长">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DarkYellowCat's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/11/14/SpringSecurity/" class="post-title-link" itemprop="url">SpringSecurity配置</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-11-14 12:00:00" itemprop="dateCreated datePublished" datetime="2025-11-14T12:00:00+00:00">2025-11-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-11-15 16:44:23" itemprop="dateModified" datetime="2025-11-15T16:44:23+00:00">2025-11-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1><span id="引入">引入</span></h1><p>之前跟着教程做了web后端的项目，打算找个时间上线运营培养经验，不过因为域名的问题一直拖着没做。</p>
+<p>但在学习网络安全时，老师提了一句：“为什么不用MD5加密，因为它已经被破解了”，一句话让我的困意瞬间消失。因为我的加密就是用MD5。</p>
+<h1><span id="md5为什么不能用">MD5为什么不能用</span></h1><h2><span id="md5的加密逻辑">MD5的加密逻辑</span></h2><p>将输入数据扩展为 512 位的整数倍，用四个 32 位的十六进制整数作为初始链接变量进行四轮循环运算，每轮循环包含 16 次操作，共 64 步。每轮循环结束后，将当前链接变量 A、B、C、D 分别加上临时变量 a、b、c、d。最终，将四个链接变量级联，得到 128 位的 MD5 哈希值。</p>
+<h2><span id="缺点">缺点</span></h2><h3><span id="1计算太快">1.计算太快</span></h3><p>对于选择的电脑的性能，MD5的计算量太少，攻击者可以轻松通过计算进行解密。</p>
+<h3><span id="2被证明过不安全">2.被证明过不安全</span></h3><p>王小云研究团队发现了MD5国际密码算法存在漏洞，被证实MD5并不安全。</p>
+<h1><span id="选择springsecurity的原因">选择SpringSecurity的原因</span></h1><h2><span id="优势">优势</span></h2><h3><span id="1导入便捷">1.导入便捷</span></h3><p>SpringSecurity 对于 SpringBoot 项目来说几乎是“标配安全框架”，只需要在pom.xml文件中加入配置就可以进行使用。</p>
+<h3><span id="2自带bcrypt加密安全">2.自带BCrypt，加密安全</span></h3><p>BCrypt是慢哈希函数，适合存储密码，带 salt，不可逆，抗暴力破解。</p>
+<h3><span id="3内置认证-授权体系">3.内置认证 + 授权体系</span></h3><p>Security会自己处理：登录验证、过滤器链、会话安全、跨域、csrf、路由权限控制等问题，开发者不需要操心这些方面的问题。</p>
+<h1><span id="配置和导入">配置和导入</span></h1><h2><span id="1依赖">1.依赖</span></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-security&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>配置类</li>
+</ol>
+<p>SpringBoot 3 去掉了 WebSecurityConfigurerAdapter，用 Bean 配置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">@EnableWebSecurity</span><br><span class="line">public class SecurityConfig &#123;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    public PasswordEncoder passwordEncoder() &#123;</span><br><span class="line">        return new BCryptPasswordEncoder();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception &#123;</span><br><span class="line">        http</span><br><span class="line">            .csrf(csrf -&gt; csrf.disable())</span><br><span class="line">            .authorizeHttpRequests(auth -&gt; auth</span><br><span class="line">                .requestMatchers(&quot;/login&quot;, &quot;/register&quot;).permitAll()</span><br><span class="line">                .anyRequest().authenticated()</span><br><span class="line">            )</span><br><span class="line">            .formLogin(login -&gt; login</span><br><span class="line">                .loginPage(&quot;/login&quot;)</span><br><span class="line">                .permitAll()</span><br><span class="line">            );</span><br><span class="line">        return http.build();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2><span id="如何兼容之前的用户">如何兼容之前的用户</span></h2><p>之前在数据库中存储的密码是MD5加密的，如果直接更新加密方法，会导致之前的用户无法登录。所以需要增加一段逻辑。</p>
+<p>用户注册-&gt;直接使用SpringSecurity加密。</p>
+<p>用户登录-&gt;如果使用MD5加密：用MD5验证-&gt;更新加密逻辑，将新的数据存入数据库。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/11/13/%E6%B2%99%E7%AE%B1Sandbox/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DarkYellowCat">
+      <meta itemprop="description" content="记录学习与成长">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DarkYellowCat's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/11/13/%E6%B2%99%E7%AE%B1Sandbox/" class="post-title-link" itemprop="url">沙箱初步认识</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-11-13 12:00:00" itemprop="dateCreated datePublished" datetime="2025-11-13T12:00:00+00:00">2025-11-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-11-15 16:44:23" itemprop="dateModified" datetime="2025-11-15T16:44:23+00:00">2025-11-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1><span id="为什么要学沙箱">为什么要学沙箱</span></h1><p>第一次接触这个概念是因为Python的期末大作业，老师让我们写一个python学习的平台。</p>
+<p>我想到模仿<a target="_blank" rel="noopener" href="https://www.freecodecamp.org/">FreeCodecamp</a>，写一个可以通过程序二次运行python代码的平台。</p>
+<p>之前也没有相关的经验，我便将自己的想法发给ai，让它告诉我需要用到什么，也就接触到了沙箱–用于防止别人在执行代码时对程序(或电脑)造成破坏。</p>
+<h1><span id="概念">概念</span></h1><p>沙箱（Sandboxing）是一种用于隔离环境的技术。</p>
+<h1><span id="用途">用途</span></h1><p>沙箱技术通常用于以下几类场景：</p>
+<ul>
+<li><strong>在线代码运行平台</strong>：如 LeetCode、FreeCodeCamp、自建 OJ 系统</li>
+<li><strong>浏览器隔离</strong>：Chrome 的每个 tab 页就是一个沙箱进程</li>
+<li><strong>移动端应用权限管理</strong>：iOS、Android 对 App 的文件访问就是沙箱设计</li>
+<li><strong>恶意软件分析</strong>：将样本放在沙箱中运行，观察行为</li>
+<li><strong>插件系统</strong>：比如浏览器扩展、VSCode 插件，都不能直接访问用户系统</li>
+<li><strong>安全研究和渗透测试</strong>有专门做沙箱业务的公司</li>
+</ul>
+<p>这些场景的共同点就是：“<strong>运行不可信代码</strong>”，而沙箱的职责就是“<strong>让它尽量跑得动，但伤不到我</strong>”。</p>
+<h1><span id="分类">分类</span></h1><p>根据隔离程度不同，可以粗略分成三类：</p>
+<h3><span id="1-语言级沙箱最轻量">1. 语言级沙箱（最轻量）</span></h3><p>依赖语言本身的机制进行限制。</p>
+<ul>
+<li>Python 的 <code>ast</code>、受控 namespace</li>
+<li>JavaScript 的 <code>vm2</code></li>
+<li>Lua 沙箱化 runtime</li>
+</ul>
+<p>优点：实现简单，启动快<br>缺点：很容易被绕过，安全性弱</p>
+<h3><span id="2-系统级沙箱中等级别">2. 系统级沙箱（中等级别）</span></h3><p>依赖操作系统提供的隔离机制：</p>
+<ul>
+<li>Linux cgroups（限制资源）</li>
+<li>namespace（隔离进程、文件系统、网络）</li>
+<li>seccomp（限制系统调用）</li>
+<li>Docker &#x2F; LXC（容器）</li>
+</ul>
+<p>优点：安全性高、性能好<br>缺点：实现较复杂，需要系统层面的支持</p>
+<h3><span id="3-虚拟化级沙箱最高隔离">3. 虚拟化级沙箱（最高隔离）</span></h3><p>原来我用过这么久沙箱…</p>
+<ul>
+<li>KVM</li>
+<li>QEMU</li>
+<li>Firecracker（AWS Lambda 用的）</li>
+<li>VirtualBox</li>
+</ul>
+<p>优点：隔离性能好<br>缺点：启动慢、消耗资源大，不适合大量高频的代码执行</p>
+<h1><span id="实现模板">实现模板</span></h1><h2><span id="java">Java</span></h2><p>java.lang.SecurityManager是Java的一个可插拔的安全策略执行器，用于在运行时对敏感操作（如文件读写、网络访问、反射调用、类加载等）进行权限检查。</p>
+<p>当某段代码执行特权操作时，JVM 会调用 SecurityManager.checkXXX() 方法（如 checkRead, checkConnect, checkPermission 等），若未授权，则抛出 SecurityException。</p>
+<p>虽然“安全管理员多年来一直不是保护客户端 Java 代码的主要手段，也很少用于保护服务器端代码，并且维护成本很高。”（官方回复），导致这个类在JDK17后被淘汰了，但作为新手去学习依旧足够了。</p>
+<h2><span id="python">Python</span></h2><p>目前还在写(前文提到的)，先插个眼 </p>
+<p>TODO</p>
+<h1><span id="一些开源的沙盒项目">一些开源的沙盒项目</span></h1><p><a target="_blank" rel="noopener" href="https://github.com/sandboxie-plus/Sandboxie">https://github.com/sandboxie-plus/Sandboxie</a> Sandboxie 允许您创建几乎无限的沙箱并单独或同时运行它们，以将程序与主机隔离并相互隔离，同时还允许您在单个盒子中同时运行任意数量的程序。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/alibaba/jvm-sandbox">https://github.com/alibaba/jvm-sandbox</a><br>JVM-SANDBOX（沙箱）实现了一种在不重启、不侵入目标JVM应用的AOP解决方案。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/11/10/%E7%94%9F%E6%88%90%E5%A4%B4%E5%83%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DarkYellowCat">
+      <meta itemprop="description" content="记录学习与成长">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DarkYellowCat's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/11/10/%E7%94%9F%E6%88%90%E5%A4%B4%E5%83%8F/" class="post-title-link" itemprop="url">头像生成工具</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-11-10 12:00:00" itemprop="dateCreated datePublished" datetime="2025-11-10T12:00:00+00:00">2025-11-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-11-15 16:44:23" itemprop="dateModified" datetime="2025-11-15T16:44:23+00:00">2025-11-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E5%85%B7%E6%8E%A8%E8%8D%90/" itemprop="url" rel="index"><span itemprop="name">工具推荐</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1><span id="起因">起因</span></h1><p>在我的项目中，用户注册后会获得默认头像。虽然后续可以自行更改，但未免太过单调。于是我便想起注册GitHub时，会根据用户的名称自动生成一个头像，还不用担心版权问题。于是我在项目中引入了头像生成工具，测试成功后分享给大家。</p>
+<h1><span id="dicebear">Dicebear</span></h1><h2><span id="简介">简介</span></h2><p><a target="_blank" rel="noopener" href="https://www.dicebear.com/">Dicebear</a> 是一个开源的头像生成服务，支持 SVG、PNG 等多种格式。<br>它的特色是：<strong>风格丰富、可定制项多、无需复杂后端即可直接使用</strong>。无论是像素风、卡通风，还是圆形首字母，都能一键生成。</p>
+<p>更重要的是，<strong>Dicebear 是 MIT License</strong>，使用范围宽松，不存在版权风险。</p>
+<h2><span id="导入">导入</span></h2><h3><span id="1-直接请求-api最简单">1. 直接请求 API（最简单）</span></h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://api.dicebear.com/7.x/&#123;style&#125;/svg?seed=&#123;text&#125;</span><br></pre></td></tr></table></figure>
+<p>例如：</p>
+<p><a target="_blank" rel="noopener" href="https://api.dicebear.com/7.x/bottts/svg?seed=darkyellowcat">https://api.dicebear.com/7.x/bottts/svg?seed=darkyellowcat</a></p>
+<p>返回的就是一个 SVG 头像。</p>
+<h3><span id="2-npm-包">2. NPM 包</span></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install @dicebear/core @dicebear/bottts</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import &#123; createAvatar &#125; from &#x27;@dicebear/core&#x27;;</span><br><span class="line">import &#123; bottts &#125; from &#x27;@dicebear/bottts&#x27;;</span><br><span class="line"></span><br><span class="line">const avatar = createAvatar(bottts, &#123;</span><br><span class="line">  seed: &#x27;darkyellowcat&#x27;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">const svg = avatar.toString();</span><br></pre></td></tr></table></figure>
+<h2><span id="功能">功能</span></h2><p>支持十几种风格（像素、商务、卡通、漫画…）</p>
+<p>支持通过 seed 保证「同名用户头像固定」</p>
+<p>提供性别随机化、配色方案、表情样式等配置</p>
+<p>可直接返回 SVG 或 PNG</p>
+<p>CDN 快速访问，不占用自己服务器</p>
+<h1><span id="ui-avatars">ui-avatars</span></h1><h2><span id="简介">简介</span></h2><p><a target="_blank" rel="noopener" href="https://ui-avatars.com/">ui-avatars</a>是一个简单、轻量的姓名首字母头像生成工具。（GMail的用户头像就是单字母）</p>
+<p>它不支持复杂的风格，但胜在简单、稳定、无需依赖库，访问速度快。</p>
+<h2><span id="导入">导入</span></h2><p>只需直接请求 API：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://ui-avatars.com/api/?name=&#123;Name&#125;&amp;background=random</span><br></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://ui-avatars.com/api/?name=Dark+Bird&amp;background=random</span><br></pre></td></tr></table></figure>
+
+<p>返回的是 PNG 图片。</p>
+<h2><span id="功能">功能</span></h2><p>不需要 seed，直接根据名称生成</p>
+<p>配置参数简单易懂</p>
+<p>轻量、稳定、无额外依赖</p>
+<p>不会出现风格过于跳脱的问题</p>
+<h1><span id="对比">对比</span></h1><p>ui-avatars相较而言功能较少，仅通过名称生成首字母头像，风格和种类较少。</p>
+<p>但风格单一换来的是，它几乎不需要学习成本，且更加轻量级，适合喜欢简约风或轻量化配置的用户。</p>
+<p>当然，你也可以在配置中同时引入两种工具，根据情况选用。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/10/29/Redis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DarkYellowCat">
+      <meta itemprop="description" content="记录学习与成长">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DarkYellowCat's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/10/29/Redis/" class="post-title-link" itemprop="url">Redis学习笔记</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-10-29 12:00:00" itemprop="dateCreated datePublished" datetime="2025-10-29T12:00:00+00:00">2025-10-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-11-15 16:44:23" itemprop="dateModified" datetime="2025-11-15T16:44:23+00:00">2025-11-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1><span id></span></h1><p>GitHub仓库：<a target="_blank" rel="noopener" href="https://github.com/redis/redis">https://github.com/redis/redis</a></p>
+<p>可以试试deepwiki读取GitHub仓库：<a target="_blank" rel="noopener" href="https://deepwiki.com/redis/redis">https://deepwiki.com/redis/redis</a></p>
+<p>在线测试：<a target="_blank" rel="noopener" href="https://redis.io/try/sandbox/">https://redis.io/try/sandbox/</a></p>
+<p>官网：<a target="_blank" rel="noopener" href="https://redis.io/">https://redis.io/</a></p>
+<h1><span id="nosql">NoSQL</span></h1><p>Redis是一种NoSQL类型的数据库</p>
+
       
     </div>
 
@@ -254,7 +646,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-10-28 11:11:45" itemprop="dateModified" datetime="2025-10-28T11:11:45+00:00">2025-10-28</time>
+                <time title="修改时间：2025-11-15 16:44:23" itemprop="dateModified" datetime="2025-11-15T16:44:23+00:00">2025-11-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -277,60 +669,112 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="1-Maven介绍"><a href="#1-Maven介绍" class="headerlink" title="1-Maven介绍"></a>1-Maven介绍</h1><h2 id="1-1-Maven两大功能"><a href="#1-1-Maven两大功能" class="headerlink" title="1.1 Maven两大功能"></a>1.1 Maven两大功能</h2><h3 id="1-1-1-项目构建"><a href="#1-1-1-项目构建" class="headerlink" title="1.1.1 项目构建"></a>1.1.1 项目构建</h3><h4 id="Maven构建项目特点："><a href="#Maven构建项目特点：" class="headerlink" title="Maven构建项目特点："></a>Maven构建项目特点：</h4><p>Maven可以将传统的项目构建标准化，每个阶段用一个命令完成。</p>
-<h5 id="1、Clean-生命周期："><a href="#1、Clean-生命周期：" class="headerlink" title="1、Clean 生命周期："></a>1、Clean 生命周期：</h5><p>clean：删除目标目录中的编译输出文件。这通常是在构建之前执行的，以确保项目从一个干净的状态开始。</p>
-<h5 id="2、Default-生命周期（也称为-Build-生命周期）："><a href="#2、Default-生命周期（也称为-Build-生命周期）：" class="headerlink" title="2、Default 生命周期（也称为 Build 生命周期）："></a>2、Default 生命周期（也称为 Build 生命周期）：</h5><p>validate：验证项目的正确性，例如检查项目的版本是否正确。</p>
+          <!-- toc -->
+
+<ul>
+<li><a href="#1-maven%E4%BB%8B%E7%BB%8D">1-Maven介绍</a><ul>
+<li><a href="#11-maven%E4%B8%A4%E5%A4%A7%E5%8A%9F%E8%83%BD">1.1 Maven两大功能</a><ul>
+<li><a href="#111-%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA">1.1.1 项目构建</a></li>
+<li><a href="#112%E4%BE%9D%E8%B5%96%E7%AE%A1%E7%90%86">1.1.2依赖管理</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#2-maven%E4%BB%93%E5%BA%93">2-Maven仓库</a><ul>
+<li><a href="#21-%E6%9C%AC%E5%9C%B0%E4%BB%93%E5%BA%93">2.1 本地仓库</a></li>
+<li><a href="#22-%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93">2.2 远程仓库</a><ul>
+<li><a href="#221-%E4%B8%AD%E5%A4%AE%E4%BB%93%E5%BA%93">2.2.1 中央仓库</a></li>
+<li><a href="#222-%E7%A7%81%E6%9C%8D%E4%BB%93%E5%BA%93">2.2.2 私服仓库</a></li>
+<li><a href="#23-%E6%9B%BF%E6%8D%A2%E4%BB%93%E5%BA%93%E8%87%B3%E9%98%BF%E9%87%8C%E4%BA%91">2.3 替换仓库至阿里云</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#3-%E6%A0%B8%E5%BF%83%E6%96%87%E4%BB%B6pomxml">3-核心文件pom.xml</a><ul>
+<li><a href="#31-%E7%A4%BA%E4%BE%8B%E6%96%87%E4%BB%B6">3.1 示例文件</a></li>
+<li><a href="#32-maven%E5%9D%90%E6%A0%87">3.2 Maven坐标</a></li>
+</ul>
+</li>
+<li><a href="#4-%E4%B8%89%E5%A4%A7%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">4-三大生命周期</a><ul>
+<li><a href="#41-clean%E6%B8%85%E7%90%86%E9%A1%B9%E7%9B%AE">4.1 clean清理项目</a></li>
+<li><a href="#42-defalut%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA">4.2 defalut项目构建</a></li>
+<li><a href="#43-site%E7%94%9F%E6%88%90%E6%96%87%E6%A1%A3">4.3 site生成文档</a></li>
+</ul>
+</li>
+<li><a href="#5-%E4%BE%9D%E8%B5%96%E7%AE%A1%E7%90%86">5-依赖管理</a><ul>
+<li><a href="#51%E6%B5%81%E7%A8%8B">5.1流程</a></li>
+<li><a href="#52%E4%BE%9D%E8%B5%96%E4%BC%A0%E9%80%92">5.2依赖传递</a><ul>
+<li><a href="#521-%E7%9B%B4%E6%8E%A5%E4%BE%9D%E8%B5%96%E5%92%8C%E9%97%B4%E6%8E%A5%E4%BE%9D%E8%B5%96">5.2.1 直接依赖和间接依赖</a></li>
+<li><a href="#522-%E5%BD%B1%E5%93%8D">5.2.2 影响</a></li>
+<li><a href="#523-%E4%BE%9D%E8%B5%96%E5%86%B2%E7%AA%81">5.2.3 依赖冲突</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#6-%E6%8F%92%E4%BB%B6">6-插件</a><ul>
+<li><a href="#61-%E5%8A%9F%E8%83%BD">6.1 功能</a></li>
+<li><a href="#62-%E7%BB%91%E5%AE%9A%E6%96%B9%E5%BC%8F">6.2 绑定方式</a></li>
+</ul>
+</li>
+<li><a href="#%E8%A1%A5%E5%85%85">补充：</a></li>
+</ul>
+<!-- tocstop -->
+
+<h1><span id="1-maven介绍">1-Maven介绍</span></h1><h2><span id="11-maven两大功能">1.1 Maven两大功能</span></h2><h3><span id="111-项目构建">1.1.1 项目构建</span></h3><h4><span id="maven构建项目特点">Maven构建项目特点：</span></h4><p>Maven可以将传统的项目构建标准化，每个阶段用一个命令完成。</p>
+<h5><span id="1-clean-生命周期">1、Clean 生命周期：</span></h5><p>clean：删除目标目录中的编译输出文件。这通常是在构建之前执行的，以确保项目从一个干净的状态开始。</p>
+<h5><span id="2-default-生命周期也称为-build-生命周期">2、Default 生命周期（也称为 Build 生命周期）：</span></h5><p>validate：验证项目的正确性，例如检查项目的版本是否正确。</p>
 <p>compile：编译项目的源代码。</p>
 <p>test：运行项目的单元测试。</p>
 <p>package：将编译后的代码打包成可分发的格式，例如 JAR 或 WAR。</p>
 <p>verify：对项目进行额外的检查以确保质量。</p>
 <p>install：将项目的构建结果安装到本地 Maven 仓库中，以供其他项目使用。</p>
 <p>deploy：将项目的构建结果复制到远程仓库，以供其他开发人员或团队使用。</p>
-<h5 id="3、Site-生命周期："><a href="#3、Site-生命周期：" class="headerlink" title="3、Site 生命周期："></a>3、Site 生命周期：</h5><p>site：生成项目文档和站点信息。</p>
+<h5><span id="3-site-生命周期">3、Site 生命周期：</span></h5><p>site：生成项目文档和站点信息。</p>
 <p>deploy-site：将生成的站点信息发布到远程服务器，以便共享项目文档。</p>
 <p><img src="/image-2.png" alt="alt text"></p>
-<h4 id="与其他项目构建工具对比"><a href="#与其他项目构建工具对比" class="headerlink" title="与其他项目构建工具对比"></a>与其他项目构建工具对比</h4><p>1.Ant:Ant没有依赖管理功能.</p>
+<h4><span id="与其他项目构建工具对比">与其他项目构建工具对比</span></h4><p>1.Ant:Ant没有依赖管理功能.</p>
 <p>2.Gradle：在Maven Apache的基础上引入了基于Groovy的特定领域语言。</p>
-<h3 id="1-1-2依赖管理"><a href="#1-1-2依赖管理" class="headerlink" title="1.1.2依赖管理"></a>1.1.2依赖管理</h3><h4 id="传统"><a href="#传统" class="headerlink" title="传统"></a>传统</h4><p>手动拷贝jar包</p>
+<h3><span id="112依赖管理">1.1.2依赖管理</span></h3><h4><span id="传统">传统</span></h4><p>手动拷贝jar包</p>
 <p>1.容易版本冲突；<br>2.难以寻找；<br>3.添加麻烦。</p>
-<h4 id="Maven"><a href="#Maven" class="headerlink" title="Maven"></a>Maven</h4><p>在pom.xml文件中添加jar包坐标，Maven会自动从仓库中下载<br>1.一步构建；</p>
+<h4><span id="maven">Maven</span></h4><p>在pom.xml文件中添加jar包坐标，Maven会自动从仓库中下载<br>1.一步构建；</p>
 <p>2.方便管理；</p>
 <p>3.支持跨平台。</p>
-<h1 id="2-Maven仓库"><a href="#2-Maven仓库" class="headerlink" title="2-Maven仓库"></a>2-Maven仓库</h1><h2 id="2-1-本地仓库"><a href="#2-1-本地仓库" class="headerlink" title="2.1 本地仓库"></a>2.1 本地仓库</h2><p>本地仓库，在第一次执行 maven 命令的时候才被创建。</p>
+<h1><span id="2-maven仓库">2-Maven仓库</span></h1><h2><span id="21-本地仓库">2.1 本地仓库</span></h2><p>本地仓库，在第一次执行 maven 命令的时候才被创建。</p>
 <p>运行 Maven 的时候，Maven 所需要的任何构件都是直接从本地仓库获取的。如果本地仓库没有，它会首先尝试从远程仓库下载构件至本地仓库，然后再使用本地仓库的构件。</p>
 <p>默认情况下，不管 Linux 还是 Windows，每个用户在自己的用户目录下都有一个路径名为 .m2&#x2F;repository&#x2F; 的仓库目录。</p>
-<h2 id="2-2-远程仓库"><a href="#2-2-远程仓库" class="headerlink" title="2.2 远程仓库"></a>2.2 远程仓库</h2><h3 id="2-2-1-中央仓库"><a href="#2-2-1-中央仓库" class="headerlink" title="2.2.1 中央仓库"></a>2.2.1 中央仓库</h3><p> 中央仓库是由 Maven 社区提供的仓库，其中包含了大量常用的库。<br> <a target="_blank" rel="noopener" href="https://repo.maven.apache.org/maven2/">https://repo.maven.apache.org/maven2/</a></p>
-<h3 id="2-2-2-私服仓库"><a href="#2-2-2-私服仓库" class="headerlink" title="2.2.2 私服仓库"></a>2.2.2 私服仓库</h3><p>局域网架设私有仓库服务器，常用于企业开发。</p>
-<h3 id="2-3-替换仓库至阿里云"><a href="#2-3-替换仓库至阿里云" class="headerlink" title="2.3 替换仓库至阿里云"></a>2.3 替换仓库至阿里云</h3><p>中央仓库的服务器在国外，国内进行访问下载速度较慢，可以替换为阿里云的镜像仓库。</p>
+<h2><span id="22-远程仓库">2.2 远程仓库</span></h2><h3><span id="221-中央仓库">2.2.1 中央仓库</span></h3><p> 中央仓库是由 Maven 社区提供的仓库，其中包含了大量常用的库。<br> <a target="_blank" rel="noopener" href="https://repo.maven.apache.org/maven2/">https://repo.maven.apache.org/maven2/</a></p>
+<h3><span id="222-私服仓库">2.2.2 私服仓库</span></h3><p>局域网架设私有仓库服务器，常用于企业开发。</p>
+<h3><span id="23-替换仓库至阿里云">2.3 替换仓库至阿里云</span></h3><p>中央仓库的服务器在国外，国内进行访问下载速度较慢，可以替换为阿里云的镜像仓库。</p>
 <p>修改 maven 根目录下的 conf 文件夹中的 settings.xml 文件，在 mirrors 节点上，添加内容如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;mirror&gt;</span><br><span class="line">  &lt;id&gt;aliyunmaven&lt;/id&gt;</span><br><span class="line">  &lt;mirrorOf&gt;*&lt;/mirrorOf&gt;</span><br><span class="line">  &lt;name&gt;阿里云公共仓库&lt;/name&gt;</span><br><span class="line">  &lt;url&gt;https://maven.aliyun.com/repository/public&lt;/url&gt;</span><br><span class="line">&lt;/mirror&gt;</span><br></pre></td></tr></table></figure>
 
 <p>如果想使用其它代理仓库，可在 <repositories></repositories> 节点中加入对应的仓库使用地址。以使用 spring 代理仓为例：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;repository&gt;</span><br><span class="line">  &lt;id&gt;spring&lt;/id&gt;</span><br><span class="line">  &lt;url&gt;https://maven.aliyun.com/repository/spring&lt;/url&gt;</span><br><span class="line">  &lt;releases&gt;</span><br><span class="line">    &lt;enabled&gt;true&lt;/enabled&gt;</span><br><span class="line">  &lt;/releases&gt;</span><br><span class="line">  &lt;snapshots&gt;</span><br><span class="line">    &lt;enabled&gt;true&lt;/enabled&gt;</span><br><span class="line">  &lt;/snapshots&gt;</span><br><span class="line">&lt;/repository&gt;</span><br></pre></td></tr></table></figure>
 
-<h1 id="3-核心文件pom-xml"><a href="#3-核心文件pom-xml" class="headerlink" title="3-核心文件pom.xml"></a>3-核心文件pom.xml</h1><h2 id="3-1-示例文件"><a href="#3-1-示例文件" class="headerlink" title="3.1 示例文件"></a>3.1 示例文件</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line"></span><br><span class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;</span><br><span class="line">         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">&lt;!--    Maven模型版本--&gt;</span><br><span class="line">    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</span><br><span class="line">&lt;!--组织标识--&gt;</span><br><span class="line">    &lt;groupId&gt;com.darkyellowcat&lt;/groupId&gt;</span><br><span class="line">&lt;!--项目标识--&gt;</span><br><span class="line">    &lt;artifactId&gt;untitled&lt;/artifactId&gt;</span><br><span class="line">&lt;!--    版本号--&gt;</span><br><span class="line">    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;</span><br><span class="line">&lt;!-- 项目依赖--&gt;</span><br><span class="line">    &lt;properties&gt;</span><br><span class="line">        &lt;maven.compiler.source&gt;8&lt;/maven.compiler.source&gt;</span><br><span class="line">        &lt;maven.compiler.target&gt;8&lt;/maven.compiler.target&gt;</span><br><span class="line">        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;</span><br><span class="line">    &lt;/properties&gt;</span><br><span class="line">&lt;!--项目依赖--&gt;</span><br><span class="line">    &lt;dependencies&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;junit&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;junit&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;4.12&lt;/version&gt;</span><br><span class="line">            &lt;scope&gt;test&lt;/scope&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.apache.tomcat.maven&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;tomcat7-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;2.2&lt;/version&gt;</span><br><span class="line">&lt;!--             配置项--&gt;</span><br><span class="line">            &lt;configuration&gt;</span><br><span class="line">                &lt;url&gt;http://localhost:8080/manager/text&lt;/url&gt;</span><br><span class="line">                &lt;server&gt;TomcatServer&lt;/server&gt;</span><br><span class="line">                &lt;path&gt;/untitled&lt;/path&gt;</span><br><span class="line">            &lt;/configuration&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">    &lt;/dependencies&gt;</span><br><span class="line"></span><br><span class="line">&lt;/project&gt;</span><br></pre></td></tr></table></figure>
-<h2 id="3-2-Maven坐标"><a href="#3-2-Maven坐标" class="headerlink" title="3.2 Maven坐标"></a>3.2 Maven坐标</h2><p>Maven通过groupId，artifactId，version三个字段来获取坐标，进而获得jar包。</p>
-<h1 id="4-三大生命周期"><a href="#4-三大生命周期" class="headerlink" title="4-三大生命周期"></a>4-三大生命周期</h1><p>官网<br><a target="_blank" rel="noopener" href="https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html">https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html</a></p>
-<h2 id="4-1-clean清理项目"><a href="#4-1-clean清理项目" class="headerlink" title="4.1 clean清理项目"></a>4.1 clean清理项目</h2><p>清理项目的临时文件和目录</p>
+<h1><span id="3-核心文件pomxml">3-核心文件pom.xml</span></h1><h2><span id="31-示例文件">3.1 示例文件</span></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line"></span><br><span class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;</span><br><span class="line">         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">&lt;!--    Maven模型版本--&gt;</span><br><span class="line">    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</span><br><span class="line">&lt;!--组织标识--&gt;</span><br><span class="line">    &lt;groupId&gt;com.darkyellowcat&lt;/groupId&gt;</span><br><span class="line">&lt;!--项目标识--&gt;</span><br><span class="line">    &lt;artifactId&gt;untitled&lt;/artifactId&gt;</span><br><span class="line">&lt;!--    版本号--&gt;</span><br><span class="line">    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;</span><br><span class="line">&lt;!-- 项目依赖--&gt;</span><br><span class="line">    &lt;properties&gt;</span><br><span class="line">        &lt;maven.compiler.source&gt;8&lt;/maven.compiler.source&gt;</span><br><span class="line">        &lt;maven.compiler.target&gt;8&lt;/maven.compiler.target&gt;</span><br><span class="line">        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;</span><br><span class="line">    &lt;/properties&gt;</span><br><span class="line">&lt;!--项目依赖--&gt;</span><br><span class="line">    &lt;dependencies&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;junit&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;junit&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;4.12&lt;/version&gt;</span><br><span class="line">            &lt;scope&gt;test&lt;/scope&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.apache.tomcat.maven&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;tomcat7-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;2.2&lt;/version&gt;</span><br><span class="line">&lt;!--             配置项--&gt;</span><br><span class="line">            &lt;configuration&gt;</span><br><span class="line">                &lt;url&gt;http://localhost:8080/manager/text&lt;/url&gt;</span><br><span class="line">                &lt;server&gt;TomcatServer&lt;/server&gt;</span><br><span class="line">                &lt;path&gt;/untitled&lt;/path&gt;</span><br><span class="line">            &lt;/configuration&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">    &lt;/dependencies&gt;</span><br><span class="line"></span><br><span class="line">&lt;/project&gt;</span><br></pre></td></tr></table></figure>
+<h2><span id="32-maven坐标">3.2 Maven坐标</span></h2><p>Maven通过groupId，artifactId，version三个字段来获取坐标，进而获得jar包。</p>
+<h1><span id="4-三大生命周期">4-三大生命周期</span></h1><p>官网<br><a target="_blank" rel="noopener" href="https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html">https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html</a></p>
+<h2><span id="41-clean清理项目">4.1 clean清理项目</span></h2><p>清理项目的临时文件和目录</p>
 <p>1.pre-clean 清理前</p>
 <p>2.clean</p>
 <p>3.post-clean 清理后</p>
 <p>命令</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn clean</span><br></pre></td></tr></table></figure>
-<h2 id="4-2-defalut项目构建"><a href="#4-2-defalut项目构建" class="headerlink" title="4.2 defalut项目构建"></a>4.2 defalut项目构建</h2><p>核心生命周期，负责项目构建和部署的所有核心步骤。</p>
+<h2><span id="42-defalut项目构建">4.2 defalut项目构建</span></h2><p>核心生命周期，负责项目构建和部署的所有核心步骤。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn validate/compile/test ...</span><br></pre></td></tr></table></figure>
-<h2 id="4-3-site生成文档"><a href="#4-3-site生成文档" class="headerlink" title="4.3 site生成文档"></a>4.3 site生成文档</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn site</span><br></pre></td></tr></table></figure>
+<h2><span id="43-site生成文档">4.3 site生成文档</span></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn site</span><br></pre></td></tr></table></figure>
 <p>pre-site	生成前准备</p>
 <p>site	生成项目站点文档</p>
 <p>post-site	收尾</p>
 <p>site-deploy	部署站点到服务器</p>
-<h1 id="5-依赖管理"><a href="#5-依赖管理" class="headerlink" title="5-依赖管理"></a>5-依赖管理</h1><h2 id="5-1流程"><a href="#5-1流程" class="headerlink" title="5.1流程"></a>5.1流程</h2><h2 id="5-2依赖传递"><a href="#5-2依赖传递" class="headerlink" title="5.2依赖传递"></a>5.2依赖传递</h2><h3 id="5-2-1-直接依赖和间接依赖"><a href="#5-2-1-直接依赖和间接依赖" class="headerlink" title="5.2.1 直接依赖和间接依赖"></a>5.2.1 直接依赖和间接依赖</h3><p>如果B使用A，C使用B，那么B是C的直接依赖，C是A的间接依赖。Maven 会自动将间接依赖引入，这种自动处理依赖关系的特性称为传递性依赖(Transitive Dependencies)。</p>
-<h3 id="5-2-2-影响"><a href="#5-2-2-影响" class="headerlink" title="5.2.2 影响"></a>5.2.2 影响</h3><p><img src="/image-3.png" alt="alt text"><br>&#x2F;&#x2F;本图来自菜鸟教程</p>
-<h3 id="5-2-3-依赖冲突"><a href="#5-2-3-依赖冲突" class="headerlink" title="5.2.3 依赖冲突"></a>5.2.3 依赖冲突</h3><p>如果直接依赖和间接依赖同时包含一个包的不同版本，默认以直接依赖为准。<br>去除依赖：</p>
+<h1><span id="5-依赖管理">5-依赖管理</span></h1><h2><span id="51流程">5.1流程</span></h2><p>pom.xml中添加地址 -&gt; 在本地仓库中查找 -&gt; 去远程仓库查找（如果有） -&gt; 去中央仓库下载</p>
+<h2><span id="52依赖传递">5.2依赖传递</span></h2><h3><span id="521-直接依赖和间接依赖">5.2.1 直接依赖和间接依赖</span></h3><p>如果B使用A，C使用B，那么B是C的直接依赖，C是A的间接依赖。Maven 会自动将间接依赖引入，这种自动处理依赖关系的特性称为传递性依赖(Transitive Dependencies)。</p>
+<h3><span id="522-影响">5.2.2 影响</span></h3><p><img src="/image-3.png" alt="alt text"><br>&#x2F;&#x2F;本图来自菜鸟教程</p>
+<h3><span id="523-依赖冲突">5.2.3 依赖冲突</span></h3><p>如果直接依赖和间接依赖同时包含一个包的不同版本，默认以直接依赖为准。<br>去除依赖：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;exclusions&gt;</span><br><span class="line">  &lt;groupId&gt;</span><br><span class="line">    xxx</span><br><span class="line">  &lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;</span><br><span class="line">    xxx</span><br><span class="line">  &lt;/artifactId&gt;</span><br><span class="line">&lt;/exclusions&gt;</span><br></pre></td></tr></table></figure>
-<h1 id="6-插件"><a href="#6-插件" class="headerlink" title="6-插件"></a>6-插件</h1><h2 id="6-1-功能"><a href="#6-1-功能" class="headerlink" title="6.1 功能"></a>6.1 功能</h2><p>插件用于用于执行特定任务(编译、测试、打包等)，具体实现生命周期对应的功能。</p>
-<h2 id="6-2-绑定方式"><a href="#6-2-绑定方式" class="headerlink" title="6.2 绑定方式"></a>6.2 绑定方式</h2><p>Maven会为生命周期阶段预绑定插件，同时也支持在pom.xml中自定义绑定</p>
-<h1 id="补充："><a href="#补充：" class="headerlink" title="补充："></a>补充：</h1><p>推荐菜鸟教程，虽然直接点进去看起来有点乱，但知识点很全，也适合做笔记。<br><a target="_blank" rel="noopener" href="https://www.runoob.com/maven">https://www.runoob.com/maven</a></p>
+<h1><span id="6-插件">6-插件</span></h1><h2><span id="61-功能">6.1 功能</span></h2><p>插件用于用于执行特定任务(编译、测试、打包等)，具体实现生命周期对应的功能。</p>
+<h2><span id="62-绑定方式">6.2 绑定方式</span></h2><p>Maven会为生命周期阶段预绑定插件，同时也支持在pom.xml中自定义绑定</p>
+<h1><span id="补充">补充：</span></h1><p>推荐菜鸟教程，虽然直接点进去看起来有点乱，但知识点很全，也适合做笔记。<br><a target="_blank" rel="noopener" href="https://www.runoob.com/maven">https://www.runoob.com/maven</a></p>
 
       
     </div>
@@ -381,7 +825,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-10-28 11:11:45" itemprop="dateModified" datetime="2025-10-28T11:11:45+00:00">2025-10-28</time>
+                <time title="修改时间：2025-11-15 16:44:23" itemprop="dateModified" datetime="2025-11-15T16:44:23+00:00">2025-11-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -404,38 +848,38 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>网上关于“MySQL密码正确却无法登录”的解决方案很多，比如跳过权限验证、重置 root 密码、检查插件认证方式等。但在我遇到的问题中，这些方法都不适用——因为<strong>根本不是密码错了，而是连错了实例</strong>。<br>这里记录一下我的“乌龙”经历，希望能帮到踩了同样坑的朋友。</p>
-<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="情况描述"><a href="#情况描述" class="headerlink" title="情况描述"></a>情况描述</h2><p>我在本地安装并配置好 MySQL 后，成功设置了 root 密码，并正常使用了一段时间。<br>但第二天再次尝试登录时，执行：</p>
+          <h1><span id="前言">前言</span></h1><p>网上关于“MySQL密码正确却无法登录”的解决方案很多，比如跳过权限验证、重置 root 密码、检查插件认证方式等。但在我遇到的问题中，这些方法都不适用——因为<strong>根本不是密码错了，而是连错了实例</strong>。<br>这里记录一下我的“乌龙”经历，希望能帮到踩了同样坑的朋友。</p>
+<h1><span id="正文">正文</span></h1><h2><span id="情况描述">情况描述</span></h2><p>我在本地安装并配置好 MySQL 后，成功设置了 root 密码，并正常使用了一段时间。<br>但第二天再次尝试登录时，执行：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
 <p>却出现</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ERROR 1045 (28000): Access denied <span class="keyword">for</span> user <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> (using password: YES)</span><br></pre></td></tr></table></figure>
 
 <p>于是按照网上的教程重置了密码，登录就成功了，我便没有深究。</p>
 <p>然而，当我为了修改数据库默认编码（utf8mb4）而编辑 my.ini 文件并重启 MySQL 后，发现之前创建的数据库和表全都不见了！</p>
-<h2 id="病因分析"><a href="#病因分析" class="headerlink" title="病因分析"></a>病因分析</h2><p>经过反复排查，终于发现问题根源：</p>
+<h2><span id="病因分析">病因分析</span></h2><p>经过反复排查，终于发现问题根源：</p>
 <p>我之前退出 MySQL 客户端时，直接关闭了命令行窗口，没有输入 exit 或 \q 正常退出。<br>第二天执行 mysql -u root -p 时，系统自动启动了一个新的、干净的 MySQL 实例（或连接到了另一个实例），而这个实例的 root 用户密码是空的（或默认值），和我之前配置的实例不是同一个！ </p>
 <p>更具体地说：</p>
 <p>我本地可能同时存在两个 MySQL 服务</p>
-<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><h3 id="✅-1-确认当前连接的是哪个-MySQL-实例"><a href="#✅-1-确认当前连接的是哪个-MySQL-实例" class="headerlink" title="✅ 1. 确认当前连接的是哪个 MySQL 实例"></a>✅ 1. 确认当前连接的是哪个 MySQL 实例</h3><p>登录后执行：</p>
+<h2><span id="解决办法">解决办法</span></h2><h3><span id="1-确认当前连接的是哪个-mysql-实例">✅ 1. 确认当前连接的是哪个 MySQL 实例</span></h3><p>登录后执行：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW VARIABLES LIKE <span class="string">&#x27;datadir&#x27;</span>;</span><br></pre></td></tr></table></figure>
 
 <p>查看数据目录。对比你之前配置的 my.ini 中的 datadir 路径是否一致。</p>
-<h3 id="✅-2-检查-MySQL-服务状态"><a href="#✅-2-检查-MySQL-服务状态" class="headerlink" title="✅ 2. 检查 MySQL 服务状态"></a>✅ 2. 检查 MySQL 服务状态</h3><p>在 Windows 上：</p>
+<h3><span id="2-检查-mysql-服务状态">✅ 2. 检查 MySQL 服务状态</span></h3><p>在 Windows 上：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sc query mysql</span><br><span class="line"><span class="comment"># 或</span></span><br><span class="line">net start</span><br></pre></td></tr></table></figure>
 
 <p>看是否有多个 MySQL 服务在运行（如 MySQL80、MySQL 等）。</p>
 <p>在 Linux&#x2F;macOS 上：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps aux | grep mysqld</span><br></pre></td></tr></table></figure>
 
-<h3 id="✅-3-确保只启动一个-MySQL-服务"><a href="#✅-3-确保只启动一个-MySQL-服务" class="headerlink" title="✅ 3. 确保只启动一个 MySQL 服务"></a>✅ 3. 确保只启动一个 MySQL 服务</h3><p>停止所有 MySQL 进程(把不是你需要的服务删除了)，然后手动启动你配置过的那个实例：</p>
+<h3><span id="3-确保只启动一个-mysql-服务">✅ 3. 确保只启动一个 MySQL 服务</span></h3><p>停止所有 MySQL 进程(把不是你需要的服务删除了)，然后手动启动你配置过的那个实例：</p>
 <p>Windows（以管理员身份）</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">net stop MySQL80</span><br><span class="line">mysqld --defaults-file=<span class="string">&quot;C:\path\to\my.ini&quot;</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="✅-4-使用明确的连接方式"><a href="#✅-4-使用明确的连接方式" class="headerlink" title="✅ 4. 使用明确的连接方式"></a>✅ 4. 使用明确的连接方式</h3><p>如果你有多个实例，建议通过指定端口或 socket 连接：</p>
+<h3><span id="4-使用明确的连接方式">✅ 4. 使用明确的连接方式</span></h3><p>如果你有多个实例，建议通过指定端口或 socket 连接：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p -P 3306 --protocol=tcp</span><br></pre></td></tr></table></figure>
 
-<h3 id="✅-5-避免“直接关窗口”"><a href="#✅-5-避免“直接关窗口”" class="headerlink" title="✅ 5. 避免“直接关窗口”"></a>✅ 5. 避免“直接关窗口”</h3><p>虽然直接关闭命令行通常不会导致数据丢失，<br>但养成输入 exit 退出的习惯，有助于你更清楚当前会话状态。</p>
-<h1 id="bb"><a href="#bb" class="headerlink" title="bb"></a>bb</h1><p>如果所有方法试过之后都不好用，重装可以解决你的一切烦恼(认真)</p>
+<h3><span id="5-避免直接关窗口">✅ 5. 避免“直接关窗口”</span></h3><p>虽然直接关闭命令行通常不会导致数据丢失，<br>但养成输入 exit 退出的习惯，有助于你更清楚当前会话状态。</p>
+<h1><span id="bb">bb</span></h1><p>如果所有方法试过之后都不好用，重装可以解决你的一切烦恼(认真)</p>
 
       
     </div>
@@ -486,7 +930,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-10-28 11:11:45" itemprop="dateModified" datetime="2025-10-28T11:11:45+00:00">2025-10-28</time>
+                <time title="修改时间：2025-11-15 16:44:23" itemprop="dateModified" datetime="2025-11-15T16:44:23+00:00">2025-11-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -509,8 +953,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>在 GitHub 上，我们经常会遇到一个共同的问题：<strong>项目结构太复杂，源码难以理解</strong>。而 DeepWiki 正是为了解决这个痛点而诞生的一个开源导航与推荐工具。它通过算法与人工整理相结合，帮助开发者快速解析 GitHub 项目、文档和资源。</p>
-<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p><strong>DeepWiki</strong> 是一个聚焦于 GitHub 的“项目百科全书”，它从开源生态中自动抓取并解析优质项目，帮助开发者探索、学习与贡献。</p>
+          <h1><span id="引言">引言</span></h1><p>在 GitHub 上，我们经常会遇到一个共同的问题：<strong>项目结构太复杂，源码难以理解</strong>。而 DeepWiki 正是为了解决这个痛点而诞生的一个开源导航与推荐工具。它通过算法与人工整理相结合，帮助开发者快速解析 GitHub 项目、文档和资源。</p>
+<h1><span id="正文">正文</span></h1><h2><span id="简介">简介</span></h2><p><strong>DeepWiki</strong> 是一个聚焦于 GitHub 的“项目百科全书”，它从开源生态中自动抓取并解析优质项目，帮助开发者探索、学习与贡献。</p>
 <p>它不仅仅是一个项目索引网站，更像是一个面向开发者的知识图谱平台，让你能在更短时间内发现优秀的轮子和前沿技术。</p>
 <p>主要特点包括：</p>
 <ul>
@@ -518,7 +962,7 @@
 <li>清晰的界面设计与标签导航  </li>
 <li>高质量项目解析功能</li>
 </ul>
-<h2 id="核心功能"><a href="#核心功能" class="headerlink" title="核心功能"></a>核心功能</h2><ol>
+<h2><span id="核心功能">核心功能</span></h2><ol>
 <li><p><strong>智能推荐</strong><br>DeepWiki 利用算法从 GitHub 数据中挖掘高活跃度、高质量的项目，避免信息噪声，让用户更容易发现真正值得关注的仓库。</p>
 </li>
 <li><p><strong>项目百科页</strong><br>每个项目页面不仅展示仓库信息，还包含简明的技术介绍、相关项目推荐以及技术栈标签，帮助你快速了解一个项目的全貌。</p>
@@ -528,10 +972,10 @@
 <li><p><strong>趋势追踪与时间线</strong><br>DeepWiki 追踪项目的活跃度与更新时间，提供类似“今日热门”、“本周上升榜”等趋势榜单，帮助开发者掌握社区动态。</p>
 </li>
 </ol>
-<h2 id="使用指南"><a href="#使用指南" class="headerlink" title="使用指南"></a>使用指南</h2><p>将 <a target="_blank" rel="noopener" href="http://github.com替换/">http://github.com替换</a> 为<a target="_blank" rel="noopener" href="http://deepwiki.com/">http://deepwiki.com</a><br>列如：<a target="_blank" rel="noopener" href="https://github.com/spring-projects/spring-framework">https://github.com/spring-projects/spring-framework</a> -&gt; <a target="_blank" rel="noopener" href="https://deepwiki.com/spring-projects/spring-framework">https://deepwiki.com/spring-projects/spring-framework</a></p>
+<h2><span id="使用指南">使用指南</span></h2><p>将 <a target="_blank" rel="noopener" href="http://github.com替换/">http://github.com替换</a> 为<a target="_blank" rel="noopener" href="http://deepwiki.com/">http://deepwiki.com</a><br>列如：<a target="_blank" rel="noopener" href="https://github.com/spring-projects/spring-framework">https://github.com/spring-projects/spring-framework</a> -&gt; <a target="_blank" rel="noopener" href="https://deepwiki.com/spring-projects/spring-framework">https://deepwiki.com/spring-projects/spring-framework</a></p>
 <p><img src="/image-1.png" alt="alt text"> -&gt;</p>
 <p><img src="/image.png" alt="alt text"></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>DeepWiki 是一个极具潜力的开源项目导航与探索平台，对于经常逛 GitHub 的开发者而言，它能大大理解成本，帮助你快速了解技术生态、发现优秀项目。</p>
+<h2><span id="总结">总结</span></h2><p>DeepWiki 是一个极具潜力的开源项目导航与探索平台，对于经常逛 GitHub 的开发者而言，它能大大理解成本，帮助你快速了解技术生态、发现优秀项目。</p>
 <p>无论你是想找灵感、学习新框架，还是参与开源贡献，DeepWiki 都是一个不可错过的工具。</p>
 <blockquote>
 <p>🌐 官方网站：<a target="_blank" rel="noopener" href="https://deepwiki.org/">https://deepwiki.org/</a></p>
@@ -588,7 +1032,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-10-28 11:11:45" itemprop="dateModified" datetime="2025-10-28T11:11:45+00:00">2025-10-28</time>
+                <time title="修改时间：2025-11-15 16:44:23" itemprop="dateModified" datetime="2025-11-15T16:44:23+00:00">2025-11-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -611,11 +1055,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="缘由"><a href="#缘由" class="headerlink" title="缘由"></a>缘由</h1><p>在大学生活中，我发现很多同学虽然渴望社交，却苦于没有合适的渠道。传统的社交平台要么信息过载，要么匹配机制粗糙。于是，我萌生了开发 <strong>weconnected</strong> 的想法——一个让用户通过自定义标签（如“摄影”“考研”“Java后端”）快速找到志同道合伙伴的轻量级社交平台。</p>
+          <h1><span id="缘由">缘由</span></h1><p>在大学生活中，我发现很多同学虽然渴望社交，却苦于没有合适的渠道。传统的社交平台要么信息过载，要么匹配机制粗糙。于是，我萌生了开发 <strong>weconnected</strong> 的想法——一个让用户通过自定义标签（如“摄影”“考研”“Java后端”）快速找到志同道合伙伴的轻量级社交平台。</p>
 <blockquote>
 <p>💡 项目初衷：降低高质量社交的门槛，让“找人”变得更精准、更自然。</p>
 </blockquote>
-<h1 id="项目概览"><a href="#项目概览" class="headerlink" title="项目概览"></a>项目概览</h1><ul>
+<h1><span id="项目概览">项目概览</span></h1><ul>
 <li><strong>核心功能</strong>：<ul>
 <li>用户注册&#x2F;登录（含密码加密）</li>
 <li>自定义兴趣标签（可增删改）</li>
@@ -631,34 +1075,34 @@
 </ul>
 </li>
 </ul>
-<h1 id="后端设计亮点"><a href="#后端设计亮点" class="headerlink" title="后端设计亮点"></a>后端设计亮点</h1><h2 id="1-标签系统设计"><a href="#1-标签系统设计" class="headerlink" title="1. 标签系统设计"></a>1. 标签系统设计</h2><ul>
+<h1><span id="后端设计亮点">后端设计亮点</span></h1><h2><span id="1-标签系统设计">1. 标签系统设计</span></h2><ul>
 <li>用户标签存储在表 <code>user</code>中，支持一对多关系。</li>
 <li>查询“相同标签用户”时，使用 SQL 的 <code>JOIN</code> 实现高效匹配。</li>
 <li>为提升性能，对高频查询（如热门标签用户列表）引入 <strong>Redis 缓存</strong>，设置合理过期时间。</li>
 </ul>
-<h2 id="2-安全实践"><a href="#2-安全实践" class="headerlink" title="2. 安全实践"></a>2. 安全实践</h2><ul>
+<h2><span id="2-安全实践">2. 安全实践</span></h2><ul>
 <li>密码采用 <strong>盐值 + MD5</strong> 加密存储（说明：MD5 已不推荐用于生产，但作为学习项目可接受；后续可替换为 Spring Security + BCrypt）。</li>
 </ul>
-<h2 id="3-API-文档与调试"><a href="#3-API-文档与调试" class="headerlink" title="3. API 文档与调试"></a>3. API 文档与调试</h2><ul>
+<h2><span id="3-api-文档与调试">3. API 文档与调试</span></h2><ul>
 <li>集成 <strong>Knife4j</strong>，自动生成美观的 Swagger UI，方便前后端联调。</li>
 </ul>
-<h1 id="前端实现简述"><a href="#前端实现简述" class="headerlink" title="前端实现简述"></a>前端实现简述</h1><p>由于我主要专注后端开发，前端借助 <strong>Vue 3 官方脚手架（Vite）</strong> 快速搭建，并使用 AI 工具辅助编写组件逻辑（如标签选择器、用户卡片渲染）。虽然界面较为简洁，但功能完整、交互流畅。</p>
+<h1><span id="前端实现简述">前端实现简述</span></h1><p>由于我主要专注后端开发，前端借助 <strong>Vue 3 官方脚手架（Vite）</strong> 快速搭建，并使用 AI 工具辅助编写组件逻辑（如标签选择器、用户卡片渲染）。虽然界面较为简洁，但功能完整、交互流畅。</p>
 <blockquote>
 <p>🙏 欢迎前端高手提 PR 或建议！项目开源地址：<a target="_blank" rel="noopener" href="https://github.com/darkyellowcat/weconnected">https://github.com/darkyellowcat/weconnected</a></p>
 </blockquote>
-<h1 id="遇到的挑战与收获"><a href="#遇到的挑战与收获" class="headerlink" title="遇到的挑战与收获"></a>遇到的挑战与收获</h1><ul>
+<h1><span id="遇到的挑战与收获">遇到的挑战与收获</span></h1><ul>
 <li><p><strong>挑战1</strong>：如何高效实现“标签匹配”？<br>→ 最初用全表扫描，性能差；后改用 Redis 缓存热门标签用户 ID 列表，QPS 提升明显。</p>
 </li>
 <li><p><strong>收获</strong>：完整走通一个全栈项目流程，加深了对 Spring Boot、Redis 缓存策略、RESTful API 设计的理解。</p>
 </li>
 </ul>
-<h1 id="下一步计划"><a href="#下一步计划" class="headerlink" title="下一步计划"></a>下一步计划</h1><ul>
-<li><input disabled="" type="checkbox"> 引入 WebSocket 实现实时聊天</li>
-<li><input disabled="" type="checkbox"> 用 Spring Security 重构认证模块</li>
-<li><input disabled="" type="checkbox"> 添加单元测试（JUnit + Mockito）</li>
-<li><input disabled="" type="checkbox"> 优化前端 UI&#x2F;UX</li>
+<h1><span id="下一步计划">下一步计划</span></h1><ul>
+<li><input disabled type="checkbox"> 引入 WebSocket 实现实时聊天</li>
+<li><input disabled type="checkbox"> 用 Spring Security 重构认证模块</li>
+<li><input disabled type="checkbox"> 添加单元测试（JUnit + Mockito）</li>
+<li><input disabled type="checkbox"> 优化前端 UI&#x2F;UX</li>
 </ul>
-<h1 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h1><p>weconnected 不仅是一个技术练手项目，更是我对“技术如何解决真实问题”的一次尝试。如果你也在做类似的项目，欢迎交流！也欢迎 Star &#x2F; Fork 项目，一起让它变得更好 🌟</p>
+<h1><span id="结语">结语</span></h1><p>weconnected 不仅是一个技术练手项目，更是我对“技术如何解决真实问题”的一次尝试。如果你也在做类似的项目，欢迎交流！也欢迎 Star &#x2F; Fork 项目，一起让它变得更好 🌟</p>
 
       
     </div>
@@ -709,7 +1153,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-10-28 11:11:45" itemprop="dateModified" datetime="2025-10-28T11:11:45+00:00">2025-10-28</time>
+                <time title="修改时间：2025-11-15 16:44:23" itemprop="dateModified" datetime="2025-11-15T16:44:23+00:00">2025-11-15</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -732,9 +1176,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="🚀-前言"><a href="#🚀-前言" class="headerlink" title="🚀 前言"></a>🚀 前言</h1><p>作为一名计算机科学与技术专业的大二学生，我决定用一套完全免费的方式搭建属于自己的个人博客。<br>最终我选择了 <strong>Hexo + NexT + GitHub Pages</strong> 的组合，简单、美观、自动化。</p>
+          <h1><span id="前言">🚀 前言</span></h1><p>作为一名计算机科学与技术专业的大二学生，我决定用一套完全免费的方式搭建属于自己的个人博客。<br>最终我选择了 <strong>Hexo + NexT + GitHub Pages</strong> 的组合，简单、美观、自动化。</p>
 <hr>
-<h1 id="🧰-一、环境准备"><a href="#🧰-一、环境准备" class="headerlink" title="🧰 一、环境准备"></a>🧰 一、环境准备</h1><p>系统：Windows 10<br>需要安装：</p>
+<h1><span id="一-环境准备">🧰 一、环境准备</span></h1><p>系统：Windows 10<br>需要安装：</p>
 <ul>
 <li>Node.js（推荐 v20+）</li>
 <li>Git</li>
@@ -745,13 +1189,13 @@
 
 
 
-<h1 id="🏗️-二、初始化博客"><a href="#🏗️-二、初始化博客" class="headerlink" title="🏗️ 二、初始化博客"></a>🏗️ 二、初始化博客</h1><p>在安装好 Node.js 与 Git 之后，使用 Hexo CLI 初始化你的博客项目：</p>
+<h1><span id="️-二-初始化博客">🏗️ 二、初始化博客</span></h1><p>在安装好 Node.js 与 Git 之后，使用 Hexo CLI 初始化你的博客项目：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">hexo init my-blog</span><br><span class="line"><span class="built_in">cd</span> my-blog</span><br><span class="line">npm install</span><br><span class="line">````</span><br><span class="line"></span><br><span class="line">Hexo 会自动创建一个包含基本结构的文件夹：</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>my-blog&#x2F;<br>├─ _config.yml          # 主配置文件<br>├─ package.json         # npm 依赖配置<br>├─ scaffolds&#x2F;           # 模板文件<br>├─ source&#x2F;              # 存放文章和页面<br>│  └─ _posts&#x2F;           # 博文存放处<br>└─ themes&#x2F;              # 主题目录</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">初始化完成后，可以运行以下命令预览网站：</span><br><span class="line"></span><br><span class="line">```bash</span><br><span class="line">hexo server</span><br></pre></td></tr></table></figure>
 
 <p>在浏览器中访问 <a target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000</a>，<br>就能看到 Hexo 的默认页面啦 🎉</p>
-<h1 id="🎨-三、更换-NexT-主题"><a href="#🎨-三、更换-NexT-主题" class="headerlink" title="🎨 三、更换 NexT 主题"></a>🎨 三、更换 NexT 主题</h1><p>我选择了社区维护最好的主题 —— <strong>NexT</strong>。</p>
+<h1><span id="三-更换-next-主题">🎨 三、更换 NexT 主题</span></h1><p>我选择了社区维护最好的主题 —— <strong>NexT</strong>。</p>
 <p>进入博客目录，克隆 NexT：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/next-theme/hexo-theme-next themes/next</span><br><span class="line">````</span><br><span class="line"></span><br><span class="line">修改博客根目录下的 `_config.yml`，</span><br><span class="line">找到：</span><br><span class="line"></span><br><span class="line">```yaml</span><br><span class="line">theme: landscape</span><br></pre></td></tr></table></figure>
 
@@ -762,7 +1206,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo g &amp;&amp; hexo s</span><br></pre></td></tr></table></figure>
 
 <p>再次打开 <a target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000</a>，<br>你就能看到 NexT 的简洁界面了 ✨</p>
-<h1 id="🧭-四、配置导航栏与页面"><a href="#🧭-四、配置导航栏与页面" class="headerlink" title="🧭 四、配置导航栏与页面"></a>🧭 四、配置导航栏与页面</h1><p>NexT 的导航菜单配置在 <code>themes/next/_config.yml</code> 中，<br>找到：</p>
+<h1><span id="四-配置导航栏与页面">🧭 四、配置导航栏与页面</span></h1><p>NexT 的导航菜单配置在 <code>themes/next/_config.yml</code> 中，<br>找到：</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">menu:</span></span><br><span class="line">  <span class="attr">home:</span> <span class="string">/</span> <span class="string">||</span> <span class="string">fa</span> <span class="string">fa-home</span></span><br><span class="line">  <span class="attr">archives:</span> <span class="string">/archives/</span> <span class="string">||</span> <span class="string">fa</span> <span class="string">fa-archive</span></span><br><span class="line"><span class="string">````</span></span><br><span class="line"></span><br><span class="line"><span class="string">修改为：</span></span><br><span class="line"></span><br><span class="line"><span class="string">```yaml</span></span><br><span class="line"><span class="attr">menu:</span></span><br><span class="line">  <span class="attr">home:</span> <span class="string">/</span> <span class="string">||</span> <span class="string">fa</span> <span class="string">fa-home</span></span><br><span class="line">  <span class="attr">categories:</span> <span class="string">/categories/</span> <span class="string">||</span> <span class="string">fa</span> <span class="string">fa-th</span></span><br><span class="line">  <span class="attr">tags:</span> <span class="string">/tags/</span> <span class="string">||</span> <span class="string">fa</span> <span class="string">fa-tags</span></span><br><span class="line">  <span class="attr">about:</span> <span class="string">/about/</span> <span class="string">||</span> <span class="string">fa</span> <span class="string">fa-user</span></span><br></pre></td></tr></table></figure>
 
 <p>然后创建对应页面：</p>
@@ -782,7 +1226,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo g &amp;&amp; hexo s</span><br></pre></td></tr></table></figure>
 
 <p>刷新页面，你的导航栏就会出现“主页 &#x2F; 分类 &#x2F; 标签 &#x2F; 关于我”四个菜单 </p>
-<h1 id="⚙️-五、部署到-GitHub-Pages"><a href="#⚙️-五、部署到-GitHub-Pages" class="headerlink" title="⚙️ 五、部署到 GitHub Pages"></a>⚙️ 五、部署到 GitHub Pages</h1><p>为了实现自动部署，我使用了 <strong>GitHub Actions</strong>。</p>
+<h1><span id="️-五-部署到-github-pages">⚙️ 五、部署到 GitHub Pages</span></h1><p>为了实现自动部署，我使用了 <strong>GitHub Actions</strong>。</p>
 <p>1️⃣ 在 <code>.github/workflows/</code> 下创建一个文件：<br><code>deploy.yml</code></p>
 <p>2️⃣ 填入以下内容：</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name:</span> <span class="string">Deploy</span> <span class="string">Hexo</span> <span class="string">to</span> <span class="string">GitHub</span> <span class="string">Pages</span></span><br><span class="line"></span><br><span class="line"><span class="attr">on:</span></span><br><span class="line">  <span class="attr">push:</span></span><br><span class="line">    <span class="attr">branches:</span> [ <span class="string">main</span> ]</span><br><span class="line"></span><br><span class="line"><span class="attr">jobs:</span></span><br><span class="line">  <span class="attr">deploy:</span></span><br><span class="line">    <span class="attr">runs-on:</span> <span class="string">ubuntu-latest</span></span><br><span class="line"></span><br><span class="line">    <span class="attr">steps:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Checkout</span> <span class="string">source</span></span><br><span class="line">      <span class="attr">uses:</span> <span class="string">actions/checkout@v4</span></span><br><span class="line"></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Setup</span> <span class="string">Node.js</span></span><br><span class="line">      <span class="attr">uses:</span> <span class="string">actions/setup-node@v4</span></span><br><span class="line">      <span class="attr">with:</span></span><br><span class="line">        <span class="attr">node-version:</span> <span class="string">&#x27;20&#x27;</span></span><br><span class="line">        <span class="attr">cache:</span> <span class="string">&#x27;npm&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Install</span> <span class="string">dependencies</span></span><br><span class="line">      <span class="attr">run:</span> <span class="string">npm</span> <span class="string">install</span></span><br><span class="line"></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Generate</span> <span class="string">static</span> <span class="string">files</span></span><br><span class="line">      <span class="attr">run:</span> <span class="string">npx</span> <span class="string">hexo</span> <span class="string">generate</span></span><br><span class="line"></span><br><span class="line">    <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">Deploy</span> <span class="string">to</span> <span class="string">GitHub</span> <span class="string">Pages</span></span><br><span class="line">      <span class="attr">uses:</span> <span class="string">peaceiris/actions-gh-pages@v4</span></span><br><span class="line">      <span class="attr">with:</span></span><br><span class="line">        <span class="attr">personal_token:</span> <span class="string">$&#123;&#123;</span> <span class="string">secrets.DEPLOY_TOKEN</span> <span class="string">&#125;&#125;</span></span><br><span class="line">        <span class="attr">external_repository:</span> <span class="string">darkyellowcat/darkyellowcat.github.io</span></span><br><span class="line">        <span class="attr">publish_branch:</span> <span class="string">main</span></span><br><span class="line">        <span class="attr">publish_dir:</span> <span class="string">./public</span></span><br><span class="line"><span class="string">````</span></span><br><span class="line"></span><br><span class="line"><span class="number">3</span><span class="string">️⃣</span> <span class="string">推送到</span> <span class="string">GitHub：</span></span><br><span class="line"></span><br><span class="line"><span class="string">```bash</span></span><br><span class="line"><span class="string">git</span> <span class="string">add</span> <span class="string">.</span></span><br><span class="line"><span class="string">git</span> <span class="string">commit</span> <span class="string">-m</span> <span class="string">&quot;Add deploy workflow&quot;</span></span><br><span class="line"><span class="string">git</span> <span class="string">push</span> <span class="string">origin</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
@@ -790,7 +1234,7 @@
 <p>GitHub Actions 会自动构建并部署。<br>几分钟后访问：</p>
 <p>👉 <strong><a target="_blank" rel="noopener" href="https://darkyellowcat.github.io/">https://darkyellowcat.github.io</a></strong></p>
 <p>你就能看到网站成功上线 🚀</p>
-<h1 id="✅-六、总结"><a href="#✅-六、总结" class="headerlink" title="✅ 六、总结"></a>✅ 六、总结</h1><p>至此，你已经完成了：</p>
+<h1><span id="六-总结">✅ 六、总结</span></h1><p>至此，你已经完成了：</p>
 <ul>
 <li>Hexo 初始化与 NexT 安装  </li>
 <li>导航栏与页面配置  </li>
@@ -812,83 +1256,11 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2025/10/18/Hello-NexT/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="DarkYellowCat">
-      <meta itemprop="description" content="记录学习与成长">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="DarkYellowCat's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/10/18/Hello-NexT/" class="post-title-link" itemprop="url">Hello NexT</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-10-18 09:00:00" itemprop="dateCreated datePublished" datetime="2025-10-18T09:00:00+00:00">2025-10-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-10-28 11:11:45" itemprop="dateModified" datetime="2025-10-28T11:11:45+00:00">2025-10-28</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" itemprop="url" rel="index"><span itemprop="name">博客搭建</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="🎉-欢迎来到我的新博客！"><a href="#🎉-欢迎来到我的新博客！" class="headerlink" title="🎉 欢迎来到我的新博客！"></a>🎉 欢迎来到我的新博客！</h1><p>这是我使用 <strong>Hexo + NexT + GitHub Pages</strong> 搭建的个人网站。<br>这篇文章仅作为示例，用来展示 <strong>NexT 主题的排版和样式</strong>。<br>无其他含义。</p>
-<hr>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
 
 
 
@@ -953,7 +1325,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -966,7 +1338,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">17</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
