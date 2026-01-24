@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="记录学习与成长">
@@ -166,6 +166,473 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/11/10/%E7%94%9F%E6%88%90%E5%A4%B4%E5%83%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DarkYellowCat">
+      <meta itemprop="description" content="记录学习与成长">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DarkYellowCat's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/11/10/%E7%94%9F%E6%88%90%E5%A4%B4%E5%83%8F/" class="post-title-link" itemprop="url">头像生成工具</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-11-10 12:00:00" itemprop="dateCreated datePublished" datetime="2025-11-10T12:00:00+00:00">2025-11-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-01-24 16:51:14" itemprop="dateModified" datetime="2026-01-24T16:51:14+00:00">2026-01-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E5%85%B7%E6%8E%A8%E8%8D%90/" itemprop="url" rel="index"><span itemprop="name">工具推荐</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1><span id="起因">起因</span></h1><p>在我的项目中，用户注册后会获得默认头像。虽然后续可以自行更改，但未免太过单调。于是我便想起注册GitHub时，会根据用户的名称自动生成一个头像，还不用担心版权问题。于是我在项目中引入了头像生成工具，测试成功后分享给大家。</p>
+<h1><span id="dicebear">Dicebear</span></h1><h2><span id="简介">简介</span></h2><p><a target="_blank" rel="noopener" href="https://www.dicebear.com/">Dicebear</a> 是一个开源的头像生成服务，支持 SVG、PNG 等多种格式。<br>它的特色是：<strong>风格丰富、可定制项多、无需复杂后端即可直接使用</strong>。无论是像素风、卡通风，还是圆形首字母，都能一键生成。</p>
+<p>更重要的是，<strong>Dicebear 是 MIT License</strong>，使用范围宽松，不存在版权风险。</p>
+<h2><span id="导入">导入</span></h2><h3><span id="1-直接请求-api最简单">1. 直接请求 API（最简单）</span></h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://api.dicebear.com/7.x/&#123;style&#125;/svg?seed=&#123;text&#125;</span><br></pre></td></tr></table></figure>
+<p>例如：</p>
+<p><a target="_blank" rel="noopener" href="https://api.dicebear.com/7.x/bottts/svg?seed=darkyellowcat">https://api.dicebear.com/7.x/bottts/svg?seed=darkyellowcat</a></p>
+<p>返回的就是一个 SVG 头像。</p>
+<h3><span id="2-npm-包">2. NPM 包</span></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install @dicebear/core @dicebear/bottts</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import &#123; createAvatar &#125; from &#x27;@dicebear/core&#x27;;</span><br><span class="line">import &#123; bottts &#125; from &#x27;@dicebear/bottts&#x27;;</span><br><span class="line"></span><br><span class="line">const avatar = createAvatar(bottts, &#123;</span><br><span class="line">  seed: &#x27;darkyellowcat&#x27;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">const svg = avatar.toString();</span><br></pre></td></tr></table></figure>
+<h2><span id="功能">功能</span></h2><p>支持十几种风格（像素、商务、卡通、漫画…）</p>
+<p>支持通过 seed 保证「同名用户头像固定」</p>
+<p>提供性别随机化、配色方案、表情样式等配置</p>
+<p>可直接返回 SVG 或 PNG</p>
+<p>CDN 快速访问，不占用自己服务器</p>
+<h1><span id="ui-avatars">ui-avatars</span></h1><h2><span id="简介">简介</span></h2><p><a target="_blank" rel="noopener" href="https://ui-avatars.com/">ui-avatars</a>是一个简单、轻量的姓名首字母头像生成工具。（GMail的用户头像就是单字母）</p>
+<p>它不支持复杂的风格，但胜在简单、稳定、无需依赖库，访问速度快。</p>
+<h2><span id="导入">导入</span></h2><p>只需直接请求 API：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://ui-avatars.com/api/?name=&#123;Name&#125;&amp;background=random</span><br></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://ui-avatars.com/api/?name=Dark+Bird&amp;background=random</span><br></pre></td></tr></table></figure>
+
+<p>返回的是 PNG 图片。</p>
+<h2><span id="功能">功能</span></h2><p>不需要 seed，直接根据名称生成</p>
+<p>配置参数简单易懂</p>
+<p>轻量、稳定、无额外依赖</p>
+<p>不会出现风格过于跳脱的问题</p>
+<h1><span id="对比">对比</span></h1><p>ui-avatars相较而言功能较少，仅通过名称生成首字母头像，风格和种类较少。</p>
+<p>但风格单一换来的是，它几乎不需要学习成本，且更加轻量级，适合喜欢简约风或轻量化配置的用户。</p>
+<p>当然，你也可以在配置中同时引入两种工具，根据情况选用。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/10/29/Redis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DarkYellowCat">
+      <meta itemprop="description" content="记录学习与成长">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DarkYellowCat's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/10/29/Redis/" class="post-title-link" itemprop="url">Redis学习笔记</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-10-29 12:00:00" itemprop="dateCreated datePublished" datetime="2025-10-29T12:00:00+00:00">2025-10-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-01-24 16:51:14" itemprop="dateModified" datetime="2026-01-24T16:51:14+00:00">2026-01-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1><span id></span></h1><p>GitHub仓库：<a target="_blank" rel="noopener" href="https://github.com/redis/redis">https://github.com/redis/redis</a></p>
+<p>可以试试deepwiki读取GitHub仓库：<a target="_blank" rel="noopener" href="https://deepwiki.com/redis/redis">https://deepwiki.com/redis/redis</a></p>
+<p>在线测试：<a target="_blank" rel="noopener" href="https://redis.io/try/sandbox/">https://redis.io/try/sandbox/</a></p>
+<p>官网：<a target="_blank" rel="noopener" href="https://redis.io/">https://redis.io/</a></p>
+<h1><span id="nosql">NoSQL</span></h1><p>Redis是一种NoSQL类型的数据库</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/10/27/Maven%E5%AD%A6%E4%B9%A0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DarkYellowCat">
+      <meta itemprop="description" content="记录学习与成长">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DarkYellowCat's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/10/27/Maven%E5%AD%A6%E4%B9%A0/" class="post-title-link" itemprop="url">Maven学习笔记</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-10-27 12:00:00" itemprop="dateCreated datePublished" datetime="2025-10-27T12:00:00+00:00">2025-10-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-01-24 16:51:14" itemprop="dateModified" datetime="2026-01-24T16:51:14+00:00">2026-01-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <!-- toc -->
+
+<ul>
+<li><a href="#1-maven%E4%BB%8B%E7%BB%8D">1-Maven介绍</a><ul>
+<li><a href="#11-maven%E4%B8%A4%E5%A4%A7%E5%8A%9F%E8%83%BD">1.1 Maven两大功能</a><ul>
+<li><a href="#111-%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA">1.1.1 项目构建</a></li>
+<li><a href="#112%E4%BE%9D%E8%B5%96%E7%AE%A1%E7%90%86">1.1.2依赖管理</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#2-maven%E4%BB%93%E5%BA%93">2-Maven仓库</a><ul>
+<li><a href="#21-%E6%9C%AC%E5%9C%B0%E4%BB%93%E5%BA%93">2.1 本地仓库</a></li>
+<li><a href="#22-%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93">2.2 远程仓库</a><ul>
+<li><a href="#221-%E4%B8%AD%E5%A4%AE%E4%BB%93%E5%BA%93">2.2.1 中央仓库</a></li>
+<li><a href="#222-%E7%A7%81%E6%9C%8D%E4%BB%93%E5%BA%93">2.2.2 私服仓库</a></li>
+<li><a href="#23-%E6%9B%BF%E6%8D%A2%E4%BB%93%E5%BA%93%E8%87%B3%E9%98%BF%E9%87%8C%E4%BA%91">2.3 替换仓库至阿里云</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#3-%E6%A0%B8%E5%BF%83%E6%96%87%E4%BB%B6pomxml">3-核心文件pom.xml</a><ul>
+<li><a href="#31-%E7%A4%BA%E4%BE%8B%E6%96%87%E4%BB%B6">3.1 示例文件</a></li>
+<li><a href="#32-maven%E5%9D%90%E6%A0%87">3.2 Maven坐标</a></li>
+</ul>
+</li>
+<li><a href="#4-%E4%B8%89%E5%A4%A7%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">4-三大生命周期</a><ul>
+<li><a href="#41-clean%E6%B8%85%E7%90%86%E9%A1%B9%E7%9B%AE">4.1 clean清理项目</a></li>
+<li><a href="#42-defalut%E9%A1%B9%E7%9B%AE%E6%9E%84%E5%BB%BA">4.2 defalut项目构建</a></li>
+<li><a href="#43-site%E7%94%9F%E6%88%90%E6%96%87%E6%A1%A3">4.3 site生成文档</a></li>
+</ul>
+</li>
+<li><a href="#5-%E4%BE%9D%E8%B5%96%E7%AE%A1%E7%90%86">5-依赖管理</a><ul>
+<li><a href="#51%E6%B5%81%E7%A8%8B">5.1流程</a></li>
+<li><a href="#52%E4%BE%9D%E8%B5%96%E4%BC%A0%E9%80%92">5.2依赖传递</a><ul>
+<li><a href="#521-%E7%9B%B4%E6%8E%A5%E4%BE%9D%E8%B5%96%E5%92%8C%E9%97%B4%E6%8E%A5%E4%BE%9D%E8%B5%96">5.2.1 直接依赖和间接依赖</a></li>
+<li><a href="#522-%E5%BD%B1%E5%93%8D">5.2.2 影响</a></li>
+<li><a href="#523-%E4%BE%9D%E8%B5%96%E5%86%B2%E7%AA%81">5.2.3 依赖冲突</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#6-%E6%8F%92%E4%BB%B6">6-插件</a><ul>
+<li><a href="#61-%E5%8A%9F%E8%83%BD">6.1 功能</a></li>
+<li><a href="#62-%E7%BB%91%E5%AE%9A%E6%96%B9%E5%BC%8F">6.2 绑定方式</a></li>
+</ul>
+</li>
+<li><a href="#%E8%A1%A5%E5%85%85">补充：</a></li>
+</ul>
+<!-- tocstop -->
+
+<h1><span id="1-maven介绍">1-Maven介绍</span></h1><h2><span id="11-maven两大功能">1.1 Maven两大功能</span></h2><h3><span id="111-项目构建">1.1.1 项目构建</span></h3><h4><span id="maven构建项目特点">Maven构建项目特点：</span></h4><p>Maven可以将传统的项目构建标准化，每个阶段用一个命令完成。</p>
+<h5><span id="1-clean-生命周期">1、Clean 生命周期：</span></h5><p>clean：删除目标目录中的编译输出文件。这通常是在构建之前执行的，以确保项目从一个干净的状态开始。</p>
+<h5><span id="2-default-生命周期也称为-build-生命周期">2、Default 生命周期（也称为 Build 生命周期）：</span></h5><p>validate：验证项目的正确性，例如检查项目的版本是否正确。</p>
+<p>compile：编译项目的源代码。</p>
+<p>test：运行项目的单元测试。</p>
+<p>package：将编译后的代码打包成可分发的格式，例如 JAR 或 WAR。</p>
+<p>verify：对项目进行额外的检查以确保质量。</p>
+<p>install：将项目的构建结果安装到本地 Maven 仓库中，以供其他项目使用。</p>
+<p>deploy：将项目的构建结果复制到远程仓库，以供其他开发人员或团队使用。</p>
+<h5><span id="3-site-生命周期">3、Site 生命周期：</span></h5><p>site：生成项目文档和站点信息。</p>
+<p>deploy-site：将生成的站点信息发布到远程服务器，以便共享项目文档。</p>
+<p><img src="/image-2.png" alt="alt text"></p>
+<h4><span id="与其他项目构建工具对比">与其他项目构建工具对比</span></h4><p>1.Ant:Ant没有依赖管理功能.</p>
+<p>2.Gradle：在Maven Apache的基础上引入了基于Groovy的特定领域语言。</p>
+<h3><span id="112依赖管理">1.1.2依赖管理</span></h3><h4><span id="传统">传统</span></h4><p>手动拷贝jar包</p>
+<p>1.容易版本冲突；<br>2.难以寻找；<br>3.添加麻烦。</p>
+<h4><span id="maven">Maven</span></h4><p>在pom.xml文件中添加jar包坐标，Maven会自动从仓库中下载<br>1.一步构建；</p>
+<p>2.方便管理；</p>
+<p>3.支持跨平台。</p>
+<h1><span id="2-maven仓库">2-Maven仓库</span></h1><h2><span id="21-本地仓库">2.1 本地仓库</span></h2><p>本地仓库，在第一次执行 maven 命令的时候才被创建。</p>
+<p>运行 Maven 的时候，Maven 所需要的任何构件都是直接从本地仓库获取的。如果本地仓库没有，它会首先尝试从远程仓库下载构件至本地仓库，然后再使用本地仓库的构件。</p>
+<p>默认情况下，不管 Linux 还是 Windows，每个用户在自己的用户目录下都有一个路径名为 .m2&#x2F;repository&#x2F; 的仓库目录。</p>
+<h2><span id="22-远程仓库">2.2 远程仓库</span></h2><h3><span id="221-中央仓库">2.2.1 中央仓库</span></h3><p> 中央仓库是由 Maven 社区提供的仓库，其中包含了大量常用的库。<br> <a target="_blank" rel="noopener" href="https://repo.maven.apache.org/maven2/">https://repo.maven.apache.org/maven2/</a></p>
+<h3><span id="222-私服仓库">2.2.2 私服仓库</span></h3><p>局域网架设私有仓库服务器，常用于企业开发。</p>
+<h3><span id="23-替换仓库至阿里云">2.3 替换仓库至阿里云</span></h3><p>中央仓库的服务器在国外，国内进行访问下载速度较慢，可以替换为阿里云的镜像仓库。</p>
+<p>修改 maven 根目录下的 conf 文件夹中的 settings.xml 文件，在 mirrors 节点上，添加内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;mirror&gt;</span><br><span class="line">  &lt;id&gt;aliyunmaven&lt;/id&gt;</span><br><span class="line">  &lt;mirrorOf&gt;*&lt;/mirrorOf&gt;</span><br><span class="line">  &lt;name&gt;阿里云公共仓库&lt;/name&gt;</span><br><span class="line">  &lt;url&gt;https://maven.aliyun.com/repository/public&lt;/url&gt;</span><br><span class="line">&lt;/mirror&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果想使用其它代理仓库，可在 <repositories></repositories> 节点中加入对应的仓库使用地址。以使用 spring 代理仓为例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;repository&gt;</span><br><span class="line">  &lt;id&gt;spring&lt;/id&gt;</span><br><span class="line">  &lt;url&gt;https://maven.aliyun.com/repository/spring&lt;/url&gt;</span><br><span class="line">  &lt;releases&gt;</span><br><span class="line">    &lt;enabled&gt;true&lt;/enabled&gt;</span><br><span class="line">  &lt;/releases&gt;</span><br><span class="line">  &lt;snapshots&gt;</span><br><span class="line">    &lt;enabled&gt;true&lt;/enabled&gt;</span><br><span class="line">  &lt;/snapshots&gt;</span><br><span class="line">&lt;/repository&gt;</span><br></pre></td></tr></table></figure>
+
+<h1><span id="3-核心文件pomxml">3-核心文件pom.xml</span></h1><h2><span id="31-示例文件">3.1 示例文件</span></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line"></span><br><span class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;</span><br><span class="line">         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">&lt;!--    Maven模型版本--&gt;</span><br><span class="line">    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</span><br><span class="line">&lt;!--组织标识--&gt;</span><br><span class="line">    &lt;groupId&gt;com.darkyellowcat&lt;/groupId&gt;</span><br><span class="line">&lt;!--项目标识--&gt;</span><br><span class="line">    &lt;artifactId&gt;untitled&lt;/artifactId&gt;</span><br><span class="line">&lt;!--    版本号--&gt;</span><br><span class="line">    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;</span><br><span class="line">&lt;!-- 项目依赖--&gt;</span><br><span class="line">    &lt;properties&gt;</span><br><span class="line">        &lt;maven.compiler.source&gt;8&lt;/maven.compiler.source&gt;</span><br><span class="line">        &lt;maven.compiler.target&gt;8&lt;/maven.compiler.target&gt;</span><br><span class="line">        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;</span><br><span class="line">    &lt;/properties&gt;</span><br><span class="line">&lt;!--项目依赖--&gt;</span><br><span class="line">    &lt;dependencies&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;junit&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;junit&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;4.12&lt;/version&gt;</span><br><span class="line">            &lt;scope&gt;test&lt;/scope&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.apache.tomcat.maven&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;tomcat7-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;2.2&lt;/version&gt;</span><br><span class="line">&lt;!--             配置项--&gt;</span><br><span class="line">            &lt;configuration&gt;</span><br><span class="line">                &lt;url&gt;http://localhost:8080/manager/text&lt;/url&gt;</span><br><span class="line">                &lt;server&gt;TomcatServer&lt;/server&gt;</span><br><span class="line">                &lt;path&gt;/untitled&lt;/path&gt;</span><br><span class="line">            &lt;/configuration&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">    &lt;/dependencies&gt;</span><br><span class="line"></span><br><span class="line">&lt;/project&gt;</span><br></pre></td></tr></table></figure>
+<h2><span id="32-maven坐标">3.2 Maven坐标</span></h2><p>Maven通过groupId，artifactId，version三个字段来获取坐标，进而获得jar包。</p>
+<h1><span id="4-三大生命周期">4-三大生命周期</span></h1><p>官网<br><a target="_blank" rel="noopener" href="https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html">https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html</a></p>
+<h2><span id="41-clean清理项目">4.1 clean清理项目</span></h2><p>清理项目的临时文件和目录</p>
+<p>1.pre-clean 清理前</p>
+<p>2.clean</p>
+<p>3.post-clean 清理后</p>
+<p>命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn clean</span><br></pre></td></tr></table></figure>
+<h2><span id="42-defalut项目构建">4.2 defalut项目构建</span></h2><p>核心生命周期，负责项目构建和部署的所有核心步骤。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn validate/compile/test ...</span><br></pre></td></tr></table></figure>
+<h2><span id="43-site生成文档">4.3 site生成文档</span></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn site</span><br></pre></td></tr></table></figure>
+<p>pre-site	生成前准备</p>
+<p>site	生成项目站点文档</p>
+<p>post-site	收尾</p>
+<p>site-deploy	部署站点到服务器</p>
+<h1><span id="5-依赖管理">5-依赖管理</span></h1><h2><span id="51流程">5.1流程</span></h2><p>pom.xml中添加地址 -&gt; 在本地仓库中查找 -&gt; 去远程仓库查找（如果有） -&gt; 去中央仓库下载</p>
+<h2><span id="52依赖传递">5.2依赖传递</span></h2><h3><span id="521-直接依赖和间接依赖">5.2.1 直接依赖和间接依赖</span></h3><p>如果B使用A，C使用B，那么B是C的直接依赖，C是A的间接依赖。Maven 会自动将间接依赖引入，这种自动处理依赖关系的特性称为传递性依赖(Transitive Dependencies)。</p>
+<h3><span id="522-影响">5.2.2 影响</span></h3><p><img src="/image-3.png" alt="alt text"><br>&#x2F;&#x2F;本图来自菜鸟教程</p>
+<h3><span id="523-依赖冲突">5.2.3 依赖冲突</span></h3><p>如果直接依赖和间接依赖同时包含一个包的不同版本，默认以直接依赖为准。<br>去除依赖：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;exclusions&gt;</span><br><span class="line">  &lt;groupId&gt;</span><br><span class="line">    xxx</span><br><span class="line">  &lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;</span><br><span class="line">    xxx</span><br><span class="line">  &lt;/artifactId&gt;</span><br><span class="line">&lt;/exclusions&gt;</span><br></pre></td></tr></table></figure>
+<h1><span id="6-插件">6-插件</span></h1><h2><span id="61-功能">6.1 功能</span></h2><p>插件用于用于执行特定任务(编译、测试、打包等)，具体实现生命周期对应的功能。</p>
+<h2><span id="62-绑定方式">6.2 绑定方式</span></h2><p>Maven会为生命周期阶段预绑定插件，同时也支持在pom.xml中自定义绑定</p>
+<h1><span id="补充">补充：</span></h1><p>推荐菜鸟教程，虽然直接点进去看起来有点乱，但知识点很全，也适合做笔记。<br><a target="_blank" rel="noopener" href="https://www.runoob.com/maven">https://www.runoob.com/maven</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/10/23/MySQL%E5%AF%86%E7%A0%81%E9%94%99%E8%AF%AF%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DarkYellowCat">
+      <meta itemprop="description" content="记录学习与成长">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DarkYellowCat's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/10/23/MySQL%E5%AF%86%E7%A0%81%E9%94%99%E8%AF%AF%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/" class="post-title-link" itemprop="url">MySQL登录时密码没错却无法登录</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-10-23 12:00:00" itemprop="dateCreated datePublished" datetime="2025-10-23T12:00:00+00:00">2025-10-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-01-24 16:51:14" itemprop="dateModified" datetime="2026-01-24T16:51:14+00:00">2026-01-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%B8%A9%E5%9D%91/" itemprop="url" rel="index"><span itemprop="name">踩坑</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1><span id="前言">前言</span></h1><p>网上关于“MySQL密码正确却无法登录”的解决方案很多，比如跳过权限验证、重置 root 密码、检查插件认证方式等。但在我遇到的问题中，这些方法都不适用——因为<strong>根本不是密码错了，而是连错了实例</strong>。<br>这里记录一下我的“乌龙”经历，希望能帮到踩了同样坑的朋友。</p>
+<h1><span id="正文">正文</span></h1><h2><span id="情况描述">情况描述</span></h2><p>我在本地安装并配置好 MySQL 后，成功设置了 root 密码，并正常使用了一段时间。<br>但第二天再次尝试登录时，执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure>
+<p>却出现</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ERROR 1045 (28000): Access denied <span class="keyword">for</span> user <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> (using password: YES)</span><br></pre></td></tr></table></figure>
+
+<p>于是按照网上的教程重置了密码，登录就成功了，我便没有深究。</p>
+<p>然而，当我为了修改数据库默认编码（utf8mb4）而编辑 my.ini 文件并重启 MySQL 后，发现之前创建的数据库和表全都不见了！</p>
+<h2><span id="病因分析">病因分析</span></h2><p>经过反复排查，终于发现问题根源：</p>
+<p>我之前退出 MySQL 客户端时，直接关闭了命令行窗口，没有输入 exit 或 \q 正常退出。<br>第二天执行 mysql -u root -p 时，系统自动启动了一个新的、干净的 MySQL 实例（或连接到了另一个实例），而这个实例的 root 用户密码是空的（或默认值），和我之前配置的实例不是同一个！ </p>
+<p>更具体地说：</p>
+<p>我本地可能同时存在两个 MySQL 服务</p>
+<h2><span id="解决办法">解决办法</span></h2><h3><span id="1-确认当前连接的是哪个-mysql-实例">✅ 1. 确认当前连接的是哪个 MySQL 实例</span></h3><p>登录后执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW VARIABLES LIKE <span class="string">&#x27;datadir&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>查看数据目录。对比你之前配置的 my.ini 中的 datadir 路径是否一致。</p>
+<h3><span id="2-检查-mysql-服务状态">✅ 2. 检查 MySQL 服务状态</span></h3><p>在 Windows 上：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sc query mysql</span><br><span class="line"><span class="comment"># 或</span></span><br><span class="line">net start</span><br></pre></td></tr></table></figure>
+
+<p>看是否有多个 MySQL 服务在运行（如 MySQL80、MySQL 等）。</p>
+<p>在 Linux&#x2F;macOS 上：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps aux | grep mysqld</span><br></pre></td></tr></table></figure>
+
+<h3><span id="3-确保只启动一个-mysql-服务">✅ 3. 确保只启动一个 MySQL 服务</span></h3><p>停止所有 MySQL 进程(把不是你需要的服务删除了)，然后手动启动你配置过的那个实例：</p>
+<p>Windows（以管理员身份）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">net stop MySQL80</span><br><span class="line">mysqld --defaults-file=<span class="string">&quot;C:\path\to\my.ini&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3><span id="4-使用明确的连接方式">✅ 4. 使用明确的连接方式</span></h3><p>如果你有多个实例，建议通过指定端口或 socket 连接：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p -P 3306 --protocol=tcp</span><br></pre></td></tr></table></figure>
+
+<h3><span id="5-避免直接关窗口">✅ 5. 避免“直接关窗口”</span></h3><p>虽然直接关闭命令行通常不会导致数据丢失，<br>但养成输入 exit 退出的习惯，有助于你更清楚当前会话状态。</p>
+<h1><span id="bb">bb</span></h1><p>如果所有方法试过之后都不好用，重装可以解决你的一切烦恼(认真)</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2025/10/23/deepwiki/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -197,7 +664,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-12-10 16:17:10" itemprop="dateModified" datetime="2025-12-10T16:17:10+00:00">2025-12-10</time>
+                <time title="修改时间：2026-01-24 16:51:14" itemprop="dateModified" datetime="2026-01-24T16:51:14+00:00">2026-01-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -299,7 +766,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-12-10 16:17:10" itemprop="dateModified" datetime="2025-12-10T16:17:10+00:00">2025-12-10</time>
+                <time title="修改时间：2026-01-24 16:51:14" itemprop="dateModified" datetime="2026-01-24T16:51:14+00:00">2026-01-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -420,7 +887,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-12-10 16:17:10" itemprop="dateModified" datetime="2025-12-10T16:17:10+00:00">2025-12-10</time>
+                <time title="修改时间：2026-01-24 16:51:14" itemprop="dateModified" datetime="2026-01-24T16:51:14+00:00">2026-01-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -558,7 +1025,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-12-10 16:17:10" itemprop="dateModified" datetime="2025-12-10T16:17:10+00:00">2025-12-10</time>
+                <time title="修改时间：2026-01-24 16:51:14" itemprop="dateModified" datetime="2026-01-24T16:51:14+00:00">2026-01-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -667,7 +1134,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-count">18</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -680,7 +1147,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-count">22</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -707,7 +1174,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2025</span>
+  <span itemprop="copyrightYear">2026</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -716,6 +1183,8 @@
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
   </div>
 
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>LA.init({id:"3OnjqyPOaoYCHllV",ck:"3OnjqyPOaoYCHllV"})</script>
         
 
 
