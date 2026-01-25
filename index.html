@@ -166,7 +166,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2026/01/24/%E6%9B%B4%E6%96%B0%E8%AE%A1%E5%88%92-todoList/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2026/01/25/%E6%9B%B4%E6%96%B0%E8%AE%A1%E5%88%92-todoList/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -180,7 +180,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2026/01/24/%E6%9B%B4%E6%96%B0%E8%AE%A1%E5%88%92-todoList/" class="post-title-link" itemprop="url">记录更新</a>
+            <a href="/2026/01/25/%E6%9B%B4%E6%96%B0%E8%AE%A1%E5%88%92-todoList/" class="post-title-link" itemprop="url">记录更新</a>
         </h2>
 
         <div class="post-meta">
@@ -190,7 +190,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2026-01-24 16:51:14" itemprop="dateCreated datePublished" datetime="2026-01-24T16:51:14+00:00">2026-01-24</time>
+              <time title="创建时间：2026-01-25 01:59:12" itemprop="dateCreated datePublished" datetime="2026-01-25T01:59:12+00:00">2026-01-25</time>
             </span>
 
           
@@ -204,7 +204,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1><span id="更新规划">更新规划</span></h1><h3><span id="weconnected项目更新">weconnected项目更新</span></h3><h3><span id="java知识点及学习心得">Java知识点及学习心得</span></h3><h3><span id="java8特性">Java8特性</span></h3>
+          <h1><span id="更新规划">更新规划</span></h1><h3><span id="docker学习笔记">docker学习笔记</span></h3><h3><span id="计算机网络">计算机网络</span></h3>
       
     </div>
 
@@ -254,7 +254,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-24 16:51:14" itemprop="dateModified" datetime="2026-01-24T16:51:14+00:00">2026-01-24</time>
+                <time title="修改时间：2026-01-25 01:59:12" itemprop="dateModified" datetime="2026-01-25T01:59:12+00:00">2026-01-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -335,7 +335,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-24 16:51:14" itemprop="dateModified" datetime="2026-01-24T16:51:14+00:00">2026-01-24</time>
+                <time title="修改时间：2026-01-25 01:59:12" itemprop="dateModified" datetime="2026-01-25T01:59:12+00:00">2026-01-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -386,7 +386,7 @@
 </ul>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">class Mirris &#123;</span><br><span class="line">    public List&lt;Integer&gt; inorderTraversal(TreeNode root) &#123;</span><br><span class="line">        List&lt;Integer&gt; ans = new ArrayList&lt;&gt;();</span><br><span class="line">        TreeNode curr = root;</span><br><span class="line">        while (curr != null) &#123;</span><br><span class="line">            if (curr.left == null) &#123;</span><br><span class="line">                ans.add(curr.val);</span><br><span class="line">                curr = curr.right;</span><br><span class="line">            &#125; else &#123;</span><br><span class="line">                // 找到左子树的最右节点（前驱）</span><br><span class="line">                TreeNode pre = curr.left;</span><br><span class="line">                while (pre.right != null &amp;&amp; pre.right != curr) &#123;</span><br><span class="line">                    pre = pre.right;</span><br><span class="line">                &#125;</span><br><span class="line">                if (pre.right == null) &#123;</span><br><span class="line">                    // 建立线索</span><br><span class="line">                    pre.right = curr;</span><br><span class="line">                    curr = curr.left;</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    // 线索已存在，说明左子树已遍历完</span><br><span class="line">                    pre.right = null; // 恢复树结构</span><br><span class="line">                    ans.add(curr.val);</span><br><span class="line">                    curr = curr.right;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>时间复杂度：O(n)</p>
-<p>空间复杂度：O(n)</p>
+<p>空间复杂度：O(1)</p>
 <h1><span id="4测试">4.测试</span></h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">public class Main &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        TreeNode root = new TreeNode(1);</span><br><span class="line">        root.right = new TreeNode(2);</span><br><span class="line">        root.right.left = new TreeNode(3);</span><br><span class="line"></span><br><span class="line">        Recursion recursion = new Recursion();</span><br><span class="line">        List&lt;Integer&gt; res1 = recursion.inorderTraversal(root);</span><br><span class="line">        System.out.println(&quot;Recursion: &quot; + res1);</span><br><span class="line"></span><br><span class="line">        Iteration iteration = new Iteration();</span><br><span class="line">        List&lt;Integer&gt; res2 = iteration.inorderTraversal(root);</span><br><span class="line">        System.out.println(&quot;Iteration: &quot; + res2);</span><br><span class="line"></span><br><span class="line">        Mirris mirris = new Mirris();</span><br><span class="line">        List&lt;Integer&gt; res3 = mirris.inorderTraversal(root);</span><br><span class="line">        System.out.println(&quot;Mirris: &quot; + res3);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>给出的树结构：</p>
@@ -442,7 +442,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-24 16:51:14" itemprop="dateModified" datetime="2026-01-24T16:51:14+00:00">2026-01-24</time>
+                <time title="修改时间：2026-01-25 01:59:12" itemprop="dateModified" datetime="2026-01-25T01:59:12+00:00">2026-01-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -550,7 +550,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-24 16:51:14" itemprop="dateModified" datetime="2026-01-24T16:51:14+00:00">2026-01-24</time>
+                <time title="修改时间：2026-01-25 01:59:12" itemprop="dateModified" datetime="2026-01-25T01:59:12+00:00">2026-01-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -765,7 +765,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-24 16:51:14" itemprop="dateModified" datetime="2026-01-24T16:51:14+00:00">2026-01-24</time>
+                <time title="修改时间：2026-01-25 01:59:12" itemprop="dateModified" datetime="2026-01-25T01:59:12+00:00">2026-01-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -908,7 +908,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-24 16:51:14" itemprop="dateModified" datetime="2026-01-24T16:51:14+00:00">2026-01-24</time>
+                <time title="修改时间：2026-01-25 01:59:12" itemprop="dateModified" datetime="2026-01-25T01:59:12+00:00">2026-01-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -3004,7 +3004,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-24 16:51:14" itemprop="dateModified" datetime="2026-01-24T16:51:14+00:00">2026-01-24</time>
+                <time title="修改时间：2026-01-25 01:59:12" itemprop="dateModified" datetime="2026-01-25T01:59:12+00:00">2026-01-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -3120,7 +3120,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-24 16:51:14" itemprop="dateModified" datetime="2026-01-24T16:51:14+00:00">2026-01-24</time>
+                <time title="修改时间：2026-01-25 01:59:12" itemprop="dateModified" datetime="2026-01-25T01:59:12+00:00">2026-01-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -3213,7 +3213,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-24 16:51:14" itemprop="dateModified" datetime="2026-01-24T16:51:14+00:00">2026-01-24</time>
+                <time title="修改时间：2026-01-25 01:59:12" itemprop="dateModified" datetime="2026-01-25T01:59:12+00:00">2026-01-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
