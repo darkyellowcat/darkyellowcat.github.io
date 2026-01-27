@@ -166,7 +166,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2026/01/25/%E6%9B%B4%E6%96%B0%E8%AE%A1%E5%88%92-todoList/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2026/01/27/%E6%9B%B4%E6%96%B0%E8%AE%A1%E5%88%92-todoList/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -180,7 +180,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2026/01/25/%E6%9B%B4%E6%96%B0%E8%AE%A1%E5%88%92-todoList/" class="post-title-link" itemprop="url">记录更新</a>
+            <a href="/2026/01/27/%E6%9B%B4%E6%96%B0%E8%AE%A1%E5%88%92-todoList/" class="post-title-link" itemprop="url">记录更新</a>
         </h2>
 
         <div class="post-meta">
@@ -190,7 +190,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2026-01-25 01:59:12" itemprop="dateCreated datePublished" datetime="2026-01-25T01:59:12+00:00">2026-01-25</time>
+              <time title="创建时间：2026-01-27 12:38:38" itemprop="dateCreated datePublished" datetime="2026-01-27T12:38:38+00:00">2026-01-27</time>
             </span>
 
           
@@ -205,6 +205,138 @@
 
       
           <h1><span id="更新规划">更新规划</span></h1><h3><span id="docker学习笔记">docker学习笔记</span></h3><h3><span id="计算机网络">计算机网络</span></h3>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2026/01/26/%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%8E%E9%80%92%E5%BD%92/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DarkYellowCat">
+      <meta itemprop="description" content="记录学习与成长">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DarkYellowCat's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2026/01/26/%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%8E%E9%80%92%E5%BD%92/" class="post-title-link" itemprop="url">'二叉树与递归'</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2026-01-26 21:34:46" itemprop="dateCreated datePublished" datetime="2026-01-26T21:34:46+00:00">2026-01-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2026-01-27 12:38:38" itemprop="dateModified" datetime="2026-01-27T12:38:38+00:00">2026-01-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2><span id="前言">前言</span></h2><p>在练习了一些二叉树的题目后，发现二叉树由于其自身的结构特点，很多题目都可以递归解决。</p>
+<p>于是我想，如果你没有掌握二叉树结构或递归思想，可以通过这个章节来进行理解，提高。</p>
+<p>我在这里搜集了一些相关的题目，分享思路并给出递归解法(部分题解法不唯一，仅供参考)。</p>
+<p>题目主要来源：<a target="_blank" rel="noopener" href="https://leetcode.cn/">力扣</a></p>
+<p>二叉树结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class TreeNode&#123;</span><br><span class="line">    int val;</span><br><span class="line">    TreeNode left, right;</span><br><span class="line">    TreeNode() &#123;&#125;;</span><br><span class="line">    TreeNode(int val)&#123;</span><br><span class="line">        this.val = val;</span><br><span class="line">    &#125;</span><br><span class="line">    TreeNode(int val, TreeNode left, TreeNode right) &#123;</span><br><span class="line">        this.val = val;</span><br><span class="line">        this.left = left;</span><br><span class="line">        this.right = right;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1><span id="基础">基础</span></h1><p>这里讲述一下二叉树和递归的基础概念，供忘了或还没有学的朋友大致了解。</p>
+<h2><span id="二叉树">二叉树</span></h2><p>二叉树是树结构的一种情况。其中每个节点最多只有两个子节点，分别称为左子树和右子树。</p>
+<p>在算法题中，二叉树通常具备以下特点：</p>
+<ul>
+<li><p>结构具有明显的递归性（子树本身仍然是二叉树）</p>
+</li>
+<li><p>许多问题可以通过“当前节点 + 左右子树”的方式进行拆分</p>
+</li>
+</ul>
+<p>常见的二叉树问题包括遍历、深度&#x2F;高度计算、结构变换以及基于二叉搜索树性质的判断等。</p>
+<h2><span id="递归">递归</span></h2><p>递归是一种算法思想。其核心在于：将一个问题拆分为若干个规模更小但形式相同的子问题。</p>
+<p>有一个非常经典的递归问题：汉诺塔–将n个盘子的移动问题拆解为n-1个盘子的相同问题。</p>
+<p>概念：</p>
+<p>在一根柱子上从下往上按照大小顺序摞着64个圆盘。把圆盘从下面开始按大小顺序重新摆放在另一根柱子上。并且规定，在小圆盘上不能放大圆盘，在三根柱子之间一次只能移动一个圆盘。</p>
+<p>代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class HanoiTower&#123;</span><br><span class="line">    public void move(int n, char from, char to, char aux)&#123;</span><br><span class="line">        if (n == 1)&#123;</span><br><span class="line">            System.out.println(&quot;Move disk 1 from &quot; + from + &quot; to &quot; + to);</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        move(n-1, from, aux, to);</span><br><span class="line">        System.out.println(&quot;Move disk &quot; + n + &quot; from &quot; + from + &quot; to &quot; + to);</span><br><span class="line">        move(n-1, aux, to, from);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1><span id="方法论">方法论</span></h1><ol>
+<li>分析题目是否可以递归完成 <code>(重点看根和左右子树的关系)</code>。</li>
+<li>若可以递归完成，则分析根与左右子树的关系。</li>
+<li>分别取左子树和右子树，这时左右子树又会成为两个根，而这两个根又有自己的左右子树。这样就形成了递归，由根和左右子树的关系去层层递推。</li>
+<li>思考边界条件和返回值。</li>
+</ol>
+<h1><span id="示例">示例</span></h1><p>题目：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/validate-binary-search-tree/description/?envType=study-plan-v2&envId=top-100-liked">验证二叉树</a></p>
+<p>给你一个二叉树的根节点 root ，判断其是否是一个有效的二叉搜索树。</p>
+<p>有效 二叉搜索树定义如下：</p>
+<ul>
+<li>节点的左子树只包含 严格小于 当前节点的数。</li>
+<li>节点的右子树只包含 严格大于 当前节点的数。</li>
+<li>所有左子树和右子树自身必须也是二叉搜索树。</li>
+</ul>
+<ol>
+<li>通过阅读题目，可以发现：我们先判断根和左右子树，当左子树比根小，右子树比根大，则这一层符合条件。</li>
+<li>可以根据这一判断逻辑进行衍生–当左子树的左子树比左子树小，左子树右子树比左子树大，则这一层符合条件，以此类推</li>
+<li>边界条件：当节点值超出区间时，直接返回 false。空节点视为合法，作为递归的边界条件。</li>
+<li>返回值：返回当前节点是否有效。</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public boolean isValidBST(TreeNode root) &#123;</span><br><span class="line">        if (root.left == null &amp;&amp; root.right == null) return true;</span><br><span class="line">        </span><br><span class="line">        return isValidBST(root, Long.MIN_VALUE, Long.MAX_VALUE);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    private boolean isValidBST(TreeNode root, long min, long max) &#123;</span><br><span class="line">        if (root == null) return true;</span><br><span class="line">        if (root.val &lt;= min || root.val &gt;= max) return false;</span><br><span class="line">        return isValidBST(root.left, min, root.val) &amp;&amp; isValidBST(root.right, root.val, max);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1><span id="练习题目">练习题目</span></h1><h2><span id="二叉树的中序遍历"></span></h2><p>给定一个二叉树的根节点 root ，返回 它的 中序 遍历 。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public List&lt;Integer&gt; inorderTraversal(TreeNode root) &#123;</span><br><span class="line">        List&lt;Integer&gt; ans = new ArrayList&lt;&gt;();</span><br><span class="line">        inorder(root, ans);</span><br><span class="line">        return ans;</span><br><span class="line">    &#125;</span><br><span class="line">    private void inorder(TreeNode node, List&lt;Integer&gt; res)&#123;</span><br><span class="line">        if (node == null)&#123;</span><br><span class="line">            return;</span><br><span class="line">        &#125;</span><br><span class="line">        inorder(node.left, res);</span><br><span class="line">        res.add(node.val);</span><br><span class="line">        inorder(node.right, res);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2><span id="二叉树的最大深度"></span></h2><p>给定一个二叉树 root ，返回其最大深度。</p>
+<p>二叉树的 最大深度 是指从根节点到最远叶子节点的最长路径上的节点数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public int maxDepth(TreeNode root) &#123;</span><br><span class="line">        if (root == null) return 0;</span><br><span class="line">        else if (root.left == null &amp;&amp; root.right == null) return 1;</span><br><span class="line">        else &#123;</span><br><span class="line">            int leftDepth = maxDepth(root.left);</span><br><span class="line">            int rightDepth = maxDepth(root.right);</span><br><span class="line">            return Math.max(leftDepth, rightDepth) + 1;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2><span id="翻转二叉树"></span></h2><p>给你一棵二叉树的根节点 root ，翻转这棵二叉树，并返回其根节点。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public TreeNode invertTree(TreeNode root) &#123;</span><br><span class="line">        if (root == null)   return null;</span><br><span class="line">        TreeNode l = invertTree(root.left);</span><br><span class="line">        TreeNode r = invertTree(root.right);</span><br><span class="line">        root.left = r;</span><br><span class="line">        root.right = l;</span><br><span class="line">        return root;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2><span id="对称二叉树"></span></h2><p>给你一个二叉树的根节点 root ， 检查它是否轴对称。</p>
+<p><img src="/image-4.png" alt="alt text"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public boolean isSymmetric(TreeNode root) &#123;</span><br><span class="line">        return check(root.left, root.right);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private boolean check(TreeNode p, TreeNode q)&#123;</span><br><span class="line">        if(p == null &amp;&amp; q == null)    return true;</span><br><span class="line">        if(p == null || q == null)    return false;</span><br><span class="line">        return p.val == q.val &amp;&amp; check(p.left,q.right) &amp;&amp; check(p.right, q.left);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2><span id="二叉树的直径"></span></h2><p>给你一棵二叉树的根节点，返回该树的 直径 。</p>
+<p>二叉树的 直径 是指树中任意两个节点之间最长路径的 长度 。这条路径可能经过也可能不经过根节点 root 。</p>
+<p>两节点之间路径的 长度 由它们之间边数表示。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public int ans;</span><br><span class="line">    public int diameterOfBinaryTree(TreeNode root) &#123;</span><br><span class="line">        dfs(root);</span><br><span class="line">        return ans;</span><br><span class="line">    &#125;</span><br><span class="line">    private int dfs(TreeNode node)&#123;</span><br><span class="line">        if(node == null)&#123;</span><br><span class="line">            return -1;</span><br><span class="line">        &#125;</span><br><span class="line">        int l = dfs(node.left) + 1;</span><br><span class="line">        int r = dfs(node.right) + 1;</span><br><span class="line">        ans = Math.max(l + r, ans);</span><br><span class="line">        return Math.max(l,r);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -254,7 +386,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-25 01:59:12" itemprop="dateModified" datetime="2026-01-25T01:59:12+00:00">2026-01-25</time>
+                <time title="修改时间：2026-01-27 12:38:38" itemprop="dateModified" datetime="2026-01-27T12:38:38+00:00">2026-01-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -335,7 +467,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-25 01:59:12" itemprop="dateModified" datetime="2026-01-25T01:59:12+00:00">2026-01-25</time>
+                <time title="修改时间：2026-01-27 12:38:38" itemprop="dateModified" datetime="2026-01-27T12:38:38+00:00">2026-01-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -442,7 +574,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-25 01:59:12" itemprop="dateModified" datetime="2026-01-25T01:59:12+00:00">2026-01-25</time>
+                <time title="修改时间：2026-01-27 12:38:38" itemprop="dateModified" datetime="2026-01-27T12:38:38+00:00">2026-01-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -550,7 +682,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-25 01:59:12" itemprop="dateModified" datetime="2026-01-25T01:59:12+00:00">2026-01-25</time>
+                <time title="修改时间：2026-01-27 12:38:38" itemprop="dateModified" datetime="2026-01-27T12:38:38+00:00">2026-01-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -765,7 +897,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-25 01:59:12" itemprop="dateModified" datetime="2026-01-25T01:59:12+00:00">2026-01-25</time>
+                <time title="修改时间：2026-01-27 12:38:38" itemprop="dateModified" datetime="2026-01-27T12:38:38+00:00">2026-01-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -908,7 +1040,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-25 01:59:12" itemprop="dateModified" datetime="2026-01-25T01:59:12+00:00">2026-01-25</time>
+                <time title="修改时间：2026-01-27 12:38:38" itemprop="dateModified" datetime="2026-01-27T12:38:38+00:00">2026-01-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -3004,7 +3136,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-25 01:59:12" itemprop="dateModified" datetime="2026-01-25T01:59:12+00:00">2026-01-25</time>
+                <time title="修改时间：2026-01-27 12:38:38" itemprop="dateModified" datetime="2026-01-27T12:38:38+00:00">2026-01-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -3120,7 +3252,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-25 01:59:12" itemprop="dateModified" datetime="2026-01-25T01:59:12+00:00">2026-01-25</time>
+                <time title="修改时间：2026-01-27 12:38:38" itemprop="dateModified" datetime="2026-01-27T12:38:38+00:00">2026-01-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -3163,124 +3295,6 @@
 <h2><span id="如何兼容之前的用户">如何兼容之前的用户</span></h2><p>之前在数据库中存储的密码是MD5加密的，如果直接更新加密方法，会导致之前的用户无法登录。所以需要增加一段逻辑。</p>
 <p>用户注册-&gt;直接使用SpringSecurity加密。</p>
 <p>用户登录-&gt;如果使用MD5加密：用MD5验证-&gt;更新加密逻辑，将新的数据存入数据库。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2025/11/13/%E6%B2%99%E7%AE%B1Sandbox/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="DarkYellowCat">
-      <meta itemprop="description" content="记录学习与成长">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="DarkYellowCat's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/11/13/%E6%B2%99%E7%AE%B1Sandbox/" class="post-title-link" itemprop="url">沙箱初步认识</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-11-13 12:00:00" itemprop="dateCreated datePublished" datetime="2025-11-13T12:00:00+00:00">2025-11-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2026-01-25 01:59:12" itemprop="dateModified" datetime="2026-01-25T01:59:12+00:00">2026-01-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1><span id="为什么要学沙箱">为什么要学沙箱</span></h1><p>第一次接触这个概念是因为Python的期末大作业，老师让我们写一个python学习的平台。</p>
-<p>我想到模仿<a target="_blank" rel="noopener" href="https://www.freecodecamp.org/">FreeCodecamp</a>，写一个可以通过程序二次运行python代码的平台。</p>
-<p>之前也没有相关的经验，我便将自己的想法发给ai，让它告诉我需要用到什么，也就接触到了沙箱–用于防止别人在执行代码时对程序(或电脑)造成破坏。</p>
-<h1><span id="概念">概念</span></h1><p>沙箱（Sandboxing）是一种用于隔离环境的技术。</p>
-<h1><span id="用途">用途</span></h1><p>沙箱技术通常用于以下几类场景：</p>
-<ul>
-<li><strong>在线代码运行平台</strong>：如 LeetCode、FreeCodeCamp、自建 OJ 系统</li>
-<li><strong>浏览器隔离</strong>：Chrome 的每个 tab 页就是一个沙箱进程</li>
-<li><strong>移动端应用权限管理</strong>：iOS、Android 对 App 的文件访问就是沙箱设计</li>
-<li><strong>恶意软件分析</strong>：将样本放在沙箱中运行，观察行为</li>
-<li><strong>插件系统</strong>：比如浏览器扩展、VSCode 插件，都不能直接访问用户系统</li>
-<li><strong>安全研究和渗透测试</strong>有专门做沙箱业务的公司</li>
-</ul>
-<p>这些场景的共同点就是：“<strong>运行不可信代码</strong>”，而沙箱的职责就是“<strong>让它尽量跑得动，但伤不到我</strong>”。</p>
-<h1><span id="分类">分类</span></h1><p>根据隔离程度不同，可以粗略分成三类：</p>
-<h3><span id="1-语言级沙箱最轻量">1. 语言级沙箱（最轻量）</span></h3><p>依赖语言本身的机制进行限制。</p>
-<ul>
-<li>Python 的 <code>ast</code>、受控 namespace</li>
-<li>JavaScript 的 <code>vm2</code></li>
-<li>Lua 沙箱化 runtime</li>
-</ul>
-<p>优点：实现简单，启动快<br>缺点：很容易被绕过，安全性弱</p>
-<h3><span id="2-系统级沙箱中等级别">2. 系统级沙箱（中等级别）</span></h3><p>依赖操作系统提供的隔离机制：</p>
-<ul>
-<li>Linux cgroups（限制资源）</li>
-<li>namespace（隔离进程、文件系统、网络）</li>
-<li>seccomp（限制系统调用）</li>
-<li>Docker &#x2F; LXC（容器）</li>
-</ul>
-<p>优点：安全性高、性能好<br>缺点：实现较复杂，需要系统层面的支持</p>
-<h3><span id="3-虚拟化级沙箱最高隔离">3. 虚拟化级沙箱（最高隔离）</span></h3><p>原来我用过这么久沙箱…</p>
-<ul>
-<li>KVM</li>
-<li>QEMU</li>
-<li>Firecracker（AWS Lambda 用的）</li>
-<li>VirtualBox</li>
-</ul>
-<p>优点：隔离性能好<br>缺点：启动慢、消耗资源大，不适合大量高频的代码执行</p>
-<h1><span id="实现模板">实现模板</span></h1><h2><span id="java">Java</span></h2><p>java.lang.SecurityManager是Java的一个可插拔的安全策略执行器，用于在运行时对敏感操作（如文件读写、网络访问、反射调用、类加载等）进行权限检查。</p>
-<p>当某段代码执行特权操作时，JVM 会调用 SecurityManager.checkXXX() 方法（如 checkRead, checkConnect, checkPermission 等），若未授权，则抛出 SecurityException。</p>
-<p>虽然“安全管理员多年来一直不是保护客户端 Java 代码的主要手段，也很少用于保护服务器端代码，并且维护成本很高。”（官方回复），导致这个类在JDK17后被淘汰了，但作为新手去学习依旧足够了。</p>
-<h2><span id="python">Python</span></h2><p>目前还在写(前文提到的)，先插个眼 </p>
-<p>TODO</p>
-<h1><span id="一些开源的沙盒项目">一些开源的沙盒项目</span></h1><p><a target="_blank" rel="noopener" href="https://github.com/sandboxie-plus/Sandboxie">https://github.com/sandboxie-plus/Sandboxie</a> Sandboxie 允许您创建几乎无限的沙箱并单独或同时运行它们，以将程序与主机隔离并相互隔离，同时还允许您在单个盒子中同时运行任意数量的程序。</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/alibaba/jvm-sandbox">https://github.com/alibaba/jvm-sandbox</a><br>JVM-SANDBOX（沙箱）实现了一种在不重启、不侵入目标JVM应用的AOP解决方案。</p>
 
       
     </div>
@@ -3365,7 +3379,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -3378,7 +3392,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-count">23</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
