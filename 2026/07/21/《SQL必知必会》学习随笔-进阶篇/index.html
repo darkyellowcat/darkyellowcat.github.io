@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"darkyellowcat.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"default","show_result":true},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"night eighties"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="前言这是《SQL必知必会》学习随笔系列的进阶篇，承接基础篇的内容，主要聚焦于数据库性能优化相关的知识点。 进阶篇的核心内容包括：  数据库调优：从多个维度分析如何提升数据库性能 范式与反范式：理解数据库设计原则及其权衡 索引原理与应用：深入理解索引的底层实现和使用场景 锁机制：掌握不同粒度和类型的锁 性能优化实战：使用慢查询日志、EXPLAIN等工具定位和解决性能问题  如果你还没有阅读基础篇，建">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《SQL必知必会》学习随笔-进阶篇">
+<meta property="og:url" content="https://darkyellowcat.github.io/2026/07/21/%E3%80%8ASQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A%E3%80%8B%E5%AD%A6%E4%B9%A0%E9%9A%8F%E7%AC%94-%E8%BF%9B%E9%98%B6%E7%AF%87/index.html">
+<meta property="og:site_name" content="DarkYellowCat&#39;s Blog">
+<meta property="og:description" content="前言这是《SQL必知必会》学习随笔系列的进阶篇，承接基础篇的内容，主要聚焦于数据库性能优化相关的知识点。 进阶篇的核心内容包括：  数据库调优：从多个维度分析如何提升数据库性能 范式与反范式：理解数据库设计原则及其权衡 索引原理与应用：深入理解索引的底层实现和使用场景 锁机制：掌握不同粒度和类型的锁 性能优化实战：使用慢查询日志、EXPLAIN等工具定位和解决性能问题  如果你还没有阅读基础篇，建">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-07-21T09:10:49.000Z">
+<meta property="article:modified_time" content="2026-07-29T04:29:27.299Z">
+<meta property="article:author" content="DarkYellowCat">
+<meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="SQL">
+<meta property="article:tag" content="性能优化">
+<meta property="article:tag" content="数据库">
+<meta property="article:tag" content="索引">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://darkyellowcat.github.io/2026/07/21/%E3%80%8ASQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A%E3%80%8B%E5%AD%A6%E4%B9%A0%E9%9A%8F%E7%AC%94-%E8%BF%9B%E9%98%B6%E7%AF%87/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://darkyellowcat.github.io/2026/07/21/%E3%80%8ASQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A%E3%80%8B%E5%AD%A6%E4%B9%A0%E9%9A%8F%E7%AC%94-%E8%BF%9B%E9%98%B6%E7%AF%87/","path":"2026/07/21/《SQL必知必会》学习随笔-进阶篇/","title":"《SQL必知必会》学习随笔-进阶篇"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>《SQL必知必会》学习随笔-进阶篇 | DarkYellowCat's Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">DarkYellowCat's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">分享技术与思考</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">数据库调优</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">2.1.</span> <span class="nav-text">调优方向</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">2.2.</span> <span class="nav-text">调优维度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">2.2.1.</span> <span class="nav-text">选择适合的DBMS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">2.2.2.</span> <span class="nav-text">优化表设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">2.2.3.</span> <span class="nav-text">优化逻辑查询</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">范式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">3.1.</span> <span class="nav-text">范式-3NF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">3.2.</span> <span class="nav-text">反范式设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">3.2.1.</span> <span class="nav-text">反范式的适用情况</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">索引</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">4.1.</span> <span class="nav-text">不适用索引的场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">4.2.</span> <span class="nav-text">索引的分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">4.2.1.</span> <span class="nav-text">按属性的类型分类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">4.3.</span> <span class="nav-text">按属性的数量分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">4.3.1.</span> <span class="nav-text">联合索引的最左原则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">4.4.</span> <span class="nav-text">索引的底层</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">4.4.1.</span> <span class="nav-text">二叉树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">4.4.2.</span> <span class="nav-text">B树(平衡的多路搜索树)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">4.4.3.</span> <span class="nav-text">B+树</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">4.5.</span> <span class="nav-text">哈希索引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">4.5.1.</span> <span class="nav-text">Hash冲突</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">4.5.2.</span> <span class="nav-text">哈希索引与B+树索引的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">4.6.</span> <span class="nav-text">索引的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">4.6.1.</span> <span class="nav-text">什么时候创建索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">4.6.2.</span> <span class="nav-text">索引失效</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">锁</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">5.1.</span> <span class="nav-text">锁的分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">5.1.1.</span> <span class="nav-text">按照锁粒度进行划分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">5.1.2.</span> <span class="nav-text">从数据库管理的角度对锁进行划分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">5.1.3.</span> <span class="nav-text">从程序员的角度进行划分</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">5.2.</span> <span class="nav-text">避免死锁的发生</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">6.</span> <span class="nav-text">优化步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">6.1.</span> <span class="nav-text">慢查询定位执行慢的SQL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">6.2.</span> <span class="nav-text">EXPLAIN查看执行计划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">6.3.</span> <span class="nav-text">SHOW PROFILE查看SQL的具体执行成本</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">7.</span> <span class="nav-text">缓冲池和查询缓存的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">7.1.</span> <span class="nav-text">对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">7.2.</span> <span class="nav-text">查询缓存被淘汰</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">DarkYellowCat</p>
+  <div class="site-description" itemprop="description">记录学习与成长</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/07/21/%E3%80%8ASQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A%E3%80%8B%E5%AD%A6%E4%B9%A0%E9%9A%8F%E7%AC%94-%E8%BF%9B%E9%98%B6%E7%AF%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DarkYellowCat">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DarkYellowCat's Blog">
+      <meta itemprop="description" content="记录学习与成长">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="《SQL必知必会》学习随笔-进阶篇 | DarkYellowCat's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          《SQL必知必会》学习随笔-进阶篇
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-07-21 17:10:49" itemprop="dateCreated datePublished" datetime="2026-07-21T17:10:49+08:00">2026-07-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-07-29 12:29:27" itemprop="dateModified" datetime="2026-07-29T12:29:27+08:00">2026-07-29</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1><span id="前言">前言</span></h1><p>这是《SQL必知必会》学习随笔系列的进阶篇，承接<a href="../%E3%80%8ASQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A%E3%80%8B%E5%AD%A6%E4%B9%A0%E9%9A%8F%E7%AC%94-%E5%9F%BA%E7%A1%80%E7%AF%87/">基础篇</a>的内容，主要聚焦于数据库性能优化相关的知识点。</p>
+<p>进阶篇的核心内容包括：</p>
+<ul>
+<li><strong>数据库调优</strong>：从多个维度分析如何提升数据库性能</li>
+<li><strong>范式与反范式</strong>：理解数据库设计原则及其权衡</li>
+<li><strong>索引原理与应用</strong>：深入理解索引的底层实现和使用场景</li>
+<li><strong>锁机制</strong>：掌握不同粒度和类型的锁</li>
+<li><strong>性能优化实战</strong>：使用慢查询日志、EXPLAIN等工具定位和解决性能问题</li>
+</ul>
+<p>如果你还没有阅读基础篇，建议先从<a href="../%E3%80%8ASQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A%E3%80%8B%E5%AD%A6%E4%B9%A0%E9%9A%8F%E7%AC%94-%E5%9F%BA%E7%A1%80%E7%AF%87/">基础篇</a>开始，那里介绍了SQL的基本概念和MySQL的执行流程。</p>
+<h1><span id="数据库调优">数据库调优</span></h1><h2><span id="调优方向">调优方向</span></h2><ol>
+<li>用户的反馈</li>
+<li>日志分析</li>
+<li>服务器资源使用监控</li>
+<li>数据库内部状况监控</li>
+</ol>
+<h2><span id="调优维度">调优维度</span></h2><h3><span id="选择适合的dbms">选择适合的DBMS</span></h3><p>列式存储数据库可以大幅度降低系统的I&#x2F;O，适合于分布式文件系统和OLAP，但不适用于数据需要频繁增删改的场景。</p>
+<h3><span id="优化表设计">优化表设计</span></h3><ol>
+<li>表结构要尽量遵循第三范式的原则（关于第三范式，我在后面章节会讲）。这样可以让数据结构更加清晰规范，减少冗余字段，同时也减少了在更新，插入和删除数据时等异常情况的发生。</li>
+<li>如果分析查询应用比较多，尤其是需要进行多表联查的时候，可以采用反范式进行优化。反范式采用空间换时间的方式，通过增加冗余字段提高查询的效率。</li>
+<li>表字段的数据类型选择，关系到了查询效率的高低以及存储空间的大小。一般来说，如果字段可以采用数值类型就不要采用字符类型；字符长度要尽可能设计得短一些。针对字符类型来说，当确定字符长度固定时，就可以采用CHAR类型；当长度不固定时，通常采用VARCHAR类型。</li>
+</ol>
+<h3><span id="优化逻辑查询">优化逻辑查询</span></h3><p>SQL查询优化，可以分为逻辑查询优化和物理查询优化。逻辑查询优化就是通过改变SQL语句的内容让SQL执行效率更高效，采用的方式是对SQL语句进行等价变换，对查询进行重写。重写查询的数学基础就是关系代数。</p>
+<p>SQL的查询重写包括了子查询优化、等价谓词重写、视图重写、条件简化、连接消除和嵌套连接消除等。</p>
+<p>EXISTS子查询和IN子查询时，会根据小表驱动大表的原则选择适合的子查询。在WHERE子句中会尽量避免对字段进行函数运算，它们会让字段的索引失效。</p>
+<p>假设我想对商品评论表中的评论内容进行检索，查询评论内容开头为abc的内容都有哪些，如果在WHERE子句中使用了函数，语句就会写成下面这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT comment_id, comment_text, comment_time FROM product_comment WHERE SUBSTRING(comment_text, 1,3)=&#x27;abc&#x27;</span><br></pre></td></tr></table></figure>
+<p>我们可以采用查询重写的方式进行等价替换：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT comment_id, comment_text, comment_time FROM product_comment WHERE comment_text LIKE &#x27;abc%&#x27;</span><br></pre></td></tr></table></figure>
+<p>在数据量大的情况下，第二条SQL语句的执行时间为前者的1&#x2F;10。</p>
+<h1><span id="范式">范式</span></h1><h2><span id="范式-3nf">范式-3NF</span></h2><p>这个算是数据库系统原理必学内容了，我简单说一下我的理解。</p>
+<p>首先，从1NF -&gt; 到 3NF 是逐级递进的， 2NF 包含了1NF的特性，而 3NF 又包含了 2NF 的特性.作为一种约束来说，1NF 对数据库的约束性最弱， 3NF 对数据库的约束最强。</p>
+<p>在理解范式之前，需要先了解几个基本概念：</p>
+<ul>
+<li><strong>候选键（Candidate Key）</strong>：能够唯一标识一条记录的最小属性集</li>
+<li><strong>主属性</strong>：包含在任一候选键中的属性</li>
+<li><strong>非主属性</strong>：不包含在任何候选键中的属性</li>
+<li><strong>函数依赖</strong>：如果通过属性A可以唯一确定属性B，则称B函数依赖于A，记作A→B</li>
+<li><strong>完全函数依赖</strong>：如果A→B，且A的任何真子集都不能决定B，则称B完全函数依赖于A</li>
+<li><strong>传递依赖</strong>：如果A→B，B→C，且B不依赖于A，则称C传递依赖于A</li>
+</ul>
+<p>基于这些概念，三个范式可以这样理解：</p>
+<p><strong>1NF（第一范式）</strong>：每个字段都是原子性的，不可再分。</p>
+<p><strong>2NF（第二范式）</strong>：在1NF的基础上，非主属性完全函数依赖于候选键（消除了非主属性对候选键的部分依赖）。</p>
+<p><strong>3NF（第三范式）</strong>：在2NF的基础上，非主属性不传递依赖于候选键（消除了非主属性对候选键的传递依赖）。</p>
+<p>但是，3NF仍是有问题的。</p>
+<p><strong>3NF存在的问题</strong>：</p>
+<p>即使满足了3NF，仍然可能存在主属性对候选键的部分依赖或传递依赖。例如，在某些情况下，一个主属性可能依赖于候选键的一部分，或者通过其他主属性传递依赖于候选键，这会导致数据冗余和更新异常。</p>
+<p>为了解决这个问题，人们提出了一种新的范式：巴斯-科德范式，即BCNF。</p>
+<p><strong>BCNF（Boyce-Codd范式）</strong>：在3NF的基础上消除了主属性对候选键的部分依赖或者传递依赖关系。简单来说，就是要求每个决定因素都必须是候选键。</p>
+<h2><span id="反范式设计">反范式设计</span></h2><p>范式为数据库提供了约束规则，这避免了许多问题，但这也对性能造成了一定影响。</p>
+<p>反范式就是相对范式化而言的，允许少量的冗余，通过空间来换时间。</p>
+<h3><span id="反范式的适用情况">反范式的适用情况</span></h3><p>当冗余信息有价值或者能大幅度提高查询效率的时候，如：</p>
+<p>订单中的收货人信息，包括姓名、电话和地址等。每次发生的订单收货信息都属于历史快照，需要进行保存，但用户可以随时修改自己的信息，这时保存这些冗余信息是非常有必要的。</p>
+<h1><span id="索引">索引</span></h1><p>简而言之，索引就是帮助数据库管理系统高效获取数据的数据结构。好比一本书的目录，它可以帮我们快速进行特定值的定位与查找，从而加快数据查询的效率。</p>
+<h2><span id="不适用索引的场景">不适用索引的场景</span></h2><p>作为一种数据结构，索引本身也会占据存储空间.因此，在一些情况下，索引对搜素速率的优化比不上自己对性能的影响。这个时候我们就不能建立索引。</p>
+<ol>
+<li>数据表中的数据行数比较少的情况下，比如不到1000行。</li>
+</ol>
+<p>数据库本身查询速率就很高，千条数据不会对数据库产生压力，也就不需要用索引优化。</p>
+<ol start="2">
+<li>数据重复度大，比如高于10%的时候。</li>
+</ol>
+<p>性别只分为男女。假设男女数量相同，如果想要在100万行数据中查找性别为男的数据，一旦创建了索引，你需要先访问50万次索引，然后再访问50万次数据表，</p>
+<h2><span id="索引的分类">索引的分类</span></h2><h3><span id="按属性的类型分类">按属性的类型分类</span></h3><p>聚集索引：属性为主键。</p>
+<p>非聚集索引：属性不为主键。</p>
+<p>聚集索引比使用非聚集索引的查询效率略高，通常使用聚集索引。</p>
+<h2><span id="按属性的数量分类">按属性的数量分类</span></h2><p>单一索引：索引列为一列时为单一索引。</p>
+<p>联合索引：多个列组合在一起创建的索引叫做联合索引。</p>
+<h3><span id="联合索引的最左原则">联合索引的最左原则</span></h3><p>在使用联合索引（复合索引）时，查询条件必须从索引的最左列开始，并且连续匹配，索引才能被有效利用。</p>
+<p>当遇到范围查询(&gt;、&lt;、between、like)就会停止匹配。</p>
+<p>根据这个特点，在设计索引时，应该注意：</p>
+<ol>
+<li>区分度高的列放左边：优先将选择性（cardinality）高的列放在前面</li>
+<li>等值查询在前，范围查询在后：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 推荐顺序: (status, create_time)</span></span><br><span class="line"><span class="comment">-- 而非: (create_time, status)</span></span><br><span class="line"><span class="keyword">WHERE</span> status <span class="operator">=</span> <span class="number">1</span> <span class="keyword">AND</span> create_time <span class="operator">&gt;</span> <span class="string">&#x27;2024-01-01&#x27;</span></span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>尽量使用覆盖索引：减少回表操作</li>
+<li>避免索引列参与运算：保持索引列”纯净”</li>
+<li>用 EXPLAIN 验证：</li>
+</ol>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> <span class="keyword">user</span> <span class="keyword">WHERE</span> a <span class="operator">=</span> <span class="number">1</span> <span class="keyword">AND</span> b <span class="operator">=</span> <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+<h2><span id="索引的底层">索引的底层</span></h2><p>不想看优化过程可以直接看B&#x3D;树。</p>
+<h3><span id="二叉树">二叉树</span></h3><p>二叉树是一种常见的树形存储结构，时间复杂度为O(log2n)，它的特点是：</p>
+<ul>
+<li>如果key大于根节点，则在右子树中进行查找；</li>
+<li>如果key小于根节点，则在左子树中进行查找；</li>
+<li>如果key等于根节点，也就是找到了这个节点，返回根节点即可。</li>
+</ul>
+<p>但它有一个漏洞：</p>
+<p>如果构造出来的树是链表型的，那么时间复杂度会退化为O(n).如果用二叉树作为索引的实现结构，会让树变得很高，增加硬盘的I&#x2F;O次数,所以我们不使用这种结构。</p>
+<h3><span id="b树平衡的多路搜索树">B树(平衡的多路搜索树)</span></h3><p>它的每一个节点最多可以包括M个子节点，M称为B树的阶。</p>
+<ul>
+<li>根节点的儿子数的范围是[2,M]。</li>
+<li>每个中间节点包含k-1个关键字和k个孩子，孩子的数量&#x3D;关键字的数量+1，k的取值范围为[ceil(M&#x2F;2), M]。</li>
+<li>叶子节点包括k-1个关键字（叶子节点没有孩子），k的取值范围为[ceil(M&#x2F;2), M]。</li>
+<li>假设中间节点节点的关键字为：Key[1], Key[2], …, Key[k-1]，且关键字按照升序排序，即Key[i]&lt;Key[i+1]。此时k-1个关键字相当于划分了k个范围，也就是对应着k个指针，即为：P[1], P[2], …, P[k]，其中P[1]指向关键字小于Key[1]的子树，P[i]指向关键字属于(Key[i-1], Key[i])的子树，P[k]指向关键字大于Key[k-1]的子树。</li>
+<li>所有叶子节点位于同一层。</li>
+</ul>
+<h3><span id="b树">B+树</span></h3><p>B+树基于B树做出了改进，主流的DBMS都支持B+树的索引方式，比如MySQL。B+树和B树的差异在于以下几点：</p>
+<ul>
+<li>有 k 个孩子的节点就有k个关键字。也就是孩子数量&#x3D;关键字数，而B树中，孩子数量&#x3D;关键字数+1。</li>
+<li>非叶子节点的关键字也会同时存在在子节点中，并且是在子节点中所有关键字的最大（或最小）。</li>
+<li>非叶子节点仅用于索引，不保存数据记录，跟记录有关的信息都放在叶子节点中。而B树中，非叶子节点-既保存索引，也保存数据记录。</li>
+<li>所有关键字都在叶子节点出现，叶子节点构成一个有序链表，而且叶子节点本身按照关键字的大小从小到大顺序链接。</li>
+</ul>
+<p>B+树和B树有个根本的差异在于，B+树的中间节点并不直接存储数据。这样的好处是：</p>
+<ol>
+<li><p>B+树查询效率更稳定。因为B+树每次只有访问到叶子节点才能找到对应的数据，而在B树中，非叶子节点也会存储数据，这样就会造成查询效率不稳定的情况，有时候访问到了非叶子节点就可以找到关键字，而有时需要访问到叶子节点才能找到关键字。</p>
+</li>
+<li><p>B+树的查询效率更高，这是因为通常B+树比B树更矮胖（阶数更大，深度更低），查询所需要的磁盘I&#x2F;O也会更少。同样的磁盘页大小，B+树可以存储更多的节点关键字。</p>
+</li>
+<li><p>在查询范围上，B+树的效率也比B树高。这是因为所有关键字都出现在B+树的叶子节点中，并通过有序链表进行了链接。而在B树中则需要通过中序遍历才能完成查询范围的查找，效率要低很多。</p>
+</li>
+</ol>
+<h2><span id="哈希索引">哈希索引</span></h2><p>用Hash进行检索效率非常高，逻辑为：</p>
+<p>值key通过Hash映射找到桶bucket。桶（bucket）指的是一个能存储一条或多条记录的存储单位。一个桶的结构包含了一个内存指针数组，桶中的每行数据都会指向下一行，形成链表结构，当遇到Hash冲突时，会在桶中进行键值的查找。</p>
+<h3><span id="hash冲突">Hash冲突</span></h3><p>如果桶的空间小于输入的空间，不同的输入可能会映射到同一个桶中，这时就会产生Hash冲突，如果Hash冲突的量很大，就会影响读取的性能。</p>
+<p>通常Hash值的字节数比较少，简单的4个字节就够了。在Hash值相同的情况下，就会进一步比较桶（Bucket）中的键值，从而找到最终的数据行。</p>
+<p>Hash值的字节数多的话可以是16位、32位等，比如采用MD5函数就可以得到一个16位或者32位的数值，32位的MD5已经足够安全，重复率非常低。</p>
+<h3><span id="哈希索引与b树索引的区别">哈希索引与B+树索引的区别</span></h3><ol>
+<li>Hash索引不能进行范围查询，而B+树可以。这是因为Hash索引指向的数据是无序的，而B+树的叶子节点是个有序的链表。</li>
+<li>Hash索引不支持联合索引的最左侧原则（即联合索引的部分索引无法使用），而B+树可以。对于联合索引来说，Hash索引在计算 Hash 值的时候是将索引键合并后再一起计算 Hash 值，所以不会针对每个索引单独计算Hash值。因此如果用到联合索引的一个或者几个索引时，联合索引无法被利用。</li>
+<li>Hash索引不支持ORDER BY排序，因为Hash索引指向的数据是无序的，因此无法起到排序优化的作用，而B+树索引数据是有序的，可以起到对该字段ORDER BY排序优化的作用。同理，我们也无法用Hash索引进行模糊查询，而B+树使用LIKE进行模糊查询的时候，LIKE后面前模糊查询（比如%开头）的话就可以起到优化作用。</li>
+</ol>
+<h2><span id="索引的使用">索引的使用</span></h2><h3><span id="什么时候创建索引">什么时候创建索引</span></h3><ol>
+<li>字段的数值有唯一性的限制，比如用户名</li>
+<li>频繁作为WHERE查询条件的字段，尤其在数据表大的情况下</li>
+<li>需要经常GROUP BY和ORDER BY的列</li>
+<li>UPDATE、DELETE的WHERE条件列，一般也需要创建索引</li>
+<li>DISTINCT字段需要创建索引</li>
+<li>多表JOIN的连接字段需要创建索引<ul>
+<li>连接表的数量尽量不要超过3张，因为每增加一张表就相当于增加了一次嵌套的循环，数量级增长会非常快，严重影响查询的效率。</li>
+<li>其次，对WHERE条件创建索引，因为WHERE才是对数据条件的过滤。如果在数据量非常大的情况下，没有WHERE条件过滤是非常可怕的。</li>
+<li>最后，对用于连接的字段创建索引，并且该字段在多张表中的类型必须一致。比如user_id在product_comment表和user表中都为int(11)类型，而不能一个为int另一个为varchar类型。</li>
+</ul>
+</li>
+</ol>
+<h3><span id="索引失效">索引失效</span></h3><ol>
+<li>索引进行了表达式计算</li>
+</ol>
+<p>需要把索引字段的取值都取出来，然后依次进行表达式的计算来进行条件判断，因此采用的就是全表扫描的方式；</p>
+<ol start="2">
+<li>对索引使用函数</li>
+<li>在WHERE子句中，如果在OR前的条件列进行了索引，而在OR后的条件列没有进行索引</li>
+</ol>
+<p>OR的含义就是两个只要满足一个即可，因此只有一个条件列进行了索引是没有意义的，只要有条件列没有进行索引，就会进行全表扫描；</p>
+<ol start="4">
+<li>使用LIKE进行模糊查询的时候，前面不能是%</li>
+<li>索引列尽量设置为NOT NULL约束</li>
+</ol>
+<p>判断索引列是否为NOT NULL，往往需要走全表扫描，因此我们最好在设计数据表的时候就将字段设置为NOT NULL约束。</p>
+<h1><span id="锁">锁</span></h1><h2><span id="锁的分类">锁的分类</span></h2><h3><span id="按照锁粒度进行划分">按照锁粒度进行划分</span></h3><p>我们从锁定对象的粒度大小来对锁进行划分，分别为行锁、页锁和表锁。</p>
+<ol>
+<li>行锁</li>
+</ol>
+<p>按照行的粒度对数据进行锁定。锁定力度小，发生锁冲突概率低，可以实现的并发度高，但是对于锁的开销比较大，加锁会比较慢，容易出现死锁情况。</p>
+<ol start="2">
+<li>页锁</li>
+</ol>
+<p>是在页的粒度上进行锁定，锁定的数据资源比行锁要多，因为一个页中可以有多个行记录。当我们使用页锁的时候，会出现数据浪费的现象，但这样的浪费最多也就是一个页上的数据行。页锁的开销介于表锁和行锁之间，会出现死锁。锁定粒度介于表锁和行锁之间，并发度一般。</p>
+<ol start="3">
+<li>表锁</li>
+</ol>
+<p>对数据表进行锁定，锁定粒度很大，同时发生锁冲突的概率也会较高，数据访问的并发度低。不过好处在于对锁的使用开销小，加锁会很快。</p>
+<h3><span id="从数据库管理的角度对锁进行划分">从数据库管理的角度对锁进行划分</span></h3><p>我们还可以从数据库管理的角度对锁进行划分，分为共享锁和排它锁。</p>
+<ol>
+<li>共享锁</li>
+</ol>
+<p>也叫读锁或S锁，共享锁锁定的资源可以被其他用户读取，但不能修改。在进行SELECT的时候，会将对象进行共享锁锁定，当数据读取完毕之后，就会释放共享锁，这样就可以保证数据在读取时不被修改。</p>
+<ol start="2">
+<li>排它锁</li>
+</ol>
+<p>也叫独占锁、写锁或X锁。排它锁锁定的数据只允许进行锁定操作的事务使用，其他事务无法对已锁定的数据进行查询或修改。</p>
+<ol start="3">
+<li>意向锁（Intent Lock）</li>
+</ol>
+<p>简单来说就是给更大一级别的空间示意里面是否已经上过锁。举个例子，你可以给整个房子设置一个标识，告诉它里面有人，即使你只是获取了房子中某一个房间的锁。这样其他人如果想要获取整个房子的控制权，只需要看这个房子的标识即可，不需要再对房子中的每个房间进行查找。这样是不是很方便？</p>
+<p>返回数据表的场景，如果我们给某一行数据加上了排它锁，数据库会自动给更大一级的空间，比如数据页或数据表加上意向锁，告诉其他人这个数据页或数据表已经有人上过排它锁了，这样当其他人想要获取数据表排它锁的时候，只需要了解是否有人已经获取了这个数据表的意向排他锁即可。</p>
+<p>如果事务想要获得数据表中某些记录的共享锁，就需要在数据表上添加意向共享锁。同理，事务想要获得数据表中某些记录的排他锁，就需要在数据表上添加意向排他锁。这时，意向锁会告诉其他事务已经有人锁定了表中的某些记录，不能对整个表进行全表扫描。</p>
+<h3><span id="从程序员的角度进行划分">从程序员的角度进行划分</span></h3><p>如果从程序员的视角来看锁的话，可以将锁分成乐观锁和悲观锁。</p>
+<ol>
+<li>乐观锁（Optimistic Locking）</li>
+</ol>
+<p>认为对同一数据的并发操作不会总发生，属于小概率事件，不用每次都对数据上锁，也就是不采用数据库自身的锁机制，而是通过程序来实现。在程序上，我们可以采用版本号机制或者时间戳机制实现。</p>
+<ol start="2">
+<li>悲观锁（Pessimistic Locking）</li>
+</ol>
+<p>也是一种思想，对数据被其他事务的修改持保守态度，会通过数据库自身的锁机制来实现，从而保证数据操作的排它性。</p>
+<h2><span id="避免死锁的发生">避免死锁的发生</span></h2><ol>
+<li>如果事务涉及多个表，操作比较复杂，那么可以尽量一次锁定所有的资源，而不是逐步来获取，这样可以减少死锁发生的概率；</li>
+<li>如果事务需要更新数据表中的大部分数据，数据表又比较大，这时可以采用锁升级的方式，比如将行级锁升级为表级锁，从而减少死锁产生的概率；</li>
+<li>不同事务并发读写多张数据表，可以约定访问表的顺序，采用相同的顺序降低死锁发生的概率。</li>
+</ol>
+<h1><span id="优化步骤">优化步骤</span></h1><h2><span id="慢查询定位执行慢的sql">慢查询定位执行慢的SQL</span></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; show variables like &#x27;%slow_query_log&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p>开启慢查询日志</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; set global slow_query_log=&#x27;ON&#x27;;</span><br></pre></td></tr></table></figure>
+
+<h2><span id="explain查看执行计划">EXPLAIN查看执行计划</span></h2><p>EXPLAIN可以帮助我们了解数据表的读取顺序、SELECT子句的类型、数据表的访问类型、可使用的索引、实际使用的索引、使用的索引长度、上一个表的连接匹配条件、被优化器查询的行的数量以及额外的信息（比如是否使用了外部排序，是否使用了临时表等）等。</p>
+<p>EXPLAIN会返回一个表格：其中type是关键信息。</p>
+<p>all是最坏的情况，因为采用了全表扫描的方式。index和all差不多，只不过index对索引表进行全扫描，这样做的好处是不再需要对数据进行排序，但是开销依然很大。如果我们在Extral列中看到Using index，说明采用了索引覆盖，也就是索引可以覆盖所需的SELECT字段，就不需要进行回表，这样就减少了数据查找的开销。</p>
+<h2><span id="show-profile查看sql的具体执行成本">SHOW PROFILE查看SQL的具体执行成本</span></h2><p>看下当前会话都有哪些profiles：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; show profiles;</span><br></pre></td></tr></table></figure>
+
+<p>想要查看上一个查询的开销，可以使用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql &gt; show profile;</span><br></pre></td></tr></table></figure>
+
+<h1><span id="缓冲池和查询缓存的区别">缓冲池和查询缓存的区别</span></h1><h2><span id="对比">对比</span></h2><table>
+<thead>
+<tr>
+<th>对比维度</th>
+<th>缓冲池（Buffer Pool）</th>
+<th>查询缓存（Query Cache）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>适用场景</td>
+<td>几乎所有场景，是数据库高性能的绝对核心。</td>
+<td>极少更新、大量完全相同读取的静态表（如配置表、字典表）。</td>
+</tr>
+<tr>
+<td>缓存内容</td>
+<td>数据页和索引页（通常每页 16KB），即底层的物理&#x2F;逻辑数据块。</td>
+<td>完整的 SQL 查询语句及其对应的完整结果集。</td>
+</tr>
+<tr>
+<td>工作原理</td>
+<td>InnoDB 在内存中开辟的一块连续空间。当你执行查询时，InnoDB 会先检查需要的数据页是否在 Buffer Pool 中。如果在（缓存命中），直接返回内存数据；如果不在（缓存未命中），则从磁盘读取该页到 Buffer Pool 中，然后再返回数据。</td>
+<td>在 Server 层维护一个哈希表，Key 是 SQL 语句的哈希值，Value 是查询结果集。收到 SELECT 请求时，先计算哈希值去查表，命中则直接返回，跳过解析、优化、执行和存储引擎交互的所有步骤。</td>
+</tr>
+<tr>
+<td>写入机制</td>
+<td>当执行更新操作时，InnoDB 会先修改 Buffer Pool 中的数据页，并将其标记为”脏页（Dirty Page）”，随后由后台线程异步将这些脏页刷入磁盘（Flush）。这保证了写入的高性能。</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<h2><span id="查询缓存被淘汰">查询缓存被淘汰</span></h2><p>MySQL 官方在 8.0 版本中彻底移除了 Query Cache，主要原因包括：</p>
+<ol>
+<li>扩展性差：查询缓存的全局锁机制在多核 CPU 和高并发环境下成为严重的性能瓶颈。</li>
+<li>失效过于频繁：现代互联网应用读写频繁，查询缓存命中率极低，大部分时间都在做”缓存-失效”的无用功。</li>
+<li>更优的替代方案：应用层缓存（如 Redis 或 Memcached）提供了更细粒度、更灵活、更高性能的缓存控制能力，完全取代了数据库层做结果集缓存的需求。</li>
+</ol>
+<h1><span id="总结">总结</span></h1><p>进阶篇主要围绕数据库性能优化展开，涵盖了从宏观的调优方向到微观的索引实现细节。核心要点包括：</p>
+<ol>
+<li><strong>调优要多维度考虑</strong>：选择合适的DBMS、优化表设计、改进查询逻辑，而不是只盯着SQL语句本身</li>
+<li><strong>范式不是越高越好</strong>：需要在规范性和性能之间找到平衡，该反范式时就反范式</li>
+<li><strong>索引是把双刃剑</strong>：能加速查询但会增加写入成本和存储开销，要根据实际场景判断是否创建</li>
+<li><strong>理解底层原理</strong>：B+树、哈希索引、锁机制等原理能帮助我们更好地理解性能问题的根源</li>
+<li><strong>工具辅助诊断</strong>：慢查询日志、EXPLAIN、SHOW PROFILE等工具是定位性能瓶颈的利器</li>
+</ol>
+<p>数据库优化是一个系统工程，需要结合业务特点、数据规模、硬件资源等多方面因素综合考虑。没有一招鲜吃遍天的银弹，只有不断实践、测试、验证，才能找到最适合自己项目的优化方案。</p>
+<p>下一步可以继续深入学习事务、MVCC、分库分表等更高级的话题，也欢迎查看本系列的其他文章：</p>
+<ul>
+<li><a href="../%E3%80%8ASQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A%E3%80%8B%E5%AD%A6%E4%B9%A0%E9%9A%8F%E7%AC%94-%E5%9F%BA%E7%A1%80%E7%AF%87/">《SQL必知必会》学习随笔-基础篇</a></li>
+<li><a href="../%E3%80%8ASQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A%E3%80%8B%E5%AD%A6%E4%B9%A0%E9%9A%8F%E7%AC%94-%E5%8A%A0%E9%A4%90/">《SQL必知必会》学习随笔-加餐</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>DarkYellowCat
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://darkyellowcat.github.io/2026/07/21/%E3%80%8ASQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A%E3%80%8B%E5%AD%A6%E4%B9%A0%E9%9A%8F%E7%AC%94-%E8%BF%9B%E9%98%B6%E7%AF%87/" title="《SQL必知必会》学习随笔-进阶篇">https://darkyellowcat.github.io/2026/07/21/《SQL必知必会》学习随笔-进阶篇/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag"># 数据库</a>
+              <a href="/tags/SQL/" rel="tag"># SQL</a>
+              <a href="/tags/%E7%B4%A2%E5%BC%95/" rel="tag"># 索引</a>
+              <a href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" rel="tag"># 性能优化</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/19/%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E5%B7%A5%E5%85%B7%E6%8F%90%E9%AB%98%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F/" rel="prev" title="如何通过工具提高代码质量：从本地检查到 PR 审查">
+                  <i class="fa fa-angle-left"></i> 如何通过工具提高代码质量：从本地检查到 PR 审查
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">DarkYellowCat</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/darkyellowcat" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>
+  LA.init({ id: '3OnjqyPOaoYCHllV', ck: '3OnjqyPOaoYCHllV', autoTrack: true });
+</script>
+
+</body>
+</html>

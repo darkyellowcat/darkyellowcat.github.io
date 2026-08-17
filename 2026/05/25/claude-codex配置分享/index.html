@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"darkyellowcat.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"default","show_result":true},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"night eighties"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="前言我个人在大学生活中的感受是：虽然有小部分人能勇争桥头，但大部分同学是与热门技术脱节的（无歧义）。我在计算机学院发现，很多同学对ai的使用还停留在和网页版豆包扯皮，更进一步的则是设法使用gpt或其他更好用的模型，有些人为了更好的体验会选择找代充开会员。但我认为，一方面，这些工具提供的生产力与我们专业的需要还是不够的。虽然体验起来可能觉得已经很强了，但和agent比起来差别太大了；另一方面，我不认">
+<meta property="og:type" content="article">
+<meta property="og:title" content="claude&#x2F;codex配置分享">
+<meta property="og:url" content="https://darkyellowcat.github.io/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/index.html">
+<meta property="og:site_name" content="DarkYellowCat&#39;s Blog">
+<meta property="og:description" content="前言我个人在大学生活中的感受是：虽然有小部分人能勇争桥头，但大部分同学是与热门技术脱节的（无歧义）。我在计算机学院发现，很多同学对ai的使用还停留在和网页版豆包扯皮，更进一步的则是设法使用gpt或其他更好用的模型，有些人为了更好的体验会选择找代充开会员。但我认为，一方面，这些工具提供的生产力与我们专业的需要还是不够的。虽然体验起来可能觉得已经很强了，但和agent比起来差别太大了；另一方面，我不认">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://darkyellowcat.github.io/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/image-2.png">
+<meta property="og:image" content="https://darkyellowcat.github.io/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/image-3.png">
+<meta property="og:image" content="https://darkyellowcat.github.io/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/image-1.png">
+<meta property="og:image" content="https://darkyellowcat.github.io/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/image.png">
+<meta property="article:published_time" content="2026-05-25T11:18:24.000Z">
+<meta property="article:modified_time" content="2026-05-31T07:30:42.577Z">
+<meta property="article:author" content="DarkYellowCat">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Agent">
+<meta property="article:tag" content="Claude Code">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://darkyellowcat.github.io/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/image-2.png">
+
+
+<link rel="canonical" href="https://darkyellowcat.github.io/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://darkyellowcat.github.io/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/","path":"2026/05/25/claude-codex配置分享/","title":"claude/codex配置分享"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>claude/codex配置分享 | DarkYellowCat's Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">DarkYellowCat's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">分享技术与思考</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">cc-switch</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">2.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">2.2.</span> <span class="nav-text">具体功能</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">2.2.1.</span> <span class="nav-text">配置智能体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">2.2.2.</span> <span class="nav-text">下载并管理skills</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">2.2.3.</span> <span class="nav-text">管理MCP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">2.2.4.</span> <span class="nav-text">管理历史对话</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">2.2.5.</span> <span class="nav-text">管理提示词</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">skills推荐</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">3.1.</span> <span class="nav-text">karpathy-guideline</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">3.2.</span> <span class="nav-text">prompt-optimizer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">3.3.</span> <span class="nav-text">baoyu-format-markdown</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">3.4.</span> <span class="nav-text">agent-browser</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">MCP</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">4.1.</span> <span class="nav-text">codegraph</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">4.2.</span> <span class="nav-text">GitHub MCP Server</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">4.3.</span> <span class="nav-text">agentmemory</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">DarkYellowCat</p>
+  <div class="site-description" itemprop="description">记录学习与成长</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DarkYellowCat">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DarkYellowCat's Blog">
+      <meta itemprop="description" content="记录学习与成长">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="claude&#x2F;codex配置分享 | DarkYellowCat's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          claude/codex配置分享
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-05-25 19:18:24" itemprop="dateCreated datePublished" datetime="2026-05-25T19:18:24+08:00">2026-05-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-05-31 15:30:42" itemprop="dateModified" datetime="2026-05-31T15:30:42+08:00">2026-05-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B7%A5%E5%85%B7%E6%8E%A8%E8%8D%90/" itemprop="url" rel="index"><span itemprop="name">工具推荐</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1><span id="前言">前言</span></h1><p>我个人在大学生活中的感受是：虽然有小部分人能勇争桥头，但大部分同学是与热门技术脱节的（无歧义）。我在计算机学院发现，很多同学对ai的使用还停留在和网页版豆包扯皮，更进一步的则是设法使用gpt或其他更好用的模型，有些人为了更好的体验会选择找代充开会员。但我认为，一方面，这些工具提供的生产力与我们专业的需要还是不够的。虽然体验起来可能觉得已经很强了，但和agent比起来差别太大了；另一方面，我不认为普通学生有场景用完会员的额度，相比之下，随用随买的token模式在我看来是更适合的（家庭条件好可以忽略）。</p>
+<p>因此，我想要分享我对智能体的使用经验，希望能帮到同样想要尝试新技术的朋友。也希望大家能敢于尝试新事物，不要畏难（我帮助一位同学从头配置好了所有流程，但当我在命令行中唤出claude code时，他却觉得自己用不好命令行，主动放弃了，去找代充开网页端的会员）。</p>
+<p>本文主要介绍三个方面：<strong>cc-switch</strong>（管理工具）、<strong>skills</strong>（技能插件）、<strong>MCP</strong>（模型上下文协议服务）。</p>
+<hr>
+<h1><span id="cc-switch">cc-switch</span></h1><h2><span id="介绍">介绍</span></h2><p><a target="_blank" rel="noopener" href="https://github.com/farion1231/cc-switch">cc-switch</a> 是一个跨平台的桌面端 All-in-One 管理工具，支持 Claude Code、Codex、OpenCode、Gemini CLI 等多种 AI 编程 CLI 工具的统一管理。它的核心价值在于：<strong>你不再需要手动编辑各种 JSON、TOML 配置文件</strong>，所有操作都可以在图形界面中完成。</p>
+<p>简单来说，cc-switch 就是这些命令行 AI 工具的”控制面板”。</p>
+<h2><span id="具体功能">具体功能</span></h2><h3><span id="配置智能体">配置智能体</span></h3><p>cc-switch 支持对 Claude Code &#x2F; Codex 的 API Provider 进行可视化配置和一键切换。你可以：</p>
+<ul>
+<li>配置多个 API 提供商（官方 Anthropic、OpenRouter、各种中转站等）</li>
+<li>一键切换当前使用的模型和 Provider</li>
+<li>管理 API Key，避免手动修改环境变量</li>
+</ul>
+<p>对于使用中转 API 的同学来说，这个功能非常实用——不用每次都去改配置文件。</p>
+<h3><span id="下载并管理skills">下载并管理skills</span></h3><p>cc-switch支持下载并管理skills<br><img data-src="/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/image-2.png" alt="alt text"><br>点击发现技能即可进入下载页面，它会自行在Github中查找对应的仓库，点击安装即可进行自动下载并配置。（有些skills无法使用cc-switch安装，点击安装左侧的查看即可跳转到GitHub下载，安装好后在cc-switch选择导入已有即可进行管理）</p>
+<p><img data-src="/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/image-3.png" alt="alt text"></p>
+<h3><span id="管理mcp">管理MCP</span></h3><p>cc-switch 提供了 MCP Server 的可视化管理界面，可以方便地添加、启用、禁用各种 MCP 服务，不需要手动编辑 <code>settings.json</code>。</p>
+<p><img data-src="/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/image-1.png" alt="alt text"></p>
+<h3><span id="管理历史对话">管理历史对话</span></h3><p>cc-switch 可以浏览和搜索 Claude Code 的历史会话记录，方便你回顾之前的工作内容。</p>
+<p><img data-src="/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/image.png" alt="alt text"></p>
+<h3><span id="管理提示词">管理提示词</span></h3><p>支持管理自定义的系统提示词（System Prompt），可以为不同项目或场景配置不同的提示词模板，实现快速切换。</p>
+<hr>
+<h1><span id="skills推荐">skills推荐</span></h1><p>skills更多的是根据自己工作的方向进行配置，这里附带一份我自己的配置供参考。</p>
+<p>注：有些skills用cc-switch无法下载，需要自己手动安装。而我发现Claude code在GitHub上的生态远好于codex，建议大家用Claude-code下载，然后在cc-switch中 Skills 管理 -》 导入已有 -》 勾选其他智能体。</p>
+<h2><span id="karpathy-guideline">karpathy-guideline</span></h2><p><strong>仓库地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/forrestchang/andrej-karpathy-skills">forrestchang&#x2F;andrej-karpathy-skills</a></p>
+<p>这是一个源自 Andrej Karpathy（前 Tesla AI 总监、OpenAI 联合创始人）对 LLM 编程陷阱观察的 CLAUDE.md 配置文件。它通过四条核心原则来约束 AI 的编码行为：</p>
+<ol>
+<li><strong>先读再写</strong>：修改代码前必须先阅读相关文件，理解上下文</li>
+<li><strong>最小改动</strong>：只做必要的修改，不要过度重构</li>
+<li><strong>保持简单</strong>：避免过度工程化，不引入不必要的抽象</li>
+<li><strong>验证有效</strong>：改完之后要验证代码能正常工作</li>
+</ol>
+<p>简单来说，它让 AI 从一个”过度自信的初级程序员”变成一个”有纪律的工程师”。这个 skill 几乎是必装的，能显著减少 AI 写代码时的”幻觉”和过度修改问题。</p>
+<h2><span id="prompt-optimizer">prompt-optimizer</span></h2><p><strong>仓库地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/Hashaam101/prompt-optimizer">Hashaam101&#x2F;prompt-optimizer</a></p>
+<p>这个 skill 有两种模式：</p>
+<ul>
+<li><strong>自动模式（auto）</strong>：在你每次输入 prompt 时，它会在后台静默优化你的提示词，让 AI 更好地理解你的意图</li>
+<li><strong>手动模式（manual）</strong>：通过 <code>/optimize</code> 命令，将你写的粗略 prompt 转化为结构化的、高质量的提示词</li>
+</ul>
+<p>对于不太擅长写 prompt 的同学来说，这个 skill 能帮你把”帮我写个登录页面”这样模糊的需求，自动补充为包含技术栈、样式要求、错误处理等细节的完整指令。</p>
+<h2><span id="baoyu-format-markdown">baoyu-format-markdown</span></h2><p><strong>仓库地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/JimLiu/baoyu-skills">JimLiu&#x2F;baoyu-skills</a></p>
+<p>这个 skill 用于将纯文本或格式混乱的 Markdown 文件整理为结构清晰、排版规范的格式。它会：</p>
+<ul>
+<li>添加和规范化 frontmatter（标题、摘要等元信息）</li>
+<li>规范标题层级</li>
+<li>添加适当的加粗、列表、代码块</li>
+<li>处理中英文之间的空格（CJK spacing）</li>
+<li>保持原始内容不变，只优化格式</li>
+</ul>
+<p>写博客、整理笔记的时候非常好用。输出文件为 <code>{filename}-formatted.md</code>。</p>
+<h2><span id="agent-browser">agent-browser</span></h2><p><strong>仓库地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/vercel-labs/agent-browser">vercel-labs&#x2F;agent-browser</a></p>
+<p>这是 Vercel Labs 推出的浏览器自动化 CLI 工具，专为 AI Agent 设计。安装后，Claude Code 就能：</p>
+<ul>
+<li>打开网页并导航</li>
+<li>读取页面内容</li>
+<li>填写表单、点击按钮</li>
+<li>截图</li>
+<li>执行端到端测试</li>
+</ul>
+<p>它使用基于 ref（引用标记）的交互方式，比传统的 CSS 选择器更可靠。当你需要 AI 帮你查资料、测试网页、或者做一些需要浏览器的操作时，这个 skill 就派上用场了。</p>
+<hr>
+<h1><span id="mcp">MCP</span></h1><p>注意：MCP与skills不同，它会占据上下文的大小，所以不建议同一时间开太多。MCP（Model Context Protocol）是 Anthropic 推出的开放标准，可以理解为”AI 的 USB-C 接口”——让 AI 能够标准化地连接各种外部工具和数据源。</p>
+<h2><span id="codegraph">codegraph</span></h2><p><strong>仓库地址</strong>：<a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=aStudioPlus.codegraph">aStudioPlus&#x2F;codegraph</a></p>
+<p>CodeGraph 会对你的代码库进行 AST（抽象语法树）解析，构建一个包含函数、类、导入关系、调用链的语义图谱。支持 37+ 种编程语言。</p>
+<p>主要能力：</p>
+<ul>
+<li><strong>符号搜索</strong>：快速定位函数&#x2F;类的定义位置</li>
+<li><strong>调用链追踪</strong>：查看谁调用了某个函数、某个函数又调用了谁</li>
+<li><strong>影响分析</strong>：修改某个符号时，分析哪些代码会受影响</li>
+<li><strong>代码探索</strong>：一次调用就能获取多个文件的相关源码，替代反复 grep + read 的低效循环</li>
+</ul>
+<p>对于大型项目来说，codegraph 能让 AI 更快地理解代码结构，减少不必要的文件读取，节省上下文空间。</p>
+<h2><span id="github-mcp-server">GitHub MCP Server</span></h2><p><strong>来源</strong>：GitHub 官方维护</p>
+<p>GitHub MCP Server 让 AI 能够直接与 GitHub 平台交互，提供 90+ 种工具，包括：</p>
+<ul>
+<li>创建和管理 Issue、Pull Request</li>
+<li>搜索代码和仓库</li>
+<li>读取文件内容和提交历史</li>
+<li>管理 Branch 和 Release</li>
+<li>操作 GitHub Actions</li>
+</ul>
+<p>配置方式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">claude mcp add github --scope user</span><br></pre></td></tr></table></figure>
+
+<p>对于日常开发来说，有了它你可以直接让 AI 帮你创建 PR、查看 Issue、搜索相关代码，不用再手动切换到浏览器操作。</p>
+<h2><span id="agentmemory">agentmemory</span></h2><p><strong>仓库地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/kishan0725/AgentMemory">kishan0725&#x2F;AgentMemory</a></p>
+<p>AI 编程工具的一个痛点是：每次新会话都会”失忆”。agentmemory 通过 MCP 协议为 AI 提供持久化记忆能力：</p>
+<ul>
+<li><strong>跨会话记忆</strong>：上一次对话中做的决策、偏好设置，下次还能记住</li>
+<li><strong>项目上下文</strong>：记住项目的架构决策、技术选型、编码规范</li>
+<li><strong>本地存储</strong>：所有数据存在本地，不上传到云端，保护隐私</li>
+</ul>
+<p>有了它，AI 不会每次都问你”这个项目用什么框架”、”你喜欢什么代码风格”这类重复问题。</p>
+<hr>
+<h1><span id="总结">总结</span></h1><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>工具</th>
+<th>一句话描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>管理工具</td>
+<td>cc-switch</td>
+<td>图形化管理 Claude Code&#x2F;Codex 的一切配置</td>
+</tr>
+<tr>
+<td>Skill</td>
+<td>karpathy-guideline</td>
+<td>让 AI 写代码更有纪律</td>
+</tr>
+<tr>
+<td>Skill</td>
+<td>prompt-optimizer</td>
+<td>自动优化你的提示词</td>
+</tr>
+<tr>
+<td>Skill</td>
+<td>baoyu-format-markdown</td>
+<td>一键美化 Markdown 格式</td>
+</tr>
+<tr>
+<td>Skill</td>
+<td>agent-browser</td>
+<td>让 AI 能操作浏览器</td>
+</tr>
+<tr>
+<td>MCP</td>
+<td>codegraph</td>
+<td>代码语义图谱，加速代码理解</td>
+</tr>
+<tr>
+<td>MCP</td>
+<td>GitHub MCP Server</td>
+<td>直接操作 GitHub</td>
+</tr>
+<tr>
+<td>MCP</td>
+<td>agentmemory</td>
+<td>跨会话持久记忆</td>
+</tr>
+</tbody></table>
+<p>这套配置的核心思路是：<strong>用 cc-switch 降低配置门槛，用 skills 增强 AI 的行为质量，用 MCP 扩展 AI 的能力边界</strong>。</p>
+<p>如果你是刚接触 AI 编程工具的同学，建议按这个顺序来：先装 cc-switch 把环境配好，再装 karpathy-guideline 这个基础 skill，然后根据自己的需要逐步添加其他插件。不要一次性全装上——记住 MCP 会占上下文，按需开启就好。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>DarkYellowCat
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://darkyellowcat.github.io/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/" title="claude&#x2F;codex配置分享">https://darkyellowcat.github.io/2026/05/25/claude-codex配置分享/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/Claude-Code/" rel="tag"># Claude Code</a>
+              <a href="/tags/Agent/" rel="tag"># Agent</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/05/20/%E5%90%B4%E6%81%A9%E8%BE%BEagent-skills/" rel="prev" title="吴恩达 Agent Skills 学习笔记">
+                  <i class="fa fa-angle-left"></i> 吴恩达 Agent Skills 学习笔记
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/06/27/%E9%9D%A2%E7%BB%8F%E5%88%86%E4%BA%AB/" rel="next" title="面经分享：第一次后端面试复盘">
+                  面经分享：第一次后端面试复盘 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">DarkYellowCat</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/darkyellowcat" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>
+  LA.init({ id: '3OnjqyPOaoYCHllV', ck: '3OnjqyPOaoYCHllV', autoTrack: true });
+</script>
+
+</body>
+</html>

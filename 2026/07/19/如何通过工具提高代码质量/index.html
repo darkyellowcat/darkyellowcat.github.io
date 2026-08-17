@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"darkyellowcat.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"default","show_result":true},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"night eighties"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="前言在学习阶段，我一般不会刻意注意代码规范或潜在漏洞。毕竟代码不正式上线，也没有人专门做审查，很多问题只要“能跑”就被我放过去了。 但现在既然开始做正式项目，就不能再只看功能是否实现。代码能运行只是第一步，后面还要考虑：它是否容易维护、有没有明显缺陷、提交后会不会破坏原有功能，以及团队成员能不能快速看懂。 最近我了解并试用了几种代码质量工具，这里分享给大家。 先说结论：不同工具解决不同问题   工">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何通过工具提高代码质量：从本地检查到 PR 审查">
+<meta property="og:url" content="https://darkyellowcat.github.io/2026/07/19/%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E5%B7%A5%E5%85%B7%E6%8F%90%E9%AB%98%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F/index.html">
+<meta property="og:site_name" content="DarkYellowCat&#39;s Blog">
+<meta property="og:description" content="前言在学习阶段，我一般不会刻意注意代码规范或潜在漏洞。毕竟代码不正式上线，也没有人专门做审查，很多问题只要“能跑”就被我放过去了。 但现在既然开始做正式项目，就不能再只看功能是否实现。代码能运行只是第一步，后面还要考虑：它是否容易维护、有没有明显缺陷、提交后会不会破坏原有功能，以及团队成员能不能快速看懂。 最近我了解并试用了几种代码质量工具，这里分享给大家。 先说结论：不同工具解决不同问题   工">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://darkyellowcat.github.io/2026/07/19/%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E5%B7%A5%E5%85%B7%E6%8F%90%E9%AB%98%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F/spotbugs-overview.png">
+<meta property="og:image" content="https://darkyellowcat.github.io/2026/07/19/%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E5%B7%A5%E5%85%B7%E6%8F%90%E9%AB%98%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F/spotbugs-detail.png">
+<meta property="og:image" content="https://darkyellowcat.github.io/2026/07/19/%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E5%B7%A5%E5%85%B7%E6%8F%90%E9%AB%98%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F/checkstyle-settings.png">
+<meta property="article:published_time" content="2026-07-19T12:44:38.000Z">
+<meta property="article:modified_time" content="2026-07-21T08:52:26.118Z">
+<meta property="article:author" content="DarkYellowCat">
+<meta property="article:tag" content="GitHub">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="代码质量">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://darkyellowcat.github.io/2026/07/19/%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E5%B7%A5%E5%85%B7%E6%8F%90%E9%AB%98%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F/spotbugs-overview.png">
+
+
+<link rel="canonical" href="https://darkyellowcat.github.io/2026/07/19/%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E5%B7%A5%E5%85%B7%E6%8F%90%E9%AB%98%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://darkyellowcat.github.io/2026/07/19/%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E5%B7%A5%E5%85%B7%E6%8F%90%E9%AB%98%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F/","path":"2026/07/19/如何通过工具提高代码质量/","title":"如何通过工具提高代码质量：从本地检查到 PR 审查"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>如何通过工具提高代码质量：从本地检查到 PR 审查 | DarkYellowCat's Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">DarkYellowCat's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">分享技术与思考</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">先说结论：不同工具解决不同问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">SpotBugs：发现潜在 Bug</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">3.1.</span> <span class="nav-text">Maven 配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">Checkstyle：统一代码规范</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">4.1.</span> <span class="nav-text">IDEA 中使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">4.2.</span> <span class="nav-text">Maven 配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">CodeRabbit：辅助审查 Pull Request</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">6.</span> <span class="nav-text">reviewdog：把检查结果送到 PR</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">7.</span> <span class="nav-text">我目前推荐的组合</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">DarkYellowCat</p>
+  <div class="site-description" itemprop="description">记录学习与成长</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/07/19/%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E5%B7%A5%E5%85%B7%E6%8F%90%E9%AB%98%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DarkYellowCat">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DarkYellowCat's Blog">
+      <meta itemprop="description" content="记录学习与成长">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="如何通过工具提高代码质量：从本地检查到 PR 审查 | DarkYellowCat's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          如何通过工具提高代码质量：从本地检查到 PR 审查
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-07-19 20:44:38" itemprop="dateCreated datePublished" datetime="2026-07-19T20:44:38+08:00">2026-07-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-07-21 16:52:26" itemprop="dateModified" datetime="2026-07-21T16:52:26+08:00">2026-07-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B7%A5%E5%85%B7%E6%8E%A8%E8%8D%90/" itemprop="url" rel="index"><span itemprop="name">工具推荐</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1><span id="前言">前言</span></h1><p>在学习阶段，我一般不会刻意注意代码规范或潜在漏洞。毕竟代码不正式上线，也没有人专门做审查，很多问题只要“能跑”就被我放过去了。</p>
+<p>但现在既然开始做正式项目，就不能再只看功能是否实现。代码能运行只是第一步，后面还要考虑：它是否容易维护、有没有明显缺陷、提交后会不会破坏原有功能，以及团队成员能不能快速看懂。</p>
+<p>最近我了解并试用了几种代码质量工具，这里分享给大家。</p>
+<h1><span id="先说结论不同工具解决不同问题">先说结论：不同工具解决不同问题</span></h1><table>
+<thead>
+<tr>
+<th>工具</th>
+<th>主要作用</th>
+<th>适用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SpotBugs</td>
+<td>发现 Java 字节码中的潜在 Bug</td>
+<td>IDEA、本地构建、CI</td>
+</tr>
+<tr>
+<td>Checkstyle</td>
+<td>检查命名、缩进、导入顺序等代码规范</td>
+<td>IDEA、本地构建、CI</td>
+</tr>
+<tr>
+<td>CodeRabbit</td>
+<td>对 Pull Request 做 AI 辅助审查</td>
+<td>GitHub PR</td>
+</tr>
+<tr>
+<td>reviewdog</td>
+<td>把各种检查结果统一评论到代码变更上</td>
+<td>GitHub Actions 等 CI</td>
+</tr>
+</tbody></table>
+<p>这四个工具的作用领域不同：</p>
+<ul>
+<li>SpotBugs 更关心“代码可能有问题”；</li>
+<li>Checkstyle 更关心“代码是否符合团队规范”；</li>
+<li>CodeRabbit 更接近自动化的代码审查助手；</li>
+<li>reviewdog 本身通常不负责分析代码，而是负责收集其他工具的输出，并把问题准确标到 PR 对应行上。</li>
+</ul>
+<h1><span id="spotbugs发现潜在-bug">SpotBugs：发现潜在 Bug</span></h1><p><a target="_blank" rel="noopener" href="https://spotbugs.github.io/">SpotBugs</a> 是 FindBugs 的后继项目。它会分析 Java 编译后的字节码，寻找空指针、错误的对象比较、资源未关闭、可变对象暴露等潜在问题。</p>
+<p>它既有 IDEA 插件，也支持 Maven、Gradle 和 CI。对我来说，IDEA 插件适合在本地快速查看，Maven 插件更适合放进项目流程，避免出现“我的电脑装了插件，但其他人没有装”的情况。</p>
+<p>运行完成后，下方会按类型展示检查结果：</p>
+<img data-src="/2026/07/19/%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E5%B7%A5%E5%85%B7%E6%8F%90%E9%AB%98%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F/spotbugs-overview.png" class title="SpotBugs潜在问题详情">
+
+<p>选择具体问题后，可以查看对应代码、问题分类和解释：</p>
+<p>{spotbugs-detail.png}</p>
+<p>spotbugs-detail.png</p>
+<img data-src="/2026/07/19/%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E5%B7%A5%E5%85%B7%E6%8F%90%E9%AB%98%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F/spotbugs-detail.png" class title="SpotBugs潜在问题详情">
+
+<h2><span id="maven-配置">Maven 配置</span></h2><p>下面给出一个比较基础的配置。插件版本建议统一放在项目的 <code>properties</code> 或父 POM 中管理，不要每个模块各写一份。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.spotbugs<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spotbugs-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">effort</span>&gt;</span>Max<span class="tag">&lt;/<span class="name">effort</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">threshold</span>&gt;</span>Medium<span class="tag">&lt;/<span class="name">threshold</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">goal</span>&gt;</span>check<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>执行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn spotbugs:check</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是，SpotBugs 报告的是“可疑模式”，不代表每一条都一定是 Bug。正确的处理方式是先理解提示，再决定修改、抑制还是调整规则，而不是看到警告就机械改代码。</p>
+<h1><span id="checkstyle统一代码规范">Checkstyle：统一代码规范</span></h1><p><a target="_blank" rel="noopener" href="https://checkstyle.org/">Checkstyle</a> 主要检查代码风格，例如命名、格式、缩进、导入顺序、代码块写法等。</p>
+<p>它不会判断业务逻辑是否正确，但可以减少大量没有意义的格式争论。特别是在多人协作时，最好把规范写成配置文件并提交到仓库，而不是只依赖每个人 IDE 里的个人设置。</p>
+<h2><span id="idea-中使用">IDEA 中使用</span></h2><p>安装 Checkstyle 插件后，可以进入：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Settings</span><br><span class="line">  -&gt; Tools</span><br><span class="line">  -&gt; Checkstyle</span><br></pre></td></tr></table></figure>
+
+<img data-src="/2026/07/19/%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E5%B7%A5%E5%85%B7%E6%8F%90%E9%AB%98%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F/checkstyle-settings.png" class title="IDEA中的Checkstyle配置">
+
+<p>我这里选择了内置的 Google Checks。点击 <code>Apply</code> 后，可以对单个 Java 文件、目录或整个项目执行检查。</p>
+<p>例如下面这段结果，就是在提示等号和花括号附近缺少空格：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Running style checker on 1 file(s) (config: fa26)...</span><br><span class="line">ProductAdminUpdate.java:8:20: &#x27;=&#x27; 前应有空格。</span><br><span class="line">ProductAdminUpdate.java:8:20: &#x27;=&#x27; 后应有空格。</span><br><span class="line">ProductAdminUpdate.java:10:3: &#x27;&#123;&#x27; 后应有空格。</span><br><span class="line">ProductAdminUpdate.java:10:4: &#x27;&#125;&#x27; 前应有空格。</span><br><span class="line">Style checker completed with 4 errors.</span><br></pre></td></tr></table></figure>
+
+<h2><span id="maven-配置">Maven 配置</span></h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.maven.plugins<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-checkstyle-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">configLocation</span>&gt;</span>checkstyle.xml<span class="tag">&lt;/<span class="name">configLocation</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">consoleOutput</span>&gt;</span>true<span class="tag">&lt;/<span class="name">consoleOutput</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">failsOnError</span>&gt;</span>true<span class="tag">&lt;/<span class="name">failsOnError</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">phase</span>&gt;</span>verify<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">goal</span>&gt;</span>check<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>执行命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn checkstyle:check</span><br></pre></td></tr></table></figure>
+
+<p>如果团队准备长期使用，建议从现有代码能够接受的规则开始，再逐步收紧。直接套一份特别严格的规则，往往会一下出现几千条历史问题，最后大家只能选择关闭检查。</p>
+<h1><span id="coderabbit辅助审查-pull-request">CodeRabbit：辅助审查 Pull Request</span></h1><p><a target="_blank" rel="noopener" href="https://docs.coderabbit.ai/">CodeRabbit</a> 的定位和前两个工具不太一样。它主要接入 GitHub 等代码托管平台，在 Pull Request 创建或更新后分析变更，并给出摘要、逐行建议和潜在问题。</p>
+<p>我认为它比较适合发现下面这些问题：</p>
+<ul>
+<li>修改范围较大，人工审查容易漏看；</li>
+<li>代码能够编译，但边界条件没有处理；</li>
+<li>方法命名、异常处理或重复逻辑不够合理；</li>
+<li>PR 描述不完整，需要先快速了解本次改动。</li>
+</ul>
+<p>不过 AI 审查只能作为辅助，不能代替开发者负责。它不了解全部业务背景，也可能给出看似合理但并不适合当前项目的建议。最终是否修改，仍然要结合需求、测试和上下文判断。</p>
+<h1><span id="reviewdog把检查结果送到-pr">reviewdog：把检查结果送到 PR</span></h1><p><a target="_blank" rel="noopener" href="https://github.com/reviewdog/reviewdog">reviewdog</a> 是我在 GitHub 的 Code Quality 分类中较早发现的项目。</p>
+<p>我一开始以为它也是一个代码检查器，后来才发现它更像一个“结果转发器”：Checkstyle、静态分析器或 Linter 负责发现问题，reviewdog 负责读取这些工具的输出，再把问题作为 PR 评论或检查结果展示出来。</p>
+<p>例如可以在 CI 中执行 Checkstyle，再把结果交给 reviewdog。这样开发者不必翻完整日志，就能直接在改动行附近看到提示。</p>
+<p>它的价值主要有两点：</p>
+<ol>
+<li>统一不同检查工具的展示方式；</li>
+<li>只关注本次代码变更，避免历史问题淹没新的问题。</li>
+</ol>
+<h1><span id="我目前推荐的组合">我目前推荐的组合</span></h1><p>如果是一个普通 Java 项目，我会按下面的顺序接入：</p>
+<ol>
+<li><strong>IDE 阶段</strong>：使用 Checkstyle 和 SpotBugs 插件，尽量在提交前解决问题；</li>
+<li><strong>Maven 阶段</strong>：把规则写入 <code>pom.xml</code>，保证任何人执行构建都使用同一套标准；</li>
+<li><strong>CI 阶段</strong>：运行测试、Checkstyle 和 SpotBugs，不通过就阻止合并；</li>
+<li><strong>PR 阶段</strong>：根据项目情况接入 CodeRabbit，或用 reviewdog 展示已有工具的结果；</li>
+<li><strong>人工审查</strong>：检查业务逻辑、架构影响和需求是否真正实现。</li>
+</ol>
+<p>工具链不宜一次堆得太满。先解决项目当前最明显的问题，再逐步增加规则，比安装一堆工具却没有人看结果更有效。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>DarkYellowCat
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://darkyellowcat.github.io/2026/07/19/%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E5%B7%A5%E5%85%B7%E6%8F%90%E9%AB%98%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F/" title="如何通过工具提高代码质量：从本地检查到 PR 审查">https://darkyellowcat.github.io/2026/07/19/如何通过工具提高代码质量/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/GitHub/" rel="tag"># GitHub</a>
+              <a href="/tags/%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F/" rel="tag"># 代码质量</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/07/18/%E3%80%8ASQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A%E3%80%8B%E5%AD%A6%E4%B9%A0%E9%9A%8F%E7%AC%94-%E5%8A%A0%E9%A4%90/" rel="prev" title="《SQL必知必会》学习随笔：Text to SQL 与行业实战">
+                  <i class="fa fa-angle-left"></i> 《SQL必知必会》学习随笔：Text to SQL 与行业实战
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/07/21/%E3%80%8ASQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A%E3%80%8B%E5%AD%A6%E4%B9%A0%E9%9A%8F%E7%AC%94-%E8%BF%9B%E9%98%B6%E7%AF%87/" rel="next" title="《SQL必知必会》学习随笔-进阶篇">
+                  《SQL必知必会》学习随笔-进阶篇 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">DarkYellowCat</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/darkyellowcat" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>
+  LA.init({ id: '3OnjqyPOaoYCHllV', ck: '3OnjqyPOaoYCHllV', autoTrack: true });
+</script>
+
+</body>
+</html>
