@@ -173,7 +173,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-count">34</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -184,7 +184,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">44</span>
+        <span class="site-state-item-count">48</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -204,6 +204,547 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/09/03/%E6%96%87%E7%8C%AE%E8%B0%83%E7%A0%94-%E9%9D%A2%E5%90%91%E5%86%97%E4%BD%99%E6%9C%BA%E6%A2%B0%E8%87%82%E8%A7%84%E5%88%92%E6%8E%A7%E5%88%B6%E7%9A%84%E7%A5%9E%E7%BB%8F%E5%8A%A8%E5%8A%9B%E5%AD%A6%E6%A8%A1%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DarkYellowCat">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DarkYellowCat's Blog">
+      <meta itemprop="description" content="记录学习与成长">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | DarkYellowCat's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/09/03/%E6%96%87%E7%8C%AE%E8%B0%83%E7%A0%94-%E9%9D%A2%E5%90%91%E5%86%97%E4%BD%99%E6%9C%BA%E6%A2%B0%E8%87%82%E8%A7%84%E5%88%92%E6%8E%A7%E5%88%B6%E7%9A%84%E7%A5%9E%E7%BB%8F%E5%8A%A8%E5%8A%9B%E5%AD%A6%E6%A8%A1%E5%9E%8B/" class="post-title-link" itemprop="url">文献调研：面向冗余机械臂规划控制的神经动力学模型</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-03 12:10:00" itemprop="dateCreated datePublished" datetime="2026-09-03T12:10:00+00:00">2026-09-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-09-04 03:30:10" itemprop="dateModified" datetime="2026-09-04T03:30:10+00:00">2026-09-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1><span id="前言">前言</span></h1><p>这篇文章是我围绕“面向冗余机械臂规划控制的神经动力学模型”完成的一次课程文献调研。我选取了 15 篇中英文论文，时间跨度从 2008 年到 2026 年，内容覆盖逆运动学、二次规划、递归神经网络、归零神经网络、物理约束、滚动时域控制、数据驱动和任务优先级控制。</p>
+<p>读完这些论文后，我大致得出的理解为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">把冗余机械臂的多解问题写成带约束的时变优化，</span><br><span class="line">再把“求最优解”变成一个能够在线演化并收敛的神经动力系统。</span><br></pre></td></tr></table></figure>
+
+<p>技术演进大致是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">伪逆求解</span><br><span class="line">  → QP 统一主任务、次级目标和关节边界</span><br><span class="line">  → RNN/GNN 作为并行在线求解器</span><br><span class="line">  → ZNN 利用时间导数信息减小动态滞后</span><br><span class="line">  → 投影、对偶和变参数模型处理复杂约束与收敛</span><br><span class="line">  → RHC、Koopman、数据驱动和分层控制扩展应用边界</span><br></pre></td></tr></table></figure>
+
+<p>这批工作共同说明神经动力学适合实时优化，但也暴露出一个明显矛盾：模型越能处理复杂约束，推导、参数和离散实现就越复杂。论文中的连续时间收敛结论，也不能自动替代实物系统上的时延、噪声和算力验证。</p>
+<h1><span id="概念">概念</span></h1><h2><span id="冗余机械臂为什么会有多解">冗余机械臂为什么会有多解</span></h2><p>若机械臂关节自由度 <code>n</code> 大于末端任务空间维度 <code>m</code>，即 <code>n &gt; m</code>，其速度级运动学通常写成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ṙ = J(θ)θ̇</span><br></pre></td></tr></table></figure>
+
+<p>这是一个欠定方程。同一末端速度 <code>ṙ</code> 可能对应多组关节速度 <code>θ̇</code>。伪逆可以给出最小二范数解，但难以自然表达关节限位、避障、周期回零和任务优先级等要求。[1]</p>
+<p>二次规划（QP）提供了更灵活的表达：用目标函数选择一组更合适的关节运动，用等式保证末端任务，用不等式表示物理边界。[2]</p>
+<h2><span id="神经网络不一定需要训练">“神经网络”不一定需要训练</span></h2><p>这 15 篇论文中的 RNN、GNN、ZNN 和 DNN，很多并不是依靠数据集训练权重的深度学习模型，而是由常微分方程构造的优化求解器。网络状态随时间演化，平衡点对应方程或优化问题的解。</p>
+<p>到了数据驱动和 Koopman 路线，学习模型才真正成为核心部分：前者在线估计雅可比矩阵，后者从输入输出数据学习机械臂动力学，再把学习结果交给控制器。[11-13]</p>
+<h1><span id="15-篇文献分别解决了什么">15 篇文献分别解决了什么</span></h1><p>为了避免把文章写成摘要堆叠，我按“问题如何被建模、优化如何被求解、未知模型如何处理、多个任务如何协调”分成四组。</p>
+<h2><span id="一-从逆运动学到带约束-qp">一、从逆运动学到带约束 QP</span></h2><p>张泽玺等教授的综述把冗余机械臂逆运动学方法分为解析法、数值法和人工智能方法，为后续论文提供了问题地图。[1] 解析法精确但依赖具体结构；数值法通用，却需要处理奇异性和初值；人工智能方法适应性强，但通常引入训练或稳定性验证问题。</p>
+<p>张雨浓等教授较早把平面冗余机械臂自运动写成带等式和双端约束的 QP，并用基于线性变分不等式的原对偶神经网络实时求解。[2] 这类工作确立了一个后来反复出现的套路：先决定优化什么，再讨论用哪种神经动力学模型求解。</p>
+<p>关节漂移是周期任务中的典型问题。吕宣姣等教授在八连杆和九连杆平面机械臂上验证二次型性能指标对无偏差运动规划的作用；张智军和张雨浓则从理论和 PUMA560 仿真说明速度层与加速度层重复运动规划方案可以建立等效关系。[3-4] 这两篇论文点出，末端闭合轨迹不等于关节状态自动回到起点。</p>
+<h2><span id="二-在线求解器如何变得更可靠">二、在线求解器如何变得更可靠</span></h2><p>张智军等教授比较三种递归神经网络和三种离散数值方法来求解重复运动规划。[5] 论文的结果不是简单宣称 RNN 全面更好，而是给出了实际取舍：多数正常仿真条件下，神经网络更快、更准确；离散数值方法则更容易直接部署到数字计算机。</p>
+<p>固定参数难以同时照顾初期收敛和稳态表现。VP-CDNN 使用时变参数求解带反馈的关节无漂移 QP，并在 Kinova Jaco2 上进行了物理实验。[6] 这项工作把“误差是否归零”与“关节是否回到合理构型”放进同一框架。</p>
+<p>约束进一步复杂后，求解器出现了不同分支：</p>
+<ul>
+<li>CCNC-QP-DNN 同时面向凸和非凸约束，并处理初始误差，但论文验证以计算机仿真为主；[7]</li>
+<li>VPZND 把时变非线性等式、时变线性不等式、有界噪声和固定收敛时间放在统一框架中；[8]</li>
+<li>Dini-ZNN 使用连续但不可微的投影算子，并用上右 Dini 导数处理模式切换，避免为平滑近似额外调参。[9]</li>
+</ul>
+<p>这组论文展示了神经动力学研究的核心变化：关注点从“能不能解 QP”逐渐转向“面对时变、多类型约束、初始误差和噪声时还能不能稳定求解”。</p>
+<h2><span id="三-预测控制与模型未知">三、预测控制与模型未知</span></h2><p>Yan 等把滚动时域控制（RHC）写成凸 QP，目标同时包含跟踪误差、速度范数和加速度范数，并直接考虑角度、速度、加速度三层边界和终端等式约束，再设计 RNN 在线求解。[10] 它的价值在于引入预测窗口，但计算量和控制效果会受到窗口与离散实现影响。</p>
+<p>Sah 等提出 Koopman-ZNN 框架：用自编码器学习低维双线性 Koopman 模型，再配合 ZNN 处理输入约束。[11] 论文报告的控制频率最高可达 <code>800 Hz</code>，并进行了仿真和实验。它比纯运动学 ZNN 更接近“学习模型 + 在线控制”的组合，但效果仍依赖训练数据能否覆盖真实工作区。</p>
+<p>两篇中文论文从雅可比矩阵未知出发：</p>
+<ul>
+<li>刘佰阳等用梯度下降从末端速度和关节速度数据估计雅可比矩阵，并构造加速度层规划方案；[12]</li>
+<li>金龙等进一步同时控制末端位置与姿态，用四元数表示姿态，并设计神经动力学求解器。[13]</li>
+</ul>
+<p>这类数据驱动方案缓解了精确 DH 参数不可得的问题，但把风险从“模型参数误差”转移到了“在线估计误差”。因此，除了跟踪精度，还需要关注激励是否充分、估计是否收敛以及闭环稳定性是否对学习误差敏感。</p>
+<h2><span id="四-从单任务扩展到多任务">四、从单任务扩展到多任务</span></h2><p>谢正泰等的综述从神经动力学、前馈神经网络、递归神经网络和强化学习四个方向回顾机器人学习与控制。[14] 它帮助我区分了两类经常混在一起的研究：一类用神经网络逼近未知函数或策略，另一类把动态网络当作优化计算过程。</p>
+<p>在多任务控制中，谢正泰等又提出 PBRNN，通过零空间投影给末端跟踪、姿态或关节任务安排优先级；当任务总维度超过机械臂自由度时，低优先级任务会被放弃。针对优先级切换引起的控制突变，论文进一步提出带补偿项的 PSRNN，并通过仿真和物理实验验证。[15]</p>
+<p>这项工作说明，冗余自由度并不意味着所有任务都能同时完成。任务冲突时，控制器必须明确“谁先完成、谁可以退让”，而不是把所有约束平铺后期待求解器自行化解冲突。</p>
+<h1><span id="文献对照表">文献对照表</span></h1><table>
+<thead>
+<tr>
+<th>#</th>
+<th>年份</th>
+<th>文献简称</th>
+<th>主要问题</th>
+<th>方法与验证</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>2026</td>
+<td>逆运动学方法综述</td>
+<td>逆运动学方法如何分类</td>
+<td>解析、数值、人工智能三类综述</td>
+</tr>
+<tr>
+<td>2</td>
+<td>2008</td>
+<td>QP 自运动</td>
+<td>关节受限下的自运动</td>
+<td>QP + 原对偶神经网络，平面机械臂仿真</td>
+</tr>
+<tr>
+<td>3</td>
+<td>2012</td>
+<td>八&#x2F;九连杆无漂移</td>
+<td>高冗余机械臂关节漂移</td>
+<td>二次型指标，平面模型仿真</td>
+</tr>
+<tr>
+<td>4</td>
+<td>2013</td>
+<td>速度&#x2F;加速度层等效</td>
+<td>不同规划层级是否等效</td>
+<td>神经动力学分析 + PUMA560 仿真</td>
+</tr>
+<tr>
+<td>5</td>
+<td>2017</td>
+<td>三种 RNN 与三种数值法</td>
+<td>重复运动规划在线求解</td>
+<td>仿真 + 物理实验 + 求解器对比</td>
+</tr>
+<tr>
+<td>6</td>
+<td>2018</td>
+<td>VP-CDNN</td>
+<td>关节角漂移与初始误差</td>
+<td>变参数动态网络 + Kinova Jaco2 实验</td>
+</tr>
+<tr>
+<td>7</td>
+<td>2019</td>
+<td>CCNC-QP-DNN</td>
+<td>凸&#x2F;非凸约束与初始误差</td>
+<td>对偶网络，五类末端任务仿真</td>
+</tr>
+<tr>
+<td>8</td>
+<td>2023</td>
+<td>Robust VPZND</td>
+<td>物理约束与有界噪声</td>
+<td>固定时间分析 + 数值&#x2F;仿真验证</td>
+</tr>
+<tr>
+<td>9</td>
+<td>2024</td>
+<td>Dini-ZNN</td>
+<td>多类型约束与不可微投影</td>
+<td>理论 + 仿真 + 机器人实验</td>
+</tr>
+<tr>
+<td>10</td>
+<td>2022</td>
+<td>RNN-RHC</td>
+<td>带预测窗口的约束跟踪</td>
+<td>三层边界，仿真 + 实验</td>
+</tr>
+<tr>
+<td>11</td>
+<td>2024</td>
+<td>Koopman-ZNN</td>
+<td>学习动力学并实时控制</td>
+<td>自编码器 + ZNN，仿真 + 实验</td>
+</tr>
+<tr>
+<td>12</td>
+<td>2023</td>
+<td>模型未知规划</td>
+<td>未知雅可比矩阵</td>
+<td>梯度在线估计 + 数值仿真</td>
+</tr>
+<tr>
+<td>13</td>
+<td>2024</td>
+<td>数据驱动位姿控制</td>
+<td>未知模型下的位置与姿态</td>
+<td>在线学习 + 四元数 + 仿真对比</td>
+</tr>
+<tr>
+<td>14</td>
+<td>2023</td>
+<td>机器人学习控制综述</td>
+<td>神经网络方法的整体分类</td>
+<td>ND、FNN、RNN、RL 四类综述</td>
+</tr>
+<tr>
+<td>15</td>
+<td>2026</td>
+<td>PBRNN&#x2F;PSRNN</td>
+<td>多任务冲突与优先级切换</td>
+<td>零空间投影 + 补偿，仿真 + 物理实验</td>
+</tr>
+</tbody></table>
+<h1><span id="横向比较几条路线分别适合什么">横向比较：几条路线分别适合什么</span></h1><table>
+<thead>
+<tr>
+<th>路线</th>
+<th>核心思路</th>
+<th>优点</th>
+<th>主要风险</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>伪逆&#x2F;数值逆解</td>
+<td>直接求欠定运动学方程</td>
+<td>形式直接、基线清楚</td>
+<td>复杂边界和次级目标不易统一</td>
+</tr>
+<tr>
+<td>QP + 原对偶&#x2F;投影网络</td>
+<td>把目标与约束统一为优化问题</td>
+<td>约束表达灵活、适合并行求解</td>
+<td>可行域、参数和离散化影响实现</td>
+</tr>
+<tr>
+<td>ZNN&#x2F;变参数网络</td>
+<td>让时变误差按设计动态归零</td>
+<td>利用导数信息，动态跟踪能力强</td>
+<td>需要系数导数，噪声下更敏感</td>
+</tr>
+<tr>
+<td>RHC + RNN</td>
+<td>滚动预测并在线优化</td>
+<td>能考虑未来输出和终端条件</td>
+<td>预测窗口增加计算量</td>
+</tr>
+<tr>
+<td>数据驱动&#x2F;Koopman</td>
+<td>从数据估计雅可比或动力学</td>
+<td>减少对精确模型的依赖</td>
+<td>训练覆盖、在线估计误差和泛化</td>
+</tr>
+<tr>
+<td>分层控制</td>
+<td>用零空间和优先级处理任务冲突</td>
+<td>主次任务关系明确</td>
+<td>优先级切换可能引起不连续</td>
+</tr>
+</tbody></table>
+<h1><span id="我的几点判断">我的几点判断</span></h1><h2><span id="1-神经动力学的主要优势是在线优化">1. 神经动力学的主要优势是在线优化</span></h2><p>这批论文中最稳定的主线不是“网络能拟合复杂函数”，而是“动态系统能实时逼近时变优化问题的解”。因此，评价它们时应优先看收敛、约束、计算周期和硬件验证，而不是套用深度学习中的训练集准确率。</p>
+<h2><span id="2-约束完整性比单一误差数字更重要">2. 约束完整性比单一误差数字更重要</span></h2><p>只报告末端误差很小，并不能说明关节速度、加速度或输入始终安全。比较方案时至少要同时检查：</p>
+<ul>
+<li>末端跟踪误差；</li>
+<li>关节状态和控制输入是否越界；</li>
+<li>周期任务结束后是否发生关节漂移；</li>
+<li>遇到初始误差、噪声或外部干扰时是否稳定；</li>
+<li>是否有实物实验，以及控制周期是否满足实时要求。</li>
+</ul>
+<h2><span id="3-连续时间证明与数字实现之间还有距离">3. 连续时间证明与数字实现之间还有距离</span></h2><p>多数模型先在连续时间下证明收敛，再用数值积分部署。步长过大、测量噪声、高阶导数估计和通信延迟都可能改变实际表现。论文中的“全局收敛”需要连同假设一起阅读，不能脱离可行性和离散实现单独引用。</p>
+<h2><span id="4-当前方向正在从已知模型走向混合方法">4. 当前方向正在从已知模型走向混合方法</span></h2><p>较早工作通常假设雅可比矩阵和运动学模型准确已知；后续研究开始在线估计雅可比、学习 Koopman 模型，或者在任务层引入优先级。未来更可能出现的是模型、数据和优化的混合，而不是单一方法完全替代其他路线。</p>
+<h1><span id="这次调研的局限">这次调研的局限</span></h1><p>15 篇文献集中在冗余机械臂、QP 与神经动力学这条研究线上，其中多篇来自相近研究团队。它们适合呈现技术演进，但不足以代表整个机器人规划控制领域。本文也没有覆盖基于采样的路径规划、完整动力学控制、碰撞检测和大规模强化学习等路线。</p>
+<h1><span id="总结">总结</span></h1><p>从这 15 篇文献可以看到，冗余机械臂规划控制的核心一直没有变：在完成末端任务的同时，合理使用多出来的自由度。变化的是问题表达和求解方式——从伪逆到 QP，从固定参数动态网络到 ZNN、投影与变参数模型，再到预测控制、数据驱动和任务分层。</p>
+<p>对我来说，这次调研最大的收获是建立了一个判断框架：看到新的神经动力学模型时，不只看它的名字和收敛速度，而是继续追问它解决了哪类约束、依赖哪些模型信息、在什么硬件上验证，以及连续时间结论能否落到实际控制周期中。</p>
+<h1><span id="参考文献">参考文献</span></h1><p>[1] 张泽玺, 熊根良, 高延峰, 张华. 冗余机械臂逆运动学求解方法综述[J]. 机械设计与制造, 2026(1): 222-230.</p>
+<p>[2] 张雨浓, 谭志国, 杨智, 蔡炳煌. 基于二次型规划的平面冗余机械臂的自运动[J]. 机器人, 2008, 30(6). DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.13973/j.cnki.robot.2008.06.017">10.13973&#x2F;j.cnki.robot.2008.06.017</a>.</p>
+<p>[3] 吕宣姣, 张雨浓, 杨智. 平面八连杆和九连杆机械臂关节角无偏差运动规划验证[J]. 中国科技信息, 2012(23).</p>
+<p>[4] 张智军, 张雨浓. 重复运动速度层和加速度层方案的等效性[J]. 自动化学报, 2013, 39(1): 88-91. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.3724/SP.J.1004.2013.00088">10.3724&#x2F;SP.J.1004.2013.00088</a>.</p>
+<p>[5] Z. Zhang, L. Zheng, J. Yu, Y. Li, and Z. Yu, “Three Recurrent Neural Networks and Three Numerical Methods for Solving a Repetitive Motion Planning Scheme of Redundant Robot Manipulators,” <em>IEEE&#x2F;ASME Transactions on Mechatronics</em>, vol. 22, no. 3, pp. 1423-1434, 2017. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TMECH.2017.2683561">10.1109&#x2F;TMECH.2017.2683561</a>.</p>
+<p>[6] Z. Zhang, T. Fu, Z. Yan, L. Jin, L. Xiao, Y. Sun, Z. Yu, and Y. Li, “A Varying-Parameter Convergent-Differential Neural Network for Solving Joint-Angular-Drift Problems of Redundant Robot Manipulators,” <em>IEEE&#x2F;ASME Transactions on Mechatronics</em>, vol. 23, no. 2, pp. 679-689, 2018. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TMECH.2018.2799724">10.1109&#x2F;TMECH.2018.2799724</a>.</p>
+<p>[7] Z. Zhang, S. Chen, and S. Li, “Compatible Convex-Nonconvex Constrained QP-Based Dual Neural Networks for Motion Planning of Redundant Robot Manipulators,” <em>IEEE Transactions on Control Systems Technology</em>, vol. 27, no. 3, pp. 1250-1258, 2019. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TCST.2018.2799990">10.1109&#x2F;TCST.2018.2799990</a>.</p>
+<p>[8] M. Zhang, W. Tong, P. Li, Y. Hou, X. Xu, L. Zhu, and E. Q. Wu, “Robust Neural Dynamics Method for Redundant Robot Manipulator Control With Physical Constraints,” <em>IEEE Transactions on Industrial Informatics</em>, vol. 19, no. 12, pp. 11721-11731, 2023. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TII.2023.3249768">10.1109&#x2F;TII.2023.3249768</a>.</p>
+<p>[9] W. Li and Y. Pan, “A Dini-Derivative-Aided Zeroing Neural Network for Time-Variant Quadratic Programming Involving Multi-Type Constraints With Robotic Applications,” <em>IEEE Transactions on Neural Networks and Learning Systems</em>, vol. 35, no. 9, pp. 12482-12493, 2024. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TNNLS.2023.3263263">10.1109&#x2F;TNNLS.2023.3263263</a>.</p>
+<p>[10] J. Yan, L. Jin, Z. Yuan, and Z. Liu, “RNN for Receding Horizon Control of Redundant Robot Manipulators,” <em>IEEE Transactions on Industrial Electronics</em>, vol. 69, no. 2, pp. 1608-1618, 2022. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TIE.2021.3062257">10.1109&#x2F;TIE.2021.3062257</a>.</p>
+<p>[11] C. K. Sah, R. Singh, and J. Keshavan, “Real-Time Constrained Tracking Control of Redundant Manipulators Using a Koopman-Zeroing Neural Network Framework,” <em>IEEE Robotics and Automation Letters</em>, vol. 9, no. 2, pp. 1732-1739, 2024. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/LRA.2024.3349966">10.1109&#x2F;LRA.2024.3349966</a>.</p>
+<p>[12] 刘佰阳, 郑宇, 魏琳, 刘梅, 金龙. 面向模型未知的冗余机器人运动规划方案[J]. 兰州大学学报(自然科学版), 2023, 59(4): 506-511. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.13885/j.issn.0455-2059.2023.04.011">10.13885&#x2F;j.issn.0455-2059.2023.04.011</a>.</p>
+<p>[13] 金龙, 张凡, 刘佰阳, 郑宇. 基于数据驱动的冗余机器人末端执行器位姿控制方案[J]. 自动化学报, 2024, 50(3): 518-526. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.16383/j.aas.c230273">10.16383&#x2F;j.aas.c230273</a>.</p>
+<p>[14] 谢正泰, 樊佳亮, 刘梅, 金龙. 基于神经网络的机器人学习与控制：回顾与展望[J]. 信息与控制, 2023, 52(1): 37-58. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.13976/j.cnki.xk.2023.2428">10.13976&#x2F;j.cnki.xk.2023.2428</a>.</p>
+<p>[15] 谢正泰, 吴新博, 金龙. 基于任务优先级的冗余机械臂分层控制[J]. 中国科学: 信息科学, 2026, 56(6). DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1360/SSI-2025-0383">10.1360&#x2F;SSI-2025-0383</a>.</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/09/03/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB-%E4%BB%8E%E4%BA%94%E5%B1%82%E7%BA%A6%E6%9D%9F%E7%9C%8BSnap-Layer-MMPC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DarkYellowCat">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DarkYellowCat's Blog">
+      <meta itemprop="description" content="记录学习与成长">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | DarkYellowCat's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/09/03/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB-%E4%BB%8E%E4%BA%94%E5%B1%82%E7%BA%A6%E6%9D%9F%E7%9C%8BSnap-Layer-MMPC/" class="post-title-link" itemprop="url">论文精读：从五层约束看 Snap-Layer MMPC</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-03 12:00:00" itemprop="dateCreated datePublished" datetime="2026-09-03T12:00:00+00:00">2026-09-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-09-04 03:30:10" itemprop="dateModified" datetime="2026-09-04T03:30:10+00:00">2026-09-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1><span id="前言">前言</span></h1><p>这篇文章来自我的一次课程文献精读，论文题目是 <em>Novel Snap-Layer MMPC Scheme via Neural Dynamics Equivalency and Solver for Redundant Robot Arms With Five-Layer Physical Limits</em>。</p>
+<p>它用同一套 Zhang neural dynamics equivalency（ZNDE）完成了三件事：</p>
+<ol>
+<li>把“关节尽量回到初始位置”的最小运动目标提升到 snap 层；</li>
+<li>把角度、速度、加速度、jerk 和 snap 五层限制统一成 snap 的上下界；</li>
+<li>把末端路径跟踪条件提升为 snap 层等式约束。</li>
+</ol>
+<p>三部分最后组成一个标准二次规划，并由 projection neural dynamics（PND）在线求解。论文在六自由度平面冗余机械臂上完成了仿真，但没有实物实验，也没有把力矩、能耗和噪声纳入验证。因此，它证明的是一种运动学层面的可行方案，不等同于已经可部署的工业控制器。</p>
+<h1><span id="问题">问题</span></h1><p>设机械臂有 <code>n</code> 个关节，而末端任务空间只有 <code>m</code> 维。当 <code>n &gt; m</code> 时，同一个末端位姿通常对应多组关节构型，这就是冗余带来的多解性。</p>
+<p>冗余不是缺点。多出来的自由度可以用于避障、避开关节极限或减少关节运动，但也让控制器需要同时回答四个问题：</p>
+<ul>
+<li>末端能否准确跟踪给定路径；</li>
+<li>多组可行关节运动中应该选哪一组；</li>
+<li>关节状态能否始终留在物理边界内；</li>
+<li>优化问题能否随机器人运动实时求解。</li>
+</ul>
+<p>论文选择的次级目标是 minimum motion：完成路径跟踪后，让各关节尽量回到初始角度。这个目标可以减少不必要的关节位移，也能避免周期任务中的关节漂移。</p>
+<h2><span id="为什么要到-snap-层">为什么要到 snap 层</span></h2><p>从关节角 <code>θ</code> 开始连续求导，可以得到不同规划层级：</p>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>量</th>
+<th>与关节角的关系</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>角度层</td>
+<td><code>θ</code></td>
+<td>关节位置</td>
+</tr>
+<tr>
+<td>速度层</td>
+<td><code>θ̇</code></td>
+<td>一阶导数</td>
+</tr>
+<tr>
+<td>加速度层</td>
+<td><code>θ̈</code></td>
+<td>二阶导数</td>
+</tr>
+<tr>
+<td>jerk 层</td>
+<td><code>θ⃛</code></td>
+<td>三阶导数</td>
+</tr>
+<tr>
+<td>snap 层</td>
+<td><code>θ⁽⁴⁾</code></td>
+<td>四阶导数</td>
+</tr>
+</tbody></table>
+<p>不同资料对 jerk 和 snap 的中文译名并不完全一致，所以后文保留英文名。直观上，若 jerk 仍然发生突变，机械臂运动就还不够平滑；把决策变量提升到 snap 层，可以直接约束这种变化。</p>
+<p>不过，“层级更高”不等于真实设备一定更平滑。论文在连续时间运动学模型中说明了高阶轨迹的连续性，真实机械臂还会受到采样周期、传感噪声、执行器带宽和动力学的影响。</p>
+<h1><span id="znde把低层目标搬到-snap-层">ZNDE：把低层目标搬到 snap 层</span></h1><p>论文希望关节角回到初始状态 <code>θ₀</code>，最直接的误差是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">e = θ - θ₀</span><br></pre></td></tr></table></figure>
+
+<p>ZNDE 的做法不是直接令 <code>e = 0</code>，而是规定误差满足稳定的一阶动态：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ė = -λe,  λ &gt; 0</span><br></pre></td></tr></table></figure>
+
+<p>把这一操作连续使用四次，相当于对误差施加 <code>(D + λ)⁴</code>，其中 <code>D</code> 表示时间微分算子：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(D + λ)⁴(θ - θ₀) = 0</span><br><span class="line"></span><br><span class="line">θ⁽⁴⁾ + 4λθ⃛ + 6λ²θ̈ + 4λ³θ̇ + λ⁴(θ - θ₀) = 0</span><br></pre></td></tr></table></figure>
+
+<p>系数 <code>1、4、6、4、1</code> 正好来自二项式展开。这样，原本位于角度层的最小运动目标就有了 snap 层表达。</p>
+<p>论文据此构造性能指标：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">min  1/2 ||θ⁽⁴⁾||² + pₛᵀθ⁽⁴⁾</span><br><span class="line"></span><br><span class="line">pₛ = 4λθ⃛ + 6λ²θ̈ + 4λ³θ̇ + λ⁴(θ - θ₀)</span><br></pre></td></tr></table></figure>
+
+<p>第一项限制 snap 的大小，线性项则让关节状态沿着误差归零动态返回初始构型。因此，这不是单纯的 minimum snap norm，而是同时包含“高阶平滑”和“最小运动”的目标。</p>
+<h1><span id="五层约束如何变成一层">五层约束如何变成一层</span></h1><p>原始物理限制分布在五个层级：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">a⁻ ≤ θ ≤ a⁺</span><br><span class="line">v⁻ ≤ θ̇ ≤ v⁺</span><br><span class="line">α⁻ ≤ θ̈ ≤ α⁺</span><br><span class="line">j⁻ ≤ θ⃛ ≤ j⁺</span><br><span class="line">s⁻ ≤ θ⁽⁴⁾ ≤ s⁺</span><br></pre></td></tr></table></figure>
+
+<p>难点在于，二次规划只有一个决策变量 <code>θ⁽⁴⁾</code>，不能直接把不同阶的状态都写成它的简单上下界。</p>
+<p>论文采用的不等式型 ZNDE 可以先把某一层边界变成它的导数边界：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">κ(x⁻ - x) ≤ ẋ ≤ κ(x⁺ - x),  κ &gt; 0</span><br></pre></td></tr></table></figure>
+
+<p>当 <code>x</code> 接近上界时，允许的正向变化率会逐渐收紧；接近下界时，允许的负向变化率也会收紧。对角度约束重复四次、速度约束重复三次、加速度约束重复两次、jerk 约束重复一次，就能把它们全部提升到 snap 层。</p>
+<p>最后只需取所有下界中的最大值和所有上界中的最小值：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">lₛ = max&#123;各层转换得到的下界&#125;</span><br><span class="line">uₛ = min&#123;各层转换得到的上界&#125;</span><br><span class="line"></span><br><span class="line">lₛ ≤ θ⁽⁴⁾ ≤ uₛ</span><br></pre></td></tr></table></figure>
+
+<p>这一步非常关键：五组异构约束没有被丢掉，而是变成了当前时刻对 snap 最严格的安全包络。</p>
+<h1><span id="路径跟踪约束">路径跟踪约束</span></h1><p>机械臂的正运动学可以写成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f(θ) = r</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>r</code> 是末端位置，<code>f(·)</code> 是从关节空间到任务空间的非线性映射。对路径跟踪误差应用四次 ZNDE，并整理各阶雅可比矩阵项，论文得到 snap 层等式约束：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">J(θ)θ⁽⁴⁾ = bₛ</span><br></pre></td></tr></table></figure>
+
+<p><code>bₛ</code> 包含期望路径的四阶导数、雅可比矩阵及其时间导数，以及用于抑制累计跟踪误差的反馈项。完整展开式很长，但它的作用很明确：无论冗余自由度如何被次级目标利用，末端路径跟踪仍然是必须满足的主任务。</p>
+<h1><span id="最终二次规划与-pnd-求解器">最终二次规划与 PND 求解器</span></h1><p>目标、等式约束和统一边界合在一起后，问题变成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">min  1/2 θ⁽⁴⁾ᵀθ⁽⁴⁾ + pₛᵀθ⁽⁴⁾</span><br><span class="line"></span><br><span class="line">s.t. J(θ)θ⁽⁴⁾ = bₛ</span><br><span class="line">     lₛ ≤ θ⁽⁴⁾ ≤ uₛ</span><br></pre></td></tr></table></figure>
+
+<p>这是一个带等式和盒约束的时变二次规划。PND 求解器把原变量、对偶变量和投影算子组合成连续时间动态系统：当状态越过可行域时，投影会把它拉回边界；当动态系统收敛时，其平衡点对应二次规划的最优解。</p>
+<p>论文给出了全局收敛分析，但这个结论带有前提：当前二次规划需要存在最优解，连续时间模型及相关参数也要满足推导条件。工程实现时还要把连续系统离散化，这部分不能只靠理论收敛性替代验证。</p>
+<h1><span id="实验到底验证了什么">实验到底验证了什么</span></h1><p>论文使用六自由度平面冗余机械臂进行仿真，每个连杆长度为 <code>1 m</code>，主要参数为 <code>δ = 10⁴</code>、<code>ς = 10¹⁰</code>、<code>λ = 2</code>、<code>κ = 2</code>、<code>ν = 3</code>。</p>
+<h2><span id="与-jerk-层-mmpc-对比">与 jerk 层 MMPC 对比</span></h2><p>第一组实验让末端跟踪星形路径：</p>
+<ul>
+<li>在宽松边界下，两种 MMPC 都能完成任务，snap 层方案最大位置误差约为 <code>10⁻⁷ m</code> 量级，jerk 层方案约为 <code>10⁻⁶ m</code> 量级；</li>
+<li>将第一个关节的 snap 上限收紧到 <code>0.066 rad/s⁴</code> 后，snap 层方案仍保持在边界内；</li>
+<li>将第一个关节的 jerk 上限收紧到 <code>0.0445 rad/s³</code> 后，snap 会提前调整，使 jerk 不越界。</li>
+</ul>
+<p>这组实验的结论是 snap 层方案确实能显式处理第五层边界；jerk 层方案本身没有 snap 约束入口。</p>
+<h2><span id="与-minimum-snap-norm-对比">与 minimum snap norm 对比</span></h2><p>第二组实验让末端跟踪 nephroid 路径，并与只最小化 snap 范数的 MSN 方案比较：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>Snap-layer MMPC</th>
+<th>MSN</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>位置误差</td>
+<td>始终低于 <code>1.569 × 10⁻⁷ m</code></td>
+<td>接近 <code>2.342 × 10⁻³ m</code></td>
+</tr>
+<tr>
+<td>任务结束时关节速度</td>
+<td>趋近于 0</td>
+<td>没有全部归零</td>
+</tr>
+<tr>
+<td>任务结束时关节位移</td>
+<td>趋近于 0</td>
+<td>仍有明显偏移</td>
+</tr>
+</tbody></table>
+<p>这里需要避免一个误读：四个数量级的误差差距不能简单归因于“用了 snap”。两种方案的目标和反馈结构不同，MMPC 的等式约束中包含误差反馈，而 MSN 只强调 snap 范数。实验说明完整 MMPC 架构更有效，并没有单独隔离每个设计因素的贡献。</p>
+<h1><span id="我认为这篇论文的价值与局限">我认为这篇论文的价值与局限</span></h1><h2><span id="值得学习的地方">值得学习的地方</span></h2><ul>
+<li><strong>建模统一</strong>：目标、等式约束和不等式约束都由 ZNDE 推导，逻辑非常完整；</li>
+<li><strong>约束表达清楚</strong>：不同物理层级最终变成一个可直接求解的盒约束；</li>
+<li><strong>对比有针对性</strong>：jerk 层基线检验约束层数，MSN 基线检验最小运动目标；</li>
+<li><strong>问题形式标准</strong>：最终仍是二次规划，便于与其他在线求解器比较。</li>
+</ul>
+<h2><span id="仍需补足的地方">仍需补足的地方</span></h2><ul>
+<li>实验只覆盖平面六自由度模型，没有三维机械臂和实物验证；</li>
+<li>研究停留在运动学层，没有加入力矩、负载和驱动器饱和等动力学限制；</li>
+<li>高阶路径导数、雅可比导数和状态估计在噪声下可能不稳定，论文没有给出噪声实验；</li>
+<li>“最小运动”被解释为节能动机，但论文实际比较的是关节位移，没有直接测量能量或功率；</li>
+<li>参数如何系统选取、离散步长如何影响稳定性，仍缺少工程层面的指导。</li>
+</ul>
+<h1><span id="总结">总结</span></h1><p>这篇论文通过 ZNDE 把最小运动目标、末端跟踪和五层物理边界全部提升到 snap 层，再用 PND 求解统一的时变二次规划。</p>
+<p>读完之后，我更关注的不是导数层数本身，而是这种“先统一问题表达，再设计在线求解器”的思路。它把复杂约束整理得很干净，也同时提醒我：仿真中的高阶连续性、约束满足和极小误差，距离真实机械臂上的可靠运行仍有一段路。</p>
+<p>老师在听完汇报后指出：提升到 snap 层确实能提升精度，但对设备的要求也更大，目前很少会运用到实际生产中，更多是作为研究。</p>
+<h1><span id="参考文献">参考文献</span></h1><p>[1] Z. Tang, Y. Zhang, and L. Ming, “Novel Snap-Layer MMPC Scheme via Neural Dynamics Equivalency and Solver for Redundant Robot Arms With Five-Layer Physical Limits,” <em>IEEE Transactions on Neural Networks and Learning Systems</em>, vol. 36, no. 2, pp. 3534-3547, 2025. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TNNLS.2024.3351674">10.1109&#x2F;TNNLS.2024.3351674</a>.</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -241,9 +782,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-08-24 22:58:22 / 修改时间：16:32:10" itemprop="dateCreated datePublished" datetime="2026-08-24T22:58:22+00:00">2026-08-24</time>
+      <time title="创建时间：2026-08-24 22:58:22" itemprop="dateCreated datePublished" datetime="2026-08-24T22:58:22+00:00">2026-08-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-09-04 03:30:10" itemprop="dateModified" datetime="2026-09-04T03:30:10+00:00">2026-09-04</time>
     </span>
 
   
@@ -325,9 +872,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2026-08-24 22:57:48 / 修改时间：16:32:10" itemprop="dateCreated datePublished" datetime="2026-08-24T22:57:48+00:00">2026-08-24</time>
+      <time title="创建时间：2026-08-24 22:57:48" itemprop="dateCreated datePublished" datetime="2026-08-24T22:57:48+00:00">2026-08-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-09-04 03:30:10" itemprop="dateModified" datetime="2026-09-04T03:30:10+00:00">2026-09-04</time>
     </span>
 
   
@@ -346,19 +899,19 @@
 <p>如：管理员可以调整页面的布局、决定什么能够展示，什么不能展示、新增或修改法务文件等。</p>
 <h3><span id="系统的后续可修改性">系统的后续可修改性</span></h3><p>在早期设计时，可能有些功能是不必要的，但我们仍应该将这些变量纳入考虑的范围中。</p>
 <p>这样，当相关功能需要拓展时，就能更加游刃有余的应对。</p>
-<h3><span id="git管理">git管理</span></h3><p>一次我将修改提交后，提醒运维组员就走了。第二天队友跟我说自己搞砸了，希望我重新提交一遍。我查了Git记录后发现他和往常一样拉取了远程仓库，但我提的新功能都没有出现。</p>
+<h3><span id="git管理">git管理</span></h3><p>一次我将修改提交后，提醒运维组员就走了。第二天队友跟我说自己搞砸了，希望我重新提交一遍。我查了git记录后发现他和往常一样拉取了远程仓库，但我提的新功能都没有出现。</p>
 <p>最后我排查原因时发现，是因为我在提交时没有修改代理端口，导致代码实际上没有推送到远程仓库。</p>
 <p>这件事也让我意识到，“本地已经 commit”并不等于“远端已经更新”。关键改动推送后，最好确认远端分支的最新提交哈希已经变化，再通知其他人拉取代码。</p>
 <h3><span id="线上与开发环境">线上与开发环境</span></h3><p>在本地能运行的代码不一定能在线上环境正常工作。</p>
 <p>在一次任务中，我实现了一个功能：统计商品点击量并进行排名。在开发环境的测试是没有问题的，但部署后客户却表示没有统计点击量。</p>
 <p>通过浏览器网络追踪，我发现接口没有被触发，在网络层上根本找不到这个请求。</p>
-<p>结合之前的经验，我判断问题和HTTPS有关：如果页面已经走HTTPS，但接口仍然是HTTP，浏览器会按混合内容策略直接拦截这类请求。也就是说，问题不只是“没有证书”，而是线上页面的协议和接口协议不一致。</p>
-<h3><span id="安全重于一切">安全重于一切</span></h3><p>网络攻击的方式多种多样：SQL注入、供应链投毒（我记得这个很频繁，Apifox就中招过），很难做到绝对安全，但我们应该尽力保证系统的安全性，让破解成本高于对方攻击成功的利润。</p>
+<p>结合之前的经验，我判断问题的原因是线上环境没有申请SSL证书，导致浏览器认为当前环境不安全，自动拦截了相关请求。</p>
+<h3><span id="安全重于一切">安全重于一切</span></h3><p>网络攻击的方式多种多样：SQL注入、供应链投毒（我记得这个很频繁，APIFox就中招过），很难做到绝对安全，但我们应该尽力保证系统的安全性，让破解成本高于对方攻击成功的利润。</p>
 <h3><span id="测试要涵盖各种情况">测试要涵盖各种情况</span></h3><p>在编写代码和测试时一定要考虑到所有情况。</p>
 <p>比如用户注册时的昵称，一定要限长。按正常人的思维，用户名一般都不会太长，但这不代表这种情况不会发生。</p>
 <h2><span id="开发工具">开发工具</span></h2><h3><span id="开源项目">开源项目</span></h3><h4><span id="若依">若依</span></h4><p>二开神器，<a target="_blank" rel="noopener" href="https://github.com/YunaiV/ruoyi-vue-pro">地址</a></p>
 <p>若依是一套比较成熟的Java后台管理系统脚手架，内置用户、角色、菜单、部门、字典、日志、定时任务等常见后台功能，也提供代码生成器。对于中小型管理系统来说，很多基础模块不需要从零写，直接基于它做二次开发，可以省下大量前期搭建时间。</p>
-<p>我实习时接触的这个<a target="_blank" rel="noopener" href="https://github.com/YunaiV/ruoyi-vue-pro">ruoyi-vue-pro</a>，是在若依基础上扩展出来的版本，功能比官方版更丰富，比如多租户、支付、商城、工作流等模块都有对应实现。它的优点是生态和资料比较多，遇到问题时更容易找到参考；缺点是引入的功能多，结构也更重，实际使用时最好按业务裁剪依赖，而不是把所有模块都原样搬进项目。</p>
+<p>我实习时接触的这个<a target="_blank" rel="noopener" href="https://github.com/YunaiV/ruoyi-vue-pro">ruoyi-vue-pro</a>，是在若依基础上扩展出来的版本，功能比官方版更丰富，比如多租户、支付、商城、工作流等模块都有对应实现。它的优点是生态和资料比较多，遇到问题时更容易找到参考；缺点是引入的功能多，结构也更重，实际使用时最好按业务裁剪依赖。</p>
 <h4><span id="各类sdk">各类SDK</span></h4><p>如 <a target="_blank" rel="noopener" href="https://github.com/binarywang/WxJava">WxJava</a></p>
 <p>WxJava是一个封装了微信开放能力的Java SDK，覆盖公众号、小程序、微信支付、开放平台和企业微信等常用场景。它把access_token管理、签名、请求发送和结果解析这些重复工作封装好了，开发者可以直接调用对应的Service完成登录、获取手机号、下单、退款等操作。</p>
 <p>以小程序支付为例，自己对接微信API需要处理证书、签名、回调验签等细节；使用WxJava后，业务代码只需要准备好商户号、订单号、金额和openid等参数，再调用支付服务生成调起支付的参数即可。这样不仅开发速度快，也能减少手写协议时的低级错误。</p>
@@ -368,9 +921,9 @@
 <h2><span id="ai使用">AI使用</span></h2><h3><span id="一定要人为检查">一定要人为检查</span></h3><p>在使用agent开发时，使用较强的模型、配置skill等方法可以提高AI开发的正确率，但是仍然会有风险，必须要进行人为校验。代码可以由AI开发，但提交在人，要为自己提交的代码负责。</p>
 <p>我定义了一个Spring Boot的skill，每当有任务时，必须要跑JUnit和mvn test，全部成功后才能结束任务，有时候一轮任务需要跑70~90个test，人工校验和测试都没有出现问题。因此我逐渐放松了审查，一些简单的任务直接让agent去实现。</p>
 <p>但有一天，客户突然@我，询问站中查询的商品只有24条，怎么看到剩余的商品。我复现后理解去审查代码，发现分页功能只留了接口占位，没有实际实现。这一块我没有做代码审查，测试时本地数据量小，没有触发分页，导致这个问题直接暴露给了客户。</p>
-<h3><span id="逻辑缺失问题">逻辑缺失问题</span></h3><p>新增一个排行的功能，AI返回了商品的id。但搜索界面不支持通过id进行搜索，导致实际上排行是失败的，因为客户仍不能知道排行上的商品具体是什么。</p>
-<h3><span id="skill的去留">skill的去留</span></h3><p>现在的一些旗舰模型，如GPT-5.6-Sol、Claude Ops 5等综合能力已经很强，已经不太需要skill来指导它们怎么做任务。</p>
-<p>我的想法是：现在可以放弃那些简单的，只是指导AI怎么进行常规任务的skill，而留下那些用于专业任务特化、优化人机交互（JavaGuide在一篇公众号中推荐了）的skills。</p>
+<h3><span id="逻辑缺失问题">逻辑缺失问题</span></h3><p>新增一个排行的功能，ai返回了商品的id。但搜索界面不支持通过id进行搜索，导致实际上排行是失败的，因为客户仍不能知道排行上的商品具体是什么。</p>
+<h3><span id="skill的去留">skill的去留</span></h3><p>现在的一些旗舰模型，如gpt5.6-sol、claude ops5等综合能力已经很强，已经不太需要skill来指导它们怎么做任务。</p>
+<p>我的想法是：现在可以放弃那些简单的，只是指导ai怎么进行常规任务的skill，而留下那些用于专业任务特化、优化人机交互（JavaGuide在一篇公众号中推荐了）的skills。</p>
 <p>之前在测试一个新模型时，我给它发布了一个简单的代码阅读任务，目标是我的一个SSM系统。但却触发了我Vivado的skill，这样反而会对agent的工作起反作用。所以我认为，skill在精不在多，应该有选择性的保留skill。</p>
 <h3><span id="codegraph">codegraph</span></h3><p>codegraph是我比较推荐的一个MCP。它可以把项目中的类、方法、调用关系等建立成索引，帮助agent快速定位符号、分析依赖和理解代码结构，而不需要在每次任务里盲目搜索整个仓库。</p>
 <p>对于较大的Java后端项目来说，这类索引型MCP尤其适合配合AI使用：先让agent通过codegraph找到入口方法和上下游关系，再阅读相关代码并执行修改，能明显减少误改范围过大的情况。</p>
@@ -436,7 +989,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-24 16:32:10" itemprop="dateModified" datetime="2026-08-24T16:32:10+00:00">2026-08-24</time>
+      <time title="修改时间：2026-09-04 03:30:10" itemprop="dateModified" datetime="2026-09-04T03:30:10+00:00">2026-09-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -778,7 +1331,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-24 16:32:10" itemprop="dateModified" datetime="2026-08-24T16:32:10+00:00">2026-08-24</time>
+      <time title="修改时间：2026-09-04 03:30:10" itemprop="dateModified" datetime="2026-09-04T03:30:10+00:00">2026-09-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -961,7 +1514,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-24 16:32:10" itemprop="dateModified" datetime="2026-08-24T16:32:10+00:00">2026-08-24</time>
+      <time title="修改时间：2026-09-04 03:30:10" itemprop="dateModified" datetime="2026-09-04T03:30:10+00:00">2026-09-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1159,7 +1712,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-24 16:32:10" itemprop="dateModified" datetime="2026-08-24T16:32:10+00:00">2026-08-24</time>
+      <time title="修改时间：2026-09-04 03:30:10" itemprop="dateModified" datetime="2026-09-04T03:30:10+00:00">2026-09-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1490,7 +2043,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-24 16:32:10" itemprop="dateModified" datetime="2026-08-24T16:32:10+00:00">2026-08-24</time>
+      <time title="修改时间：2026-09-04 03:30:10" itemprop="dateModified" datetime="2026-09-04T03:30:10+00:00">2026-09-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1930,7 +2483,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-24 16:32:10" itemprop="dateModified" datetime="2026-08-24T16:32:10+00:00">2026-08-24</time>
+      <time title="修改时间：2026-09-04 03:30:10" itemprop="dateModified" datetime="2026-09-04T03:30:10+00:00">2026-09-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -2096,341 +2649,6 @@
 </tbody></table>
 <p>这套配置的核心思路是：<strong>用 cc-switch 降低配置门槛，用 skills 增强 AI 的行为质量，用 MCP 扩展 AI 的能力边界</strong>。</p>
 <p>如果你是刚接触 AI 编程工具的同学，建议按这个顺序来：先装 cc-switch 把环境配好，再装 karpathy-guideline 这个基础 skill，然后根据自己的需要逐步添加其他插件。不要一次性全装上——记住 MCP 会占上下文，按需开启就好。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/05/20/%E5%90%B4%E6%81%A9%E8%BE%BEagent-skills/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="DarkYellowCat">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="DarkYellowCat's Blog">
-      <meta itemprop="description" content="记录学习与成长">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | DarkYellowCat's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/05/20/%E5%90%B4%E6%81%A9%E8%BE%BEagent-skills/" class="post-title-link" itemprop="url">吴恩达 Agent Skills 学习笔记</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-05-20 14:29:25" itemprop="dateCreated datePublished" datetime="2026-05-20T14:29:25+00:00">2026-05-20</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-24 16:32:10" itemprop="dateModified" datetime="2026-08-24T16:32:10+00:00">2026-08-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>本文是吴恩达 Agent Skills 课程的学习笔记，记录了 Skill 的概念、构成、创建方式以及与工具&#x2F;MCP&#x2F;子代理之间的关系。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/05/20/%E5%90%B4%E6%81%A9%E8%BE%BEagent-skills/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/05/19/%E5%90%B4%E6%81%A9%E8%BE%BEAgent%E6%99%BA%E8%83%BD%E4%BD%93%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="DarkYellowCat">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="DarkYellowCat's Blog">
-      <meta itemprop="description" content="记录学习与成长">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | DarkYellowCat's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/05/19/%E5%90%B4%E6%81%A9%E8%BE%BEAgent%E6%99%BA%E8%83%BD%E4%BD%93%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">吴恩达 Agent 智能体学习笔记</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-05-19 10:09:32" itemprop="dateCreated datePublished" datetime="2026-05-19T10:09:32+00:00">2026-05-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-08-24 16:32:10" itemprop="dateModified" datetime="2026-08-24T16:32:10+00:00">2026-08-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2><span id="前言">前言</span></h2><p>本文是我自学时记录的笔记，有我个人的理解并部分地方调整过，并没有记录我认为不是我学习重心的内容，如有分歧请以具体课程内容为主。</p>
-<hr>
-<h2><span id="智能体工作流简介">智能体工作流简介</span></h2><h3><span id="non-agentic-vs-agentic-workflow">Non-Agentic vs Agentic Workflow</span></h3><p><strong>Non-Agentic Workflow（非代理型）</strong></p>
-<p>用 prompt 让 AI 去完成任务，一次性输出结果。</p>
-<blockquote>
-<p>例：为我写一篇实验报告 → AI 思考后返回内容</p>
-</blockquote>
-<p><strong>Agentic Workflow（代理型）</strong></p>
-<p>LLM 执行多步操作来完成任务，具备迭代和自我修正能力。</p>
-<blockquote>
-<p>例：为我写一篇实验报告 → 是否需要网络搜索 → 第一版草稿 → 判断哪些地方需要修改 → 重复直至完成任务</p>
-</blockquote>
-<p><img data-src="/2026/05/19/%E5%90%B4%E6%81%A9%E8%BE%BEAgent%E6%99%BA%E8%83%BD%E4%BD%93%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image.png" alt="Agentic Workflow 示意"></p>
-<hr>
-<h3><span id="自主性程度">自主性程度</span></h3><h4><span id="低自主性">低自主性</span></h4><p><img data-src="/2026/05/19/%E5%90%B4%E6%81%A9%E8%BE%BEAgent%E6%99%BA%E8%83%BD%E4%BD%93%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-1.png" alt="低自主性流程"></p>
-<p>写一篇关于黑洞的论文 → LLM 进行网络搜索和抓取 → 写论文</p>
-<p>特点：</p>
-<ul>
-<li>所有步骤都是设定好的</li>
-<li>工具都是硬编码</li>
-<li>智能仅体现在文本生成</li>
-</ul>
-<h4><span id="高自主性">高自主性</span></h4><p><img data-src="/2026/05/19/%E5%90%B4%E6%81%A9%E8%BE%BEAgent%E6%99%BA%E8%83%BD%E4%BD%93%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-2.png" alt="高自主性流程"></p>
-<p>写一篇关于黑洞的论文 → LLM 进行网络搜索（决定从哪里获取资料、获取什么形式的资料）→ 抓取（抓取多少、是否需要格式转换）→ 写论文 → 反复审查</p>
-<p>特点：</p>
-<ul>
-<li>自主决定执行路径</li>
-<li>能创建新工具</li>
-</ul>
-<h4><span id="对比">对比</span></h4><p><img data-src="/2026/05/19/%E5%90%B4%E6%81%A9%E8%BE%BEAgent%E6%99%BA%E8%83%BD%E4%BD%93%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-3.png" alt="自主性对比"></p>
-<hr>
-<h3><span id="优势">优势</span></h3><ol>
-<li>代理模式可以提高 AI 的性能</li>
-<li>通过并行加快速度<br><img data-src="/2026/05/19/%E5%90%B4%E6%81%A9%E8%BE%BEAgent%E6%99%BA%E8%83%BD%E4%BD%93%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-4.png" alt="并行优势示意"></li>
-<li>允许增加或更新模块</li>
-</ol>
-<hr>
-<h3><span id="任务分解识别工作流中的步骤">任务分解：识别工作流中的步骤</span></h3><p>构建初步工作流 → 表现不好 → 细化操作流程</p>
-<hr>
-<h3><span id="智能体评估">智能体评估</span></h3><p>常规做法：先构建系统 → 检查输出 → 修复漏洞 → 添加评估来检测是否修复</p>
-<p><strong>问题</strong>：有些情况难以用代码进行检测</p>
-<p><strong>解决</strong>：用智能体进行评估计分</p>
-<hr>
-<h3><span id="设计模式">设计模式</span></h3><ol>
-<li><strong>Reflection</strong>（反思）</li>
-<li><strong>Tool Use</strong>（工具使用）</li>
-<li><strong>Planning</strong>（规划）</li>
-<li><strong>Multi-Agent Collaboration</strong>（多智能体协作）</li>
-</ol>
-<hr>
-<h2><span id="reflection-反思">Reflection 反思</span></h2><h3><span id="与直接输出相比的优势">与直接输出相比的优势</span></h3><p>直接输出是一次性生成；Reflection 让 AI 对自己的输出进行审视和改进，类似于人类写完文章后的自我检查。</p>
-<h3><span id="如何正确评估">如何正确评估</span></h3><p>给出具体细分的标准，二元&#x2F;多元计分，比较分数总和。</p>
-<p><strong>为什么不直接选择？</strong><br>→ AI 倾向于选择第一个选项（位置偏差）</p>
-<p><strong>为什么要多元化标准？</strong><br>→ 单一标准校准不佳，细分维度后评估更准确</p>
-<h3><span id="外部反馈">外部反馈</span></h3><p>在大模型进行工作时，提供正确的输出作为参考，或对它的错误进行指正。</p>
-<hr>
-<h2><span id="tool-use-工具使用">Tool Use 工具使用</span></h2><p><img data-src="/2026/05/19/%E5%90%B4%E6%81%A9%E8%BE%BEAgent%E6%99%BA%E8%83%BD%E4%BD%93%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image-6.png" alt="Tool Use 示意"></p>
-<h3><span id="概念">概念</span></h3><p>大模型不实际调用工具，而是去<strong>请求</strong>工具。LLM 生成工具调用的意图，由外部系统负责实际执行。</p>
-<h3><span id="工具语法">工具语法</span></h3><p>Tool Use 的核心流程：<strong>定义工具 → LLM 生成调用请求 → 外部系统执行 → 结果返回给 LLM</strong></p>
-<h4><span id="1-定义工具tool-definition">1. 定义工具（Tool Definition）</span></h4><p>以 JSON Schema 的形式告诉 LLM 有哪些工具可用：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;function&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;function&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;get_weather&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;获取指定城市的当前天气信息&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;parameters&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;object&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;city&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;城市名称，如：北京&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;unit&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;enum&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;celsius&quot;</span><span class="punctuation">,</span> <span class="string">&quot;fahrenheit&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;温度单位&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;required&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;city&quot;</span><span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>关键字段：</p>
-<ul>
-<li><code>name</code>：工具名称，LLM 通过它来调用</li>
-<li><code>description</code>：描述工具的用途，帮助 LLM 判断何时使用</li>
-<li><code>parameters</code>：参数的 JSON Schema，定义输入格式</li>
-</ul>
-<h4><span id="2-llm-生成工具调用tool-call">2. LLM 生成工具调用（Tool Call）</span></h4><p>当 LLM 判断需要使用工具时，它不会直接执行，而是返回一个结构化的调用请求：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;tool_calls&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;call_abc123&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;function&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;function&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;get_weather&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;arguments&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&#123;\&quot;city\&quot;: \&quot;北京\&quot;, \&quot;unit\&quot;: \&quot;celsius\&quot;&#125;&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<h4><span id="3-外部系统执行并返回结果">3. 外部系统执行并返回结果</span></h4><p>应用程序拿到调用请求后，实际执行函数，再把结果喂回给 LLM：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;role&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tool&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;tool_call_id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;call_abc123&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="string">&quot;&#123;\&quot;temperature\&quot;: 22, \&quot;condition\&quot;: \&quot;晴\&quot;&#125;&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<h4><span id="4-llm-基于结果生成最终回复">4. LLM 基于结果生成最终回复</span></h4><blockquote>
-<p>“北京现在 22°C，天气晴朗。”</p>
-</blockquote>
-<p>整个过程中 LLM 本身不执行任何代码，它只负责<strong>决定调什么工具、传什么参数</strong>，实际执行权在应用层。</p>
-<h3><span id="mcpmodel-context-protocol">MCP（Model Context Protocol）</span></h3><p>MCP 是 Anthropic 提出的开放协议，目的是<strong>统一 LLM 与外部工具&#x2F;数据源的连接方式</strong>。</p>
-<p>解决的问题：每个工具提供商都有自己的接入方式，LLM 应用需要为每个工具单独写适配代码。MCP 就像 USB 接口一样，定义了一套标准协议，让任何工具只要实现 MCP Server，就能被任何支持 MCP 的 LLM 客户端调用。</p>
-<p>核心架构：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LLM 应用（MCP Client）  ←→  MCP Server（工具/数据源）</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>MCP Client</strong>：嵌入在 LLM 应用中，负责发现和调用工具</li>
-<li><strong>MCP Server</strong>：封装具体工具的能力，暴露标准化接口</li>
-</ul>
-<p>与普通 Function Calling 的区别：</p>
-<ul>
-<li>Function Calling 是一次性定义好工具列表，写死在代码里</li>
-<li>MCP 是动态发现，LLM 可以在运行时连接新的工具服务器，获取更多能力</li>
-</ul>
-<hr>
-<h2><span id="使用技巧">使用技巧</span></h2><h3><span id="构建-mvpminimum-viable-product最小可行产品">构建 MVP（Minimum Viable Product，最小可行产品）</span></h3><p>在构建 Agent 系统时，不要一开始就追求完美，先搭一个最小可行版本：</p>
-<ul>
-<li>仅保留最核心功能，剔除所有非必需代码&#x2F;依赖</li>
-<li>能完整跑通主要业务流程，无关键缺失</li>
-<li>可直接运行、测试或交付给早期用户&#x2F;验证想法</li>
-<li>常用于敏捷开发、快速原型验证、教学示例或初创项目</li>
-</ul>
-<blockquote>
-<p>先让它跑起来，再让它跑得好。</p>
-</blockquote>
-<h3><span id="进行错误审查">进行错误审查</span></h3><p>当 Agent 输出不符合预期时，不要直接改 prompt 碰运气，而是：</p>
-<ol>
-<li>把 Agent 的中间过程完整打印出来（每一步的输入输出）</li>
-<li>逐步检查，定位到具体是哪一步出了问题</li>
-<li>针对性地修复那一步，而不是全局调整</li>
-</ol>
-<p>这和 debug 代码的思路一样：先定位，再修复。</p>
-<h3><span id="评估优化">评估优化</span></h3><p>为 Agent 的每个模块单独构建评估方法：</p>
-<ul>
-<li><strong>搜索模块</strong>：返回的结果是否相关？覆盖率如何？</li>
-<li><strong>摘要模块</strong>：是否丢失关键信息？是否引入幻觉？</li>
-<li><strong>决策模块</strong>：选择的工具是否合理？参数是否正确？</li>
-</ul>
-<p>针对性评估比端到端评估更容易发现问题，也更容易迭代优化。</p>
-<hr>
-<h2><span id="多智能体">多智能体</span></h2><h3><span id="为什么要用多智能体">为什么要用多智能体</span></h3><p>单个 Agent 处理复杂任务时会遇到瓶颈：</p>
-<ul>
-<li><strong>上下文窗口有限</strong>：一个 Agent 塞太多职责，prompt 会变得又长又混乱</li>
-<li><strong>专业化更高效</strong>：就像公司里有不同岗位，让每个 Agent 专注一件事，效果更好</li>
-<li><strong>并行处理</strong>：多个 Agent 可以同时工作，提高整体速度</li>
-<li><strong>易于调试</strong>：出问题时能快速定位是哪个 Agent 的责任</li>
-</ul>
-<blockquote>
-<p>类比：一个人既当产品经理又当开发又当测试，不如三个人各司其职。</p>
-</blockquote>
-<h3><span id="多智能体的通信模式">多智能体的通信模式</span></h3><h4><span id="1-顺序传递pipeline">1. 顺序传递（Pipeline）</span></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Agent A → Agent B → Agent C → 最终输出</span><br></pre></td></tr></table></figure>
-
-<p>每个 Agent 处理完后把结果传给下一个。适合流程明确的任务，比如：研究 → 写作 → 审校。</p>
-<h4><span id="2-分层委派hierarchical">2. 分层委派（Hierarchical）</span></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">      Supervisor Agent</span><br><span class="line">     /       |        \</span><br><span class="line">Agent A   Agent B   Agent C</span><br></pre></td></tr></table></figure>
-
-<p>一个主管 Agent 负责分配任务、汇总结果。适合需要协调和决策的场景。</p>
-<h4><span id="3-协作讨论debatex2fdiscussion">3. 协作讨论（Debate&#x2F;Discussion）</span></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Agent A ←→ Agent B ←→ Agent C</span><br><span class="line">         (多轮对话)</span><br></pre></td></tr></table></figure>
-
-<p>多个 Agent 互相讨论、质疑、补充，最终达成共识。适合需要多角度分析的复杂问题。</p>
-<h4><span id="4-广播模式broadcast">4. 广播模式（Broadcast）</span></h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Orchestrator → 同时通知所有 Agent → 收集结果 → 合并</span><br></pre></td></tr></table></figure>
-
-<p>适合可以并行处理的独立子任务。</p>
-<hr>
-<h2><span id="知识图谱">知识图谱</span></h2><h3><span id="概念">概念</span></h3><p>知识图谱解决的核心问题：<strong>让 AI 理解实体之间的关系</strong>。</p>
-<p>传统数据库存储的是表格数据（行和列），而知识图谱存储的是<strong>实体（节点）和关系（边）</strong>，形成一张网络。</p>
-<blockquote>
-<p>例：「吴恩达」—[创办]→「DeepLearning.AI」—[提供]→「AI Agent 课程」</p>
-</blockquote>
-<h3><span id="为什么-agent-需要知识图谱">为什么 Agent 需要知识图谱</span></h3><ul>
-<li>LLM 的知识是静态的（训练时截止），知识图谱可以提供实时更新的结构化知识</li>
-<li>复杂推理需要多跳关系（A 认识 B，B 在 C 公司工作，所以 A 可能了解 C 公司），图谱天然支持这种查询</li>
-<li>减少幻觉：有明确的事实依据，而不是让 LLM 凭记忆回答</li>
-</ul>
-<h3><span id="模式查询">模式查询</span></h3><p>使用知识图谱时的核心思考框架：</p>
-<ol>
-<li><strong>目标是什么</strong> — 要回答什么问题？需要找到什么实体或关系？</li>
-<li><strong>什么样的数据是有效的</strong> — 图谱中哪些节点和边与问题相关？如何过滤噪声？</li>
-<li><strong>数据被怎样分析</strong> — 用什么查询模式？单跳查询还是多跳推理？是否需要聚合？</li>
-</ol>
-<p>常见查询语言：<strong>Cypher</strong>（Neo4j）、<strong>SPARQL</strong>（RDF 图谱）</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// Cypher 示例：查找吴恩达创办的所有组织</span><br><span class="line">MATCH (p:Person &#123;name: &quot;吴恩达&quot;&#125;)-[:FOUNDED]-&gt;(org:Organization)</span><br><span class="line">RETURN org.name</span><br></pre></td></tr></table></figure>
 
       
     </div>

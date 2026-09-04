@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"darkyellowcat.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"default","show_result":true},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"night eighties"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="前言这篇文章是我围绕“面向冗余机械臂规划控制的神经动力学模型”完成的一次课程文献调研。我选取了 15 篇中英文论文，时间跨度从 2008 年到 2026 年，内容覆盖逆运动学、二次规划、递归神经网络、归零神经网络、物理约束、滚动时域控制、数据驱动和任务优先级控制。 读完这些论文后，我大致得出的理解为： 12把冗余机械臂的多解问题写成带约束的时变优化，再把“求最优解”变成一个能够在线演化并收敛的神经">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文献调研：面向冗余机械臂规划控制的神经动力学模型">
+<meta property="og:url" content="https://darkyellowcat.github.io/2026/09/03/%E6%96%87%E7%8C%AE%E8%B0%83%E7%A0%94-%E9%9D%A2%E5%90%91%E5%86%97%E4%BD%99%E6%9C%BA%E6%A2%B0%E8%87%82%E8%A7%84%E5%88%92%E6%8E%A7%E5%88%B6%E7%9A%84%E7%A5%9E%E7%BB%8F%E5%8A%A8%E5%8A%9B%E5%AD%A6%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:site_name" content="DarkYellowCat&#39;s Blog">
+<meta property="og:description" content="前言这篇文章是我围绕“面向冗余机械臂规划控制的神经动力学模型”完成的一次课程文献调研。我选取了 15 篇中英文论文，时间跨度从 2008 年到 2026 年，内容覆盖逆运动学、二次规划、递归神经网络、归零神经网络、物理约束、滚动时域控制、数据驱动和任务优先级控制。 读完这些论文后，我大致得出的理解为： 12把冗余机械臂的多解问题写成带约束的时变优化，再把“求最优解”变成一个能够在线演化并收敛的神经">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-03T12:10:00.000Z">
+<meta property="article:modified_time" content="2026-09-04T03:30:10.789Z">
+<meta property="article:author" content="DarkYellowCat">
+<meta property="article:tag" content="机器人">
+<meta property="article:tag" content="神经动力学">
+<meta property="article:tag" content="论文">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://darkyellowcat.github.io/2026/09/03/%E6%96%87%E7%8C%AE%E8%B0%83%E7%A0%94-%E9%9D%A2%E5%90%91%E5%86%97%E4%BD%99%E6%9C%BA%E6%A2%B0%E8%87%82%E8%A7%84%E5%88%92%E6%8E%A7%E5%88%B6%E7%9A%84%E7%A5%9E%E7%BB%8F%E5%8A%A8%E5%8A%9B%E5%AD%A6%E6%A8%A1%E5%9E%8B/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://darkyellowcat.github.io/2026/09/03/%E6%96%87%E7%8C%AE%E8%B0%83%E7%A0%94-%E9%9D%A2%E5%90%91%E5%86%97%E4%BD%99%E6%9C%BA%E6%A2%B0%E8%87%82%E8%A7%84%E5%88%92%E6%8E%A7%E5%88%B6%E7%9A%84%E7%A5%9E%E7%BB%8F%E5%8A%A8%E5%8A%9B%E5%AD%A6%E6%A8%A1%E5%9E%8B/","path":"2026/09/03/文献调研-面向冗余机械臂规划控制的神经动力学模型/","title":"文献调研：面向冗余机械臂规划控制的神经动力学模型"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>文献调研：面向冗余机械臂规划控制的神经动力学模型 | DarkYellowCat's Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">DarkYellowCat's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">分享技术与思考</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">2.1.</span> <span class="nav-text">冗余机械臂为什么会有多解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">2.2.</span> <span class="nav-text">“神经网络”不一定需要训练</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">15 篇文献分别解决了什么</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">3.1.</span> <span class="nav-text">一、从逆运动学到带约束 QP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">3.2.</span> <span class="nav-text">二、在线求解器如何变得更可靠</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">3.3.</span> <span class="nav-text">三、预测控制与模型未知</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">3.4.</span> <span class="nav-text">四、从单任务扩展到多任务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">文献对照表</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">横向比较：几条路线分别适合什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">6.</span> <span class="nav-text">我的几点判断</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">6.1.</span> <span class="nav-text">1. 神经动力学的主要优势是在线优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">6.2.</span> <span class="nav-text">2. 约束完整性比单一误差数字更重要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">6.3.</span> <span class="nav-text">3. 连续时间证明与数字实现之间还有距离</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">6.4.</span> <span class="nav-text">4. 当前方向正在从已知模型走向混合方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">7.</span> <span class="nav-text">这次调研的局限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">9.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">DarkYellowCat</p>
+  <div class="site-description" itemprop="description">记录学习与成长</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/09/03/%E6%96%87%E7%8C%AE%E8%B0%83%E7%A0%94-%E9%9D%A2%E5%90%91%E5%86%97%E4%BD%99%E6%9C%BA%E6%A2%B0%E8%87%82%E8%A7%84%E5%88%92%E6%8E%A7%E5%88%B6%E7%9A%84%E7%A5%9E%E7%BB%8F%E5%8A%A8%E5%8A%9B%E5%AD%A6%E6%A8%A1%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DarkYellowCat">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DarkYellowCat's Blog">
+      <meta itemprop="description" content="记录学习与成长">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="文献调研：面向冗余机械臂规划控制的神经动力学模型 | DarkYellowCat's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          文献调研：面向冗余机械臂规划控制的神经动力学模型
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-03 12:10:00" itemprop="dateCreated datePublished" datetime="2026-09-03T12:10:00+00:00">2026-09-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-09-04 03:30:10" itemprop="dateModified" datetime="2026-09-04T03:30:10+00:00">2026-09-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1><span id="前言">前言</span></h1><p>这篇文章是我围绕“面向冗余机械臂规划控制的神经动力学模型”完成的一次课程文献调研。我选取了 15 篇中英文论文，时间跨度从 2008 年到 2026 年，内容覆盖逆运动学、二次规划、递归神经网络、归零神经网络、物理约束、滚动时域控制、数据驱动和任务优先级控制。</p>
+<p>读完这些论文后，我大致得出的理解为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">把冗余机械臂的多解问题写成带约束的时变优化，</span><br><span class="line">再把“求最优解”变成一个能够在线演化并收敛的神经动力系统。</span><br></pre></td></tr></table></figure>
+
+<p>技术演进大致是：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">伪逆求解</span><br><span class="line">  → QP 统一主任务、次级目标和关节边界</span><br><span class="line">  → RNN/GNN 作为并行在线求解器</span><br><span class="line">  → ZNN 利用时间导数信息减小动态滞后</span><br><span class="line">  → 投影、对偶和变参数模型处理复杂约束与收敛</span><br><span class="line">  → RHC、Koopman、数据驱动和分层控制扩展应用边界</span><br></pre></td></tr></table></figure>
+
+<p>这批工作共同说明神经动力学适合实时优化，但也暴露出一个明显矛盾：模型越能处理复杂约束，推导、参数和离散实现就越复杂。论文中的连续时间收敛结论，也不能自动替代实物系统上的时延、噪声和算力验证。</p>
+<h1><span id="概念">概念</span></h1><h2><span id="冗余机械臂为什么会有多解">冗余机械臂为什么会有多解</span></h2><p>若机械臂关节自由度 <code>n</code> 大于末端任务空间维度 <code>m</code>，即 <code>n &gt; m</code>，其速度级运动学通常写成：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ṙ = J(θ)θ̇</span><br></pre></td></tr></table></figure>
+
+<p>这是一个欠定方程。同一末端速度 <code>ṙ</code> 可能对应多组关节速度 <code>θ̇</code>。伪逆可以给出最小二范数解，但难以自然表达关节限位、避障、周期回零和任务优先级等要求。[1]</p>
+<p>二次规划（QP）提供了更灵活的表达：用目标函数选择一组更合适的关节运动，用等式保证末端任务，用不等式表示物理边界。[2]</p>
+<h2><span id="神经网络不一定需要训练">“神经网络”不一定需要训练</span></h2><p>这 15 篇论文中的 RNN、GNN、ZNN 和 DNN，很多并不是依靠数据集训练权重的深度学习模型，而是由常微分方程构造的优化求解器。网络状态随时间演化，平衡点对应方程或优化问题的解。</p>
+<p>到了数据驱动和 Koopman 路线，学习模型才真正成为核心部分：前者在线估计雅可比矩阵，后者从输入输出数据学习机械臂动力学，再把学习结果交给控制器。[11-13]</p>
+<h1><span id="15-篇文献分别解决了什么">15 篇文献分别解决了什么</span></h1><p>为了避免把文章写成摘要堆叠，我按“问题如何被建模、优化如何被求解、未知模型如何处理、多个任务如何协调”分成四组。</p>
+<h2><span id="一-从逆运动学到带约束-qp">一、从逆运动学到带约束 QP</span></h2><p>张泽玺等教授的综述把冗余机械臂逆运动学方法分为解析法、数值法和人工智能方法，为后续论文提供了问题地图。[1] 解析法精确但依赖具体结构；数值法通用，却需要处理奇异性和初值；人工智能方法适应性强，但通常引入训练或稳定性验证问题。</p>
+<p>张雨浓等教授较早把平面冗余机械臂自运动写成带等式和双端约束的 QP，并用基于线性变分不等式的原对偶神经网络实时求解。[2] 这类工作确立了一个后来反复出现的套路：先决定优化什么，再讨论用哪种神经动力学模型求解。</p>
+<p>关节漂移是周期任务中的典型问题。吕宣姣等教授在八连杆和九连杆平面机械臂上验证二次型性能指标对无偏差运动规划的作用；张智军和张雨浓则从理论和 PUMA560 仿真说明速度层与加速度层重复运动规划方案可以建立等效关系。[3-4] 这两篇论文点出，末端闭合轨迹不等于关节状态自动回到起点。</p>
+<h2><span id="二-在线求解器如何变得更可靠">二、在线求解器如何变得更可靠</span></h2><p>张智军等教授比较三种递归神经网络和三种离散数值方法来求解重复运动规划。[5] 论文的结果不是简单宣称 RNN 全面更好，而是给出了实际取舍：多数正常仿真条件下，神经网络更快、更准确；离散数值方法则更容易直接部署到数字计算机。</p>
+<p>固定参数难以同时照顾初期收敛和稳态表现。VP-CDNN 使用时变参数求解带反馈的关节无漂移 QP，并在 Kinova Jaco2 上进行了物理实验。[6] 这项工作把“误差是否归零”与“关节是否回到合理构型”放进同一框架。</p>
+<p>约束进一步复杂后，求解器出现了不同分支：</p>
+<ul>
+<li>CCNC-QP-DNN 同时面向凸和非凸约束，并处理初始误差，但论文验证以计算机仿真为主；[7]</li>
+<li>VPZND 把时变非线性等式、时变线性不等式、有界噪声和固定收敛时间放在统一框架中；[8]</li>
+<li>Dini-ZNN 使用连续但不可微的投影算子，并用上右 Dini 导数处理模式切换，避免为平滑近似额外调参。[9]</li>
+</ul>
+<p>这组论文展示了神经动力学研究的核心变化：关注点从“能不能解 QP”逐渐转向“面对时变、多类型约束、初始误差和噪声时还能不能稳定求解”。</p>
+<h2><span id="三-预测控制与模型未知">三、预测控制与模型未知</span></h2><p>Yan 等把滚动时域控制（RHC）写成凸 QP，目标同时包含跟踪误差、速度范数和加速度范数，并直接考虑角度、速度、加速度三层边界和终端等式约束，再设计 RNN 在线求解。[10] 它的价值在于引入预测窗口，但计算量和控制效果会受到窗口与离散实现影响。</p>
+<p>Sah 等提出 Koopman-ZNN 框架：用自编码器学习低维双线性 Koopman 模型，再配合 ZNN 处理输入约束。[11] 论文报告的控制频率最高可达 <code>800 Hz</code>，并进行了仿真和实验。它比纯运动学 ZNN 更接近“学习模型 + 在线控制”的组合，但效果仍依赖训练数据能否覆盖真实工作区。</p>
+<p>两篇中文论文从雅可比矩阵未知出发：</p>
+<ul>
+<li>刘佰阳等用梯度下降从末端速度和关节速度数据估计雅可比矩阵，并构造加速度层规划方案；[12]</li>
+<li>金龙等进一步同时控制末端位置与姿态，用四元数表示姿态，并设计神经动力学求解器。[13]</li>
+</ul>
+<p>这类数据驱动方案缓解了精确 DH 参数不可得的问题，但把风险从“模型参数误差”转移到了“在线估计误差”。因此，除了跟踪精度，还需要关注激励是否充分、估计是否收敛以及闭环稳定性是否对学习误差敏感。</p>
+<h2><span id="四-从单任务扩展到多任务">四、从单任务扩展到多任务</span></h2><p>谢正泰等的综述从神经动力学、前馈神经网络、递归神经网络和强化学习四个方向回顾机器人学习与控制。[14] 它帮助我区分了两类经常混在一起的研究：一类用神经网络逼近未知函数或策略，另一类把动态网络当作优化计算过程。</p>
+<p>在多任务控制中，谢正泰等又提出 PBRNN，通过零空间投影给末端跟踪、姿态或关节任务安排优先级；当任务总维度超过机械臂自由度时，低优先级任务会被放弃。针对优先级切换引起的控制突变，论文进一步提出带补偿项的 PSRNN，并通过仿真和物理实验验证。[15]</p>
+<p>这项工作说明，冗余自由度并不意味着所有任务都能同时完成。任务冲突时，控制器必须明确“谁先完成、谁可以退让”，而不是把所有约束平铺后期待求解器自行化解冲突。</p>
+<h1><span id="文献对照表">文献对照表</span></h1><table>
+<thead>
+<tr>
+<th>#</th>
+<th>年份</th>
+<th>文献简称</th>
+<th>主要问题</th>
+<th>方法与验证</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>2026</td>
+<td>逆运动学方法综述</td>
+<td>逆运动学方法如何分类</td>
+<td>解析、数值、人工智能三类综述</td>
+</tr>
+<tr>
+<td>2</td>
+<td>2008</td>
+<td>QP 自运动</td>
+<td>关节受限下的自运动</td>
+<td>QP + 原对偶神经网络，平面机械臂仿真</td>
+</tr>
+<tr>
+<td>3</td>
+<td>2012</td>
+<td>八&#x2F;九连杆无漂移</td>
+<td>高冗余机械臂关节漂移</td>
+<td>二次型指标，平面模型仿真</td>
+</tr>
+<tr>
+<td>4</td>
+<td>2013</td>
+<td>速度&#x2F;加速度层等效</td>
+<td>不同规划层级是否等效</td>
+<td>神经动力学分析 + PUMA560 仿真</td>
+</tr>
+<tr>
+<td>5</td>
+<td>2017</td>
+<td>三种 RNN 与三种数值法</td>
+<td>重复运动规划在线求解</td>
+<td>仿真 + 物理实验 + 求解器对比</td>
+</tr>
+<tr>
+<td>6</td>
+<td>2018</td>
+<td>VP-CDNN</td>
+<td>关节角漂移与初始误差</td>
+<td>变参数动态网络 + Kinova Jaco2 实验</td>
+</tr>
+<tr>
+<td>7</td>
+<td>2019</td>
+<td>CCNC-QP-DNN</td>
+<td>凸&#x2F;非凸约束与初始误差</td>
+<td>对偶网络，五类末端任务仿真</td>
+</tr>
+<tr>
+<td>8</td>
+<td>2023</td>
+<td>Robust VPZND</td>
+<td>物理约束与有界噪声</td>
+<td>固定时间分析 + 数值&#x2F;仿真验证</td>
+</tr>
+<tr>
+<td>9</td>
+<td>2024</td>
+<td>Dini-ZNN</td>
+<td>多类型约束与不可微投影</td>
+<td>理论 + 仿真 + 机器人实验</td>
+</tr>
+<tr>
+<td>10</td>
+<td>2022</td>
+<td>RNN-RHC</td>
+<td>带预测窗口的约束跟踪</td>
+<td>三层边界，仿真 + 实验</td>
+</tr>
+<tr>
+<td>11</td>
+<td>2024</td>
+<td>Koopman-ZNN</td>
+<td>学习动力学并实时控制</td>
+<td>自编码器 + ZNN，仿真 + 实验</td>
+</tr>
+<tr>
+<td>12</td>
+<td>2023</td>
+<td>模型未知规划</td>
+<td>未知雅可比矩阵</td>
+<td>梯度在线估计 + 数值仿真</td>
+</tr>
+<tr>
+<td>13</td>
+<td>2024</td>
+<td>数据驱动位姿控制</td>
+<td>未知模型下的位置与姿态</td>
+<td>在线学习 + 四元数 + 仿真对比</td>
+</tr>
+<tr>
+<td>14</td>
+<td>2023</td>
+<td>机器人学习控制综述</td>
+<td>神经网络方法的整体分类</td>
+<td>ND、FNN、RNN、RL 四类综述</td>
+</tr>
+<tr>
+<td>15</td>
+<td>2026</td>
+<td>PBRNN&#x2F;PSRNN</td>
+<td>多任务冲突与优先级切换</td>
+<td>零空间投影 + 补偿，仿真 + 物理实验</td>
+</tr>
+</tbody></table>
+<h1><span id="横向比较几条路线分别适合什么">横向比较：几条路线分别适合什么</span></h1><table>
+<thead>
+<tr>
+<th>路线</th>
+<th>核心思路</th>
+<th>优点</th>
+<th>主要风险</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>伪逆&#x2F;数值逆解</td>
+<td>直接求欠定运动学方程</td>
+<td>形式直接、基线清楚</td>
+<td>复杂边界和次级目标不易统一</td>
+</tr>
+<tr>
+<td>QP + 原对偶&#x2F;投影网络</td>
+<td>把目标与约束统一为优化问题</td>
+<td>约束表达灵活、适合并行求解</td>
+<td>可行域、参数和离散化影响实现</td>
+</tr>
+<tr>
+<td>ZNN&#x2F;变参数网络</td>
+<td>让时变误差按设计动态归零</td>
+<td>利用导数信息，动态跟踪能力强</td>
+<td>需要系数导数，噪声下更敏感</td>
+</tr>
+<tr>
+<td>RHC + RNN</td>
+<td>滚动预测并在线优化</td>
+<td>能考虑未来输出和终端条件</td>
+<td>预测窗口增加计算量</td>
+</tr>
+<tr>
+<td>数据驱动&#x2F;Koopman</td>
+<td>从数据估计雅可比或动力学</td>
+<td>减少对精确模型的依赖</td>
+<td>训练覆盖、在线估计误差和泛化</td>
+</tr>
+<tr>
+<td>分层控制</td>
+<td>用零空间和优先级处理任务冲突</td>
+<td>主次任务关系明确</td>
+<td>优先级切换可能引起不连续</td>
+</tr>
+</tbody></table>
+<h1><span id="我的几点判断">我的几点判断</span></h1><h2><span id="1-神经动力学的主要优势是在线优化">1. 神经动力学的主要优势是在线优化</span></h2><p>这批论文中最稳定的主线不是“网络能拟合复杂函数”，而是“动态系统能实时逼近时变优化问题的解”。因此，评价它们时应优先看收敛、约束、计算周期和硬件验证，而不是套用深度学习中的训练集准确率。</p>
+<h2><span id="2-约束完整性比单一误差数字更重要">2. 约束完整性比单一误差数字更重要</span></h2><p>只报告末端误差很小，并不能说明关节速度、加速度或输入始终安全。比较方案时至少要同时检查：</p>
+<ul>
+<li>末端跟踪误差；</li>
+<li>关节状态和控制输入是否越界；</li>
+<li>周期任务结束后是否发生关节漂移；</li>
+<li>遇到初始误差、噪声或外部干扰时是否稳定；</li>
+<li>是否有实物实验，以及控制周期是否满足实时要求。</li>
+</ul>
+<h2><span id="3-连续时间证明与数字实现之间还有距离">3. 连续时间证明与数字实现之间还有距离</span></h2><p>多数模型先在连续时间下证明收敛，再用数值积分部署。步长过大、测量噪声、高阶导数估计和通信延迟都可能改变实际表现。论文中的“全局收敛”需要连同假设一起阅读，不能脱离可行性和离散实现单独引用。</p>
+<h2><span id="4-当前方向正在从已知模型走向混合方法">4. 当前方向正在从已知模型走向混合方法</span></h2><p>较早工作通常假设雅可比矩阵和运动学模型准确已知；后续研究开始在线估计雅可比、学习 Koopman 模型，或者在任务层引入优先级。未来更可能出现的是模型、数据和优化的混合，而不是单一方法完全替代其他路线。</p>
+<h1><span id="这次调研的局限">这次调研的局限</span></h1><p>15 篇文献集中在冗余机械臂、QP 与神经动力学这条研究线上，其中多篇来自相近研究团队。它们适合呈现技术演进，但不足以代表整个机器人规划控制领域。本文也没有覆盖基于采样的路径规划、完整动力学控制、碰撞检测和大规模强化学习等路线。</p>
+<h1><span id="总结">总结</span></h1><p>从这 15 篇文献可以看到，冗余机械臂规划控制的核心一直没有变：在完成末端任务的同时，合理使用多出来的自由度。变化的是问题表达和求解方式——从伪逆到 QP，从固定参数动态网络到 ZNN、投影与变参数模型，再到预测控制、数据驱动和任务分层。</p>
+<p>对我来说，这次调研最大的收获是建立了一个判断框架：看到新的神经动力学模型时，不只看它的名字和收敛速度，而是继续追问它解决了哪类约束、依赖哪些模型信息、在什么硬件上验证，以及连续时间结论能否落到实际控制周期中。</p>
+<h1><span id="参考文献">参考文献</span></h1><p>[1] 张泽玺, 熊根良, 高延峰, 张华. 冗余机械臂逆运动学求解方法综述[J]. 机械设计与制造, 2026(1): 222-230.</p>
+<p>[2] 张雨浓, 谭志国, 杨智, 蔡炳煌. 基于二次型规划的平面冗余机械臂的自运动[J]. 机器人, 2008, 30(6). DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.13973/j.cnki.robot.2008.06.017">10.13973&#x2F;j.cnki.robot.2008.06.017</a>.</p>
+<p>[3] 吕宣姣, 张雨浓, 杨智. 平面八连杆和九连杆机械臂关节角无偏差运动规划验证[J]. 中国科技信息, 2012(23).</p>
+<p>[4] 张智军, 张雨浓. 重复运动速度层和加速度层方案的等效性[J]. 自动化学报, 2013, 39(1): 88-91. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.3724/SP.J.1004.2013.00088">10.3724&#x2F;SP.J.1004.2013.00088</a>.</p>
+<p>[5] Z. Zhang, L. Zheng, J. Yu, Y. Li, and Z. Yu, “Three Recurrent Neural Networks and Three Numerical Methods for Solving a Repetitive Motion Planning Scheme of Redundant Robot Manipulators,” <em>IEEE&#x2F;ASME Transactions on Mechatronics</em>, vol. 22, no. 3, pp. 1423-1434, 2017. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TMECH.2017.2683561">10.1109&#x2F;TMECH.2017.2683561</a>.</p>
+<p>[6] Z. Zhang, T. Fu, Z. Yan, L. Jin, L. Xiao, Y. Sun, Z. Yu, and Y. Li, “A Varying-Parameter Convergent-Differential Neural Network for Solving Joint-Angular-Drift Problems of Redundant Robot Manipulators,” <em>IEEE&#x2F;ASME Transactions on Mechatronics</em>, vol. 23, no. 2, pp. 679-689, 2018. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TMECH.2018.2799724">10.1109&#x2F;TMECH.2018.2799724</a>.</p>
+<p>[7] Z. Zhang, S. Chen, and S. Li, “Compatible Convex-Nonconvex Constrained QP-Based Dual Neural Networks for Motion Planning of Redundant Robot Manipulators,” <em>IEEE Transactions on Control Systems Technology</em>, vol. 27, no. 3, pp. 1250-1258, 2019. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TCST.2018.2799990">10.1109&#x2F;TCST.2018.2799990</a>.</p>
+<p>[8] M. Zhang, W. Tong, P. Li, Y. Hou, X. Xu, L. Zhu, and E. Q. Wu, “Robust Neural Dynamics Method for Redundant Robot Manipulator Control With Physical Constraints,” <em>IEEE Transactions on Industrial Informatics</em>, vol. 19, no. 12, pp. 11721-11731, 2023. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TII.2023.3249768">10.1109&#x2F;TII.2023.3249768</a>.</p>
+<p>[9] W. Li and Y. Pan, “A Dini-Derivative-Aided Zeroing Neural Network for Time-Variant Quadratic Programming Involving Multi-Type Constraints With Robotic Applications,” <em>IEEE Transactions on Neural Networks and Learning Systems</em>, vol. 35, no. 9, pp. 12482-12493, 2024. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TNNLS.2023.3263263">10.1109&#x2F;TNNLS.2023.3263263</a>.</p>
+<p>[10] J. Yan, L. Jin, Z. Yuan, and Z. Liu, “RNN for Receding Horizon Control of Redundant Robot Manipulators,” <em>IEEE Transactions on Industrial Electronics</em>, vol. 69, no. 2, pp. 1608-1618, 2022. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TIE.2021.3062257">10.1109&#x2F;TIE.2021.3062257</a>.</p>
+<p>[11] C. K. Sah, R. Singh, and J. Keshavan, “Real-Time Constrained Tracking Control of Redundant Manipulators Using a Koopman-Zeroing Neural Network Framework,” <em>IEEE Robotics and Automation Letters</em>, vol. 9, no. 2, pp. 1732-1739, 2024. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/LRA.2024.3349966">10.1109&#x2F;LRA.2024.3349966</a>.</p>
+<p>[12] 刘佰阳, 郑宇, 魏琳, 刘梅, 金龙. 面向模型未知的冗余机器人运动规划方案[J]. 兰州大学学报(自然科学版), 2023, 59(4): 506-511. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.13885/j.issn.0455-2059.2023.04.011">10.13885&#x2F;j.issn.0455-2059.2023.04.011</a>.</p>
+<p>[13] 金龙, 张凡, 刘佰阳, 郑宇. 基于数据驱动的冗余机器人末端执行器位姿控制方案[J]. 自动化学报, 2024, 50(3): 518-526. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.16383/j.aas.c230273">10.16383&#x2F;j.aas.c230273</a>.</p>
+<p>[14] 谢正泰, 樊佳亮, 刘梅, 金龙. 基于神经网络的机器人学习与控制：回顾与展望[J]. 信息与控制, 2023, 52(1): 37-58. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.13976/j.cnki.xk.2023.2428">10.13976&#x2F;j.cnki.xk.2023.2428</a>.</p>
+<p>[15] 谢正泰, 吴新博, 金龙. 基于任务优先级的冗余机械臂分层控制[J]. 中国科学: 信息科学, 2026, 56(6). DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1360/SSI-2025-0383">10.1360&#x2F;SSI-2025-0383</a>.</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>DarkYellowCat
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://darkyellowcat.github.io/2026/09/03/%E6%96%87%E7%8C%AE%E8%B0%83%E7%A0%94-%E9%9D%A2%E5%90%91%E5%86%97%E4%BD%99%E6%9C%BA%E6%A2%B0%E8%87%82%E8%A7%84%E5%88%92%E6%8E%A7%E5%88%B6%E7%9A%84%E7%A5%9E%E7%BB%8F%E5%8A%A8%E5%8A%9B%E5%AD%A6%E6%A8%A1%E5%9E%8B/" title="文献调研：面向冗余机械臂规划控制的神经动力学模型">https://darkyellowcat.github.io/2026/09/03/文献调研-面向冗余机械臂规划控制的神经动力学模型/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E4%BA%BA/" rel="tag"># 机器人</a>
+              <a href="/tags/%E7%A5%9E%E7%BB%8F%E5%8A%A8%E5%8A%9B%E5%AD%A6/" rel="tag"># 神经动力学</a>
+              <a href="/tags/%E8%AE%BA%E6%96%87/" rel="tag"># 论文</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/03/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB-%E4%BB%8E%E4%BA%94%E5%B1%82%E7%BA%A6%E6%9D%9F%E7%9C%8BSnap-Layer-MMPC/" rel="prev" title="论文精读：从五层约束看 Snap-Layer MMPC">
+                  <i class="fa fa-angle-left"></i> 论文精读：从五层约束看 Snap-Layer MMPC
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">DarkYellowCat</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/darkyellowcat" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>
+  LA.init({ id: '3OnjqyPOaoYCHllV', ck: '3OnjqyPOaoYCHllV', autoTrack: true });
+</script>
+
+</body>
+</html>
