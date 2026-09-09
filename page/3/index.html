@@ -249,7 +249,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-09 12:58:00" itemprop="dateModified" datetime="2026-09-09T12:58:00+00:00">2026-09-09</time>
+      <time title="修改时间：2026-09-09 13:37:12" itemprop="dateModified" datetime="2026-09-09T13:37:12+00:00">2026-09-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -287,7 +287,8 @@
 <h1><span id="3mirris">3.Mirris</span></h1><p>对于当前节点 curr：</p>
 <ul>
 <li>如果 没有左子树：直接访问 curr，然后进入右子树。</li>
-<li>如果 有左子树：<br>找到 curr 的前驱节点（即左子树中的最右节点，记为 pre）。</li>
+<li>如果 有左子树：
+找到 curr 的前驱节点（即左子树中的最右节点，记为 pre）。</li>
 <li><ul>
 <li>如果 pre.right &#x3D;&#x3D; null：说明第一次访问，建立线索 pre.right &#x3D; curr，然后进入左子树。</li>
 </ul>
@@ -367,7 +368,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-09 12:58:00" itemprop="dateModified" datetime="2026-09-09T12:58:00+00:00">2026-09-09</time>
+      <time title="修改时间：2026-09-09 13:37:12" itemprop="dateModified" datetime="2026-09-09T13:37:12+00:00">2026-09-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -486,7 +487,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-09 12:58:00" itemprop="dateModified" datetime="2026-09-09T12:58:00+00:00">2026-09-09</time>
+      <time title="修改时间：2026-09-09 13:37:12" itemprop="dateModified" datetime="2026-09-09T13:37:12+00:00">2026-09-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -522,11 +523,14 @@
 <p>在 Java 8 之前，若要实现接口通常需要使用匿名内部类，代码冗长且可读性较差。Lambda 表达式通过更简洁的语法，使“做什么”比“怎么写”更加直观。</p>
 <h2><span id="2作用">2.作用</span></h2><p>Lambda 表达式的主要作用包括：</p>
 <ol>
-<li><p>简化代码结构<br>使用 Lambda 可以显著减少匿名内部类的样板代码，使核心逻辑更加突出。</p>
+<li><p>简化代码结构
+使用 Lambda 可以显著减少匿名内部类的样板代码，使核心逻辑更加突出。</p>
 </li>
-<li><p>提高可读性<br>在集合操作、事件回调等场景中，Lambda 能让代码更加贴近自然语言描述。</p>
+<li><p>提高可读性
+在集合操作、事件回调等场景中，Lambda 能让代码更加贴近自然语言描述。</p>
 </li>
-<li><p>支持函数式编程风格<br>Lambda 是 Stream API、Optional 等特性的基础，使 Java 能以声明式方式处理数据。</p>
+<li><p>支持函数式编程风格
+Lambda 是 Stream API、Optional 等特性的基础，使 Java 能以声明式方式处理数据。</p>
 </li>
 </ol>
 <h2><span id="3使用">3.使用</span></h2><p>Stream 的典型使用流程为：</p>
@@ -570,11 +574,14 @@
 <p>Stream 强调“做什么”，而非“如何遍历”，通过链式调用的方式完成对数据的处理。</p>
 <h2><span id="2作用">2.作用</span></h2><p>Stream API 的主要作用包括：</p>
 <ol>
-<li><p>简化集合操作<br>过滤、映射、排序、聚合等操作可以用一行链式代码完成。</p>
+<li><p>简化集合操作
+过滤、映射、排序、聚合等操作可以用一行链式代码完成。</p>
 </li>
-<li><p>提高代码表达力<br>使用 Stream 可以清晰表达数据处理流程，减少中间变量。</p>
+<li><p>提高代码表达力
+使用 Stream 可以清晰表达数据处理流程，减少中间变量。</p>
 </li>
-<li><p>支持并行处理<br>通过 parallelStream()，可以较低成本地利用多核 CPU 提升性能。</p>
+<li><p>支持并行处理
+通过 parallelStream()，可以较低成本地利用多核 CPU 提升性能。</p>
 </li>
 </ol>
 <h2><span id="3使用">3.使用</span></h2><p>Stream 的典型使用流程为：</p>
@@ -611,11 +618,14 @@
 <p>Optional 本身并不是为了解决所有 null 问题，而是作为一种 API 设计层面的约束和提示。</p>
 <h2><span id="2作用">2.作用</span></h2><p>Optional 的主要作用包括：</p>
 <ol>
-<li><p>减少空指针异常<br>通过强制检查或处理空值，降低运行时错误风险。</p>
+<li><p>减少空指针异常
+通过强制检查或处理空值，降低运行时错误风险。</p>
 </li>
-<li><p>提高代码可读性<br>方法返回 Optional，可以明确告诉调用者：返回值可能不存在。</p>
+<li><p>提高代码可读性
+方法返回 Optional，可以明确告诉调用者：返回值可能不存在。</p>
 </li>
-<li><p>鼓励函数式写法<br>Optional 与 Lambda 配合使用，可避免大量的 if-null 判断。</p>
+<li><p>鼓励函数式写法
+Optional 与 Lambda 配合使用，可避免大量的 if-null 判断。</p>
 </li>
 </ol>
 <h2><span id="3使用">3.使用</span></h2><p>创建 Optional 的常见方式：</p>
@@ -712,7 +722,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-09 12:58:00" itemprop="dateModified" datetime="2026-09-09T12:58:00+00:00">2026-09-09</time>
+      <time title="修改时间：2026-09-09 13:37:12" itemprop="dateModified" datetime="2026-09-09T13:37:12+00:00">2026-09-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -744,7 +754,8 @@
 <li><a href="#merge-two-sorted-lists">合并两个有序链表</a></li>
 </ol>
 <p><a id="middle-node"></a></p>
-<h1><span id="链表的中间节点-快慢指针">链表的中间节点-快慢指针</span></h1><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/middle-of-the-linked-list/">题号：876</a><br>给你单链表的头结点 head ，请你找出并返回链表的中间结点。</p>
+<h1><span id="链表的中间节点-快慢指针">链表的中间节点-快慢指针</span></h1><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/middle-of-the-linked-list/">题号：876</a>
+给你单链表的头结点 head ，请你找出并返回链表的中间结点。</p>
 <p>如果有两个中间结点，则返回第二个中间结点。</p>
 <p>输入：head &#x3D; [1,2,3,4,5]</p>
 <p>输出：[3,4,5]</p>
@@ -776,8 +787,10 @@
 <p><a id="reorder-list"></a></p>
 <h1><span id="重排链表">重排链表</span></h1><p><a target="_blank" rel="noopener" href="https://leetcode.cn/problems/reorder-list/description/">题号：143</a></p>
 <p>给定一个单链表 L 的头节点 head ，单链表 L 表示为：</p>
-<p>L0 → L1 → … → Ln - 1 → Ln<br>请将其重新排列后变为：</p>
-<p>L0 → Ln → L1 → Ln - 1 → L2 → Ln - 2 → …<br>不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。</p>
+<p>L0 → L1 → … → Ln - 1 → Ln
+请将其重新排列后变为：</p>
+<p>L0 → Ln → L1 → Ln - 1 → L2 → Ln - 2 → …
+不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public void reorderList(ListNode head) &#123;</span><br><span class="line">        ListNode mid = middle(head);</span><br><span class="line">        ListNode head2 = reverse(mid);</span><br><span class="line">        while(head2.next != null)&#123;</span><br><span class="line">            ListNode nxt = head.next;</span><br><span class="line">            ListNode nxt2 = head2.next;</span><br><span class="line">            head.next = head2;</span><br><span class="line">            head2.next = nxt;</span><br><span class="line">            head = nxt;</span><br><span class="line">            head2 = nxt2;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private ListNode reverse(ListNode head)&#123;</span><br><span class="line">        ListNode pre = null, cur = head;</span><br><span class="line">        while(cur != null)&#123;</span><br><span class="line">            ListNode nxt = cur.next;</span><br><span class="line">            cur.next = pre;</span><br><span class="line">            pre = cur;</span><br><span class="line">            cur = nxt;</span><br><span class="line">        &#125;</span><br><span class="line">        return pre;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private ListNode middle(ListNode head)&#123;</span><br><span class="line">        ListNode slow = head, fast = head;</span><br><span class="line">        while(fast != null &amp;&amp; fast.next != null)&#123;</span><br><span class="line">            slow = slow.next;</span><br><span class="line">            fast = fast.next.next;</span><br><span class="line">        &#125;</span><br><span class="line">        return slow;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><a id="remove-linked-list-elements"></a></p>
@@ -866,7 +879,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-09 12:58:00" itemprop="dateModified" datetime="2026-09-09T12:58:00+00:00">2026-09-09</time>
+      <time title="修改时间：2026-09-09 13:37:12" itemprop="dateModified" datetime="2026-09-09T13:37:12+00:00">2026-09-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -891,12 +904,16 @@
           <h1><span id="数据库操作">数据库操作</span></h1><h2><span id="创建">创建</span></h2><p>名称若为关键词需用单引号</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE DATABASE [IF NOT_EXISTS] XX</span><br></pre></td></tr></table></figure>
 <h2><span id="查看x2f删除">查看&#x2F;删除</span></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SHOW DATABASES 查看数据库</span><br><span class="line">SHOW CREATE DATABASE XXX 数据库创建语句</span><br><span class="line">DROP DATABASE [IF EXITS] XX 删除数据库</span><br></pre></td></tr></table></figure>
-<h2><span id="备份恢复">备份恢复</span></h2><p>必须在DOS执行<br>备份</p>
+<h2><span id="备份恢复">备份恢复</span></h2><p>必须在DOS执行
+备份</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqldump -u * -p * -B 数据库</span><br></pre></td></tr></table></figure>
-<p>生成 xx.sql文件<br>恢复</p>
+<p>生成 xx.sql文件
+恢复</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Source xx.sq了、</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <h1><span id="表操作">表操作</span></h1><h2><span id="创建表">创建表</span></h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE table_name</span><br><span class="line">&#123;</span><br><span class="line">    field datatype</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>character 字符集 (不指定默认用数据库字符集)<br>collate 校队规则<br>ENGINE </p>
+<p>character 字符集 (不指定默认用数据库字符集)
+collate 校队规则
+ENGINE </p>
 <h2><span id="修改表">修改表</span></h2><p>ALTER TABLE table_name</p>
 <ul>
 <li>ADD 添加列</li>
@@ -1051,7 +1068,8 @@
 <li>升序 ASC</li>
 <li>降序 DESC</li>
 </ul>
-<h2><span id="合计函数-count">合计函数 COUNT</span></h2><p>返回行的总数<br><code>SELECT COUNT *|COLUMN FROM table_name</code></p>
+<h2><span id="合计函数-count">合计函数 COUNT</span></h2><p>返回行的总数
+<code>SELECT COUNT *|COLUMN FROM table_name</code></p>
 <h2><span id="合计函数-sum">合计函数 SUM</span></h2><p>返回满足WHERE条件的行的和</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT SUM (COLUMN) FROM table_name</span><br></pre></td></tr></table></figure>
 
@@ -2973,7 +2991,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-09 12:58:00" itemprop="dateModified" datetime="2026-09-09T12:58:00+00:00">2026-09-09</time>
+      <time title="修改时间：2026-09-09 13:37:12" itemprop="dateModified" datetime="2026-09-09T13:37:12+00:00">2026-09-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -3100,7 +3118,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-09 12:58:00" itemprop="dateModified" datetime="2026-09-09T12:58:00+00:00">2026-09-09</time>
+      <time title="修改时间：2026-09-09 13:37:12" itemprop="dateModified" datetime="2026-09-09T13:37:12+00:00">2026-09-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -3135,7 +3153,8 @@
 <h2><span id="2-配置类">2. 配置类</span></h2><h3><span id="补充之前没注意spring2和spring3的区别">补充：之前没注意Spring2和Spring3的区别</span></h3><p>Spring Boot 2.x 配置方式</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">@EnableWebSecurity</span><br><span class="line">public class SecurityConfig extends WebSecurityConfigurerAdapter &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void configure(HttpSecurity http) throws Exception &#123;</span><br><span class="line">        http</span><br><span class="line">            .authorizeRequests()</span><br><span class="line">                .antMatchers(&quot;/public/**&quot;).permitAll()</span><br><span class="line">                .anyRequest().authenticated()</span><br><span class="line">            .and()</span><br><span class="line">            .formLogin();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>作者：刘大华<br>链接：<a target="_blank" rel="noopener" href="https://juejin.cn/post/7570191839593332799">https://juejin.cn/post/7570191839593332799</a></p>
+<p>作者：刘大华
+链接：<a target="_blank" rel="noopener" href="https://juejin.cn/post/7570191839593332799">https://juejin.cn/post/7570191839593332799</a></p>
 <p>来源：稀土掘金</p>
 <p>SpringBoot 3 去掉了 WebSecurityConfigurerAdapter，用 Bean 配置。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">@EnableWebSecurity</span><br><span class="line">public class SecurityConfig &#123;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    public PasswordEncoder passwordEncoder() &#123;</span><br><span class="line">        return new BCryptPasswordEncoder();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Bean</span><br><span class="line">    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception &#123;</span><br><span class="line">        http</span><br><span class="line">            .csrf(csrf -&gt; csrf.disable())</span><br><span class="line">            .authorizeHttpRequests(auth -&gt; auth</span><br><span class="line">                .requestMatchers(&quot;/login&quot;, &quot;/register&quot;).permitAll()</span><br><span class="line">                .anyRequest().authenticated()</span><br><span class="line">            )</span><br><span class="line">            .formLogin(login -&gt; login</span><br><span class="line">                .loginPage(&quot;/login&quot;)</span><br><span class="line">                .permitAll()</span><br><span class="line">            );</span><br><span class="line">        return http.build();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -3204,7 +3223,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-09 12:58:00" itemprop="dateModified" datetime="2026-09-09T12:58:00+00:00">2026-09-09</time>
+      <time title="修改时间：2026-09-09 13:37:12" itemprop="dateModified" datetime="2026-09-09T13:37:12+00:00">2026-09-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -3263,14 +3282,16 @@
 <li>Firecracker（AWS Lambda 用的）</li>
 <li>VirtualBox</li>
 </ul>
-<p>优点：隔离性能好<br>缺点：启动慢、消耗资源大，不适合大量高频的代码执行</p>
+<p>优点：隔离性能好
+缺点：启动慢、消耗资源大，不适合大量高频的代码执行</p>
 <h1><span id="实现模板">实现模板</span></h1><h2><span id="java">Java</span></h2><p>java.lang.SecurityManager是Java的一个可插拔的安全策略执行器，用于在运行时对敏感操作（如文件读写、网络访问、反射调用、类加载等）进行权限检查。</p>
 <p>当某段代码执行特权操作时，JVM 会调用 SecurityManager.checkXXX() 方法（如 checkRead, checkConnect, checkPermission 等），若未授权，则抛出 SecurityException。</p>
 <p>虽然“安全管理员多年来一直不是保护客户端 Java 代码的主要手段，也很少用于保护服务器端代码，并且维护成本很高。”（官方回复），导致这个类在JDK17后被淘汰了，但作为新手去学习依旧足够了。</p>
 <h2><span id="python">Python</span></h2><p>目前还在写(前文提到的)，先插个眼 </p>
 <p>TODO</p>
 <h1><span id="一些开源的沙盒项目">一些开源的沙盒项目</span></h1><p><a target="_blank" rel="noopener" href="https://github.com/sandboxie-plus/Sandboxie">https://github.com/sandboxie-plus/Sandboxie</a> Sandboxie 允许您创建几乎无限的沙箱并单独或同时运行它们，以将程序与主机隔离并相互隔离，同时还允许您在单个盒子中同时运行任意数量的程序。</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/alibaba/jvm-sandbox">https://github.com/alibaba/jvm-sandbox</a><br>JVM-SANDBOX（沙箱）实现了一种在不重启、不侵入目标JVM应用的AOP解决方案。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/alibaba/jvm-sandbox">https://github.com/alibaba/jvm-sandbox</a>
+JVM-SANDBOX（沙箱）实现了一种在不重启、不侵入目标JVM应用的AOP解决方案。</p>
 
       
     </div>
@@ -3333,7 +3354,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-09 12:58:00" itemprop="dateModified" datetime="2026-09-09T12:58:00+00:00">2026-09-09</time>
+      <time title="修改时间：2026-09-09 13:37:12" itemprop="dateModified" datetime="2026-09-09T13:37:12+00:00">2026-09-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -3449,7 +3470,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-09 12:58:00" itemprop="dateModified" datetime="2026-09-09T12:58:00+00:00">2026-09-09</time>
+      <time title="修改时间：2026-09-09 13:37:12" itemprop="dateModified" datetime="2026-09-09T13:37:12+00:00">2026-09-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
