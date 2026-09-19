@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.0.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"darkyellowcat.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"default","show_result":true},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"night eighties"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="核心原则范围内选择最小的数据类型字段类型越小，意味着单行数据和索引记录更紧凑。在相同页大小下，数据库可以容纳更多记录，从而可能提高缓存命中率并减少磁盘 I&#x2F;O。 辨析类型声明的的大小，不代表按最大长度占用空间 1nickname VarChar(20) VarChar(20) 中的 20 表示最多保存 20 个字符，并不意味着每行都会固定占用 20 个字符的空间。VarChar 通常按照">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MYSQL字段类型优化">
+<meta property="og:url" content="https://darkyellowcat.github.io/2026/09/16/MYSQL%E5%AD%97%E6%AE%B5%E7%B1%BB%E5%9E%8B%E4%BC%98%E5%8C%96/index.html">
+<meta property="og:site_name" content="DarkYellowCat&#39;s Blog">
+<meta property="og:description" content="核心原则范围内选择最小的数据类型字段类型越小，意味着单行数据和索引记录更紧凑。在相同页大小下，数据库可以容纳更多记录，从而可能提高缓存命中率并减少磁盘 I&#x2F;O。 辨析类型声明的的大小，不代表按最大长度占用空间 1nickname VarChar(20) VarChar(20) 中的 20 表示最多保存 20 个字符，并不意味着每行都会固定占用 20 个字符的空间。VarChar 通常按照">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-16T12:55:54.000Z">
+<meta property="article:modified_time" content="2026-09-19T03:23:57.556Z">
+<meta property="article:author" content="DarkYellowCat">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://darkyellowcat.github.io/2026/09/16/MYSQL%E5%AD%97%E6%AE%B5%E7%B1%BB%E5%9E%8B%E4%BC%98%E5%8C%96/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://darkyellowcat.github.io/2026/09/16/MYSQL%E5%AD%97%E6%AE%B5%E7%B1%BB%E5%9E%8B%E4%BC%98%E5%8C%96/","path":"2026/09/16/MYSQL字段类型优化/","title":"MYSQL字段类型优化"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>MYSQL字段类型优化 | DarkYellowCat's Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.0/pangu.umd.js" integrity="sha256-JnmRRnJK7DC6RQJbAJb6AXOM9OmWzS6z8eYultk/48Y=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">DarkYellowCat's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">分享技术与思考</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">核心原则</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.1.</span> <span class="nav-text">范围内选择最小的数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.1.1.</span> <span class="nav-text">辨析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.2.</span> <span class="nav-text">选择简单的数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.3.</span> <span class="nav-text">减少 NULL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">1.3.1.</span> <span class="nav-text">原因</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">版本差异</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">2.1.</span> <span class="nav-text">默认值变化的实际影响</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">InnoDB 存储基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">3.1.</span> <span class="nav-text">主键宽度的放大效应</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">3.2.</span> <span class="nav-text">行格式决定长列位置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">整数类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">4.1.</span> <span class="nav-text">按生命周期估算取值域</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">4.2.</span> <span class="nav-text">整数显示宽度不是容量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">4.3.</span> <span class="nav-text">Unsigned 的取舍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">4.4.</span> <span class="nav-text">布尔值和状态值</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">精确数和近似数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">5.1.</span> <span class="nav-text">金额和精确计算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">5.2.</span> <span class="nav-text">浮点数的适用范围</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">6.</span> <span class="nav-text">日期和时间类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">6.1.</span> <span class="nav-text">TIMESTAMP 和 DATETIME</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">6.2.</span> <span class="nav-text">小数秒精度</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">6.3.</span> <span class="nav-text">零日期和 SQL 模式</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">7.</span> <span class="nav-text">字符和长文本类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">7.1.</span> <span class="nav-text">VarChar 长度的含义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">7.2.</span> <span class="nav-text">Char 的适用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">7.3.</span> <span class="nav-text">二进制标识和值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">7.4.</span> <span class="nav-text">TEXT 与 VarChar</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">7.5.</span> <span class="nav-text">索引长度和 191 字符误区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">7.6.</span> <span class="nav-text">字符串字段决策问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">8.</span> <span class="nav-text">JSON 类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">8.1.</span> <span class="nav-text">适合和不适合的字段</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">8.2.</span> <span class="nav-text">三个版本的索引路径</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">8.3.</span> <span class="nav-text">函数索引中的类型和排序规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">8.4.</span> <span class="nav-text">局部更新的边界</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">9.</span> <span class="nav-text">NULL 设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">9.1.</span> <span class="nav-text">NULL 表达未知</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">9.2.</span> <span class="nav-text">三值逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">9.3.</span> <span class="nav-text">存储成本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">9.4.</span> <span class="nav-text">索引和选择性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">10.</span> <span class="nav-text">字符集和排序规则</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">10.1.</span> <span class="nav-text">使用 utf8mb4</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">11.</span> <span class="nav-text">字段选择框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">12.</span> <span class="nav-text">常见误区核查</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">13.</span> <span class="nav-text">迁移和上线检查</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">13.1.</span> <span class="nav-text">现状盘点 SQL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">13.2.</span> <span class="nav-text">上线策略</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">14.</span> <span class="nav-text">综合改造示例</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">15.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">DarkYellowCat</p>
+  <div class="site-description" itemprop="description">记录学习与成长</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">49</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/09/16/MYSQL%E5%AD%97%E6%AE%B5%E7%B1%BB%E5%9E%8B%E4%BC%98%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DarkYellowCat">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DarkYellowCat's Blog">
+      <meta itemprop="description" content="记录学习与成长">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="MYSQL字段类型优化 | DarkYellowCat's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MYSQL字段类型优化
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-16 12:55:54" itemprop="dateCreated datePublished" datetime="2026-09-16T12:55:54+00:00">2026-09-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-09-19 03:23:57" itemprop="dateModified" datetime="2026-09-19T03:23:57+00:00">2026-09-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1><span id="核心原则">核心原则</span></h1><h2><span id="范围内选择最小的数据类型">范围内选择最小的数据类型</span></h2><p>字段类型越小，意味着单行数据和索引记录更紧凑。在相同页大小下，数据库可以容纳更多记录，从而可能提高缓存命中率并减少磁盘 I&#x2F;O。</p>
+<h3><span id="辨析">辨析</span></h3><p>类型声明的的大小，不代表按最大长度占用空间</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nickname VarChar(20)</span><br></pre></td></tr></table></figure>
+<p>VarChar(20) 中的 20 表示最多保存 20 个字符，并不意味着每行都会固定占用 20 个字符的空间。VarChar 通常按照实际内容长度保存数据，同时额外使用 1 或 2 字节记录长度。</p>
+<p>如果用户昵称只有 5 个字符，数据库主要保存这 5 个字符编码后的字节，而不是预留完整的 20 个字符空间。实际占用还会受到字符集影响， utf8mb4 中一个字符最多可能需要 4 字节。</p>
+<p>不过，字段声明的最大长度仍可能影响：</p>
+<ul>
+<li>是否需要使用 1 字节或 2 字节的长度前缀；</li>
+<li>InnoDB 对最大行长度的检查；</li>
+<li>临时表、排序和某些执行阶段的内存估算；</li>
+<li>索引键允许的最大长度；</li>
+<li>应用驱动和 ORM 对字段的处理方式。</li>
+</ul>
+<p>整数类型则是固定长度的：</p>
+<p>所以，能用 INT 就不用 BIGINT 。</p>
+<p>但也不要取极限值，字段类型先由业务语义和生命周期确定，再讨论字节数。过窄的类型会把正常增长变成高风险 DDL。</p>
+<h2><span id="选择简单的数据类型">选择简单的数据类型</span></h2><p>复杂的数据类型不利于 MySQL 优化器 进行分析和优化。</p>
+<p>优先使用能够直接表达业务语义的原生类型，避免把结构化数据编码成需要额外解析的字符串、二进制对象或 JSON。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">优先级 整型 &gt; date,time &gt; Char,VarChar &gt; blob</span><br></pre></td></tr></table></figure>
+
+<h2><span id="减少-null">减少 NULL</span></h2><ol>
+<li>引入三值逻辑</li>
+</ol>
+<p>SQL 中的布尔判断不仅有 TRUE 和 FALSE，还存在 UNKNOWN。</p>
+<p>下面的查询不能找到空值：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT *</span><br><span class="line">FROM customer</span><br><span class="line">WHERE phone = NULL;</span><br></pre></td></tr></table></figure>
+<p>必须使用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT *</span><br><span class="line">FROM customer</span><br><span class="line">WHERE phone IS NULL;</span><br></pre></td></tr></table></figure>
+<p>NULL 还会影响 AND、OR、NOT、IN 和 NOT IN 等表达式。如果开发者不了解三值逻辑，容易编写出结果不符合预期的查询。</p>
+<ol start="2">
+<li>影响聚合结果</li>
+</ol>
+<p>大部分聚合函数会忽略 NULL：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SELECT</span><br><span class="line">    COUNT(*) AS total_rows,</span><br><span class="line">    COUNT(phone) AS known_phone_rows</span><br><span class="line">FROM customer;</span><br></pre></td></tr></table></figure>
+<p>COUNT(*) 统计所有行，而 COUNT(phone) 只统计 phone 不为 NULL 的行。两者含义不同，报表和统计代码必须明确区分。</p>
+<ol start="3">
+<li>增加应用判断分支</li>
+</ol>
+<p>允许 NULL 后，应用、ORM、序列化接口和业务代码都需要正确处理可空状态。如果字段实际上不存在“未知”或“不适用”的业务含义，允许 NULL 只会增加无意义的分支。</p>
+<ol start="4">
+<li>影响索引选择性和执行计划</li>
+</ol>
+<p>InnoDB 可以为允许 NULL 的列建立索引，IS NULL 查询也可能使用索引。因此，“可空列不能使用索引”是错误的。</p>
+<p>真正影响执行计划的是数据分布。例如，如果一列 90% 的记录都是 NULL，查询 IS NULL 需要返回大部分数据，优化器就可能认为全表扫描比索引访问更划算。</p>
+<ol start="5">
+<li>产生少量存储开销</li>
+</ol>
+<p>InnoDB 通常使用位图记录哪些可空列是 NULL。若索引记录中包含 (N) 个可空字段，NULL 位图大约需要：</p>
+<p>[
+\operatorname{CEILING}(N &#x2F; 8)
+]</p>
+<p>字节。</p>
+<p>NULL 会影响</p>
+<h3><span id="原因">原因</span></h3><h1><span id="版本差异">版本差异</span></h1><p>同一条设计建议在三个版本中可能有不同前提。</p>
+<table>
+<thead>
+<tr>
+<th><strong>能力或默认行为</strong></th>
+<th><strong>MySQL 5.7</strong></th>
+<th><strong>MySQL 8.0</strong></th>
+<th><strong>MySQL 8.4</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认字符集</td>
+<td>latin1</td>
+<td>utf8mb4</td>
+<td>utf8mb4</td>
+</tr>
+<tr>
+<td>默认排序规则</td>
+<td>latin1_swedish_ci</td>
+<td>utf8mb4_0900_ai_ci</td>
+<td>utf8mb4_0900_ai_ci</td>
+</tr>
+<tr>
+<td>原生 JSON</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>JSON 路径索引</td>
+<td>生成列</td>
+<td>生成列或函数索引</td>
+<td>生成列或函数索引</td>
+</tr>
+<tr>
+<td>函数索引</td>
+<td>不支持</td>
+<td>8.0.13 起支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>JSON 多值索引</td>
+<td>不支持</td>
+<td>8.0.17 起支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>JSON 局部更新</td>
+<td>不支持优化</td>
+<td>有条件支持</td>
+<td>有条件支持</td>
+</tr>
+<tr>
+<td>整数显示宽度</td>
+<td>可用</td>
+<td>8.0.17 起弃用</td>
+<td>弃用</td>
+</tr>
+<tr>
+<td>FLOAT DOUBLE AUTO_INCREMENT</td>
+<td>可用但不建议</td>
+<td>弃用</td>
+<td>8.4.0 起不支持</td>
+</tr>
+</tbody></table>
+<h2><span id="默认值变化的实际影响">默认值变化的实际影响</span></h2><p>MySQL 5.7 默认使用 latin1 和 latin1_swedish_ci，而 8.0 与 8.4 默认使用 utf8mb4 和 utf8mb4_0900_ai_ci。若 DDL 没有显式指定字符集和排序规则，同一份建表语句可能得到不同列定义。比较、排序、唯一索引冲突和索引长度都可能随之改变。升级方案应把隐式默认值改成显式定义。</p>
+<h1><span id="innodb-存储基础">InnoDB 存储基础</span></h1><p>字段类型的物理成本不能只看类型表。InnoDB 将表组织为以主键为序的聚簇索引。聚簇索引叶子记录保存完整行，二级索引叶子记录保存二级索引列和对应的主键列。变长列可能保存在索引页内，也可能通过 20 字节指针引用溢出页。</p>
+<h2><span id="主键宽度的放大效应">主键宽度的放大效应</span></h2><p>假设一张表有五个二级索引，把主键从 4 字节 INT 改成 8 字节 BIGINT，会给每条二级索引记录增加最多 4 字节的主键负担。实际空间还受记录头、页填充率、压缩和主键列是否已包含在索引中影响，但方向明确。选择主键类型时应把所有二级索引计入成本。</p>
+<h2><span id="行格式决定长列位置">行格式决定长列位置</span></h2><p>COMPACT 行格式会在记录内保留长变长值的前 768 字节，再把其余部分放到溢出页。DYNAMIC 行格式可以把长值完整放到行外，并在聚簇记录中保留 20 字节指针。是否外置取决于页面能否容纳整行，而不是只由列名是 VarChar 还是 TEXT 决定。DYNAMIC 同时支持更大的索引键前缀。</p>
+<table>
+<thead>
+<tr>
+<th><strong>类型</strong></th>
+<th><strong>基本存储量</strong></th>
+<th><strong>设计提示</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TINYINT</td>
+<td>1 字节</td>
+<td>适合小范围代码和值域明确的状态</td>
+</tr>
+<tr>
+<td>SMALLINT</td>
+<td>2 字节</td>
+<td>适合中小范围计数或代码</td>
+</tr>
+<tr>
+<td>MEDIUMINT</td>
+<td>3 字节</td>
+<td>节省 1 字节但生态使用较少</td>
+</tr>
+<tr>
+<td>INT</td>
+<td>4 字节</td>
+<td>常用整数和中等规模标识</td>
+</tr>
+<tr>
+<td>BIGINT</td>
+<td>8 字节</td>
+<td>适合大规模标识和大范围累计值</td>
+</tr>
+<tr>
+<td>DATE</td>
+<td>3 字节</td>
+<td>只保存日期</td>
+</tr>
+<tr>
+<td>TIMESTAMP</td>
+<td>4 字节加小数秒</td>
+<td>带时区转换且存在 2038 范围边界</td>
+</tr>
+<tr>
+<td>DATETIME</td>
+<td>5 字节加小数秒</td>
+<td>保存日历日期时间</td>
+</tr>
+<tr>
+<td>VarChar</td>
+<td>实际字节加 1 或 2 字节</td>
+<td>前缀长度由最大可能字节数决定</td>
+</tr>
+<tr>
+<td>DECIMAL</td>
+<td>按 9 位十进制数分组</td>
+<td>精度和小数位分别影响存储</td>
+</tr>
+</tbody></table>
+<h1><span id="整数类型">整数类型</span></h1><h2><span id="按生命周期估算取值域">按生命周期估算取值域</span></h2><p>整数类型应覆盖字段在整个生命周期内的最大和最小值。估算时不能只看当前行数，还要加入数据保留年限、业务增长、历史导入、分库编码、ID 生成策略和计算中间值。对于主键，范围不足后的扩容通常需要修改所有引用列，并可能触发表重建。</p>
+<table>
+<thead>
+<tr>
+<th><strong>类型</strong></th>
+<th><strong>字节</strong></th>
+<th><strong>有符号范围</strong></th>
+<th><strong>无符号范围</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TINYINT</td>
+<td>1</td>
+<td>-128 到 127</td>
+<td>0 到 255</td>
+</tr>
+<tr>
+<td>SMALLINT</td>
+<td>2</td>
+<td>-32768 到 32767</td>
+<td>0 到 65535</td>
+</tr>
+<tr>
+<td>MEDIUMINT</td>
+<td>3</td>
+<td>-8388608 到 8388607</td>
+<td>0 到 16777215</td>
+</tr>
+<tr>
+<td>INT</td>
+<td>4</td>
+<td>-2147483648 到 2147483647</td>
+<td>0 到 4294967295</td>
+</tr>
+<tr>
+<td>BIGINT</td>
+<td>8</td>
+<td>约负 9.22e18 到正 9.22e18</td>
+<td>0 到约 1.84e19</td>
+</tr>
+</tbody></table>
+<h2><span id="整数显示宽度不是容量">整数显示宽度不是容量</span></h2><p>INT(4) 和 INT(11) 都占 4 字节，也具有相同取值范围。括号中的数字是历史显示宽度，不能限制输入位数。与 ZEROFILL 配合时，它可以影响格式化显示，但该能力从 MySQL 8.0.17 起被弃用。需要前导零的业务编号应作为字符串存储，或者在展示层格式化。</p>
+<h2><span id="unsigned-的取舍">Unsigned 的取舍</span></h2><p>Unsigned 可以把负数区间换成更大的正数区间，但它也扩展了 MySQL 与其他数据库、语言类型和 ORM 之间的差异。主外键及所有关联列应保持整数宽度和符号属性一致。对金额、测量值和 DECIMAL 使用 Unsigned 的做法在 8.0.17 起被弃用，更清晰的业务下界可由 CHECK 或应用验证表达。</p>
+<h2><span id="布尔值和状态值">布尔值和状态值</span></h2><p>MySQL 的 BOOL 和 BOOLEAN 是 TINYINT(1) 的同义形式，并不会自动阻止写入 2 或负数。若字段确实只允许两个状态，应在 8.x 使用 CHECK 约束，或者通过应用和测试保证输入。若业务存在未知、未处理和失败等额外状态，则不应强行压成布尔值。</p>
+<h1><span id="精确数和近似数">精确数和近似数</span></h1><p>DECIMAL 保存十进制定点精确值，FLOAT 和 DOUBLE 保存二进制浮点近似值。两类类型的差异不仅体现在展示小数位，还体现在表达式传播、聚合、相等判断和跨平台结果。</p>
+<h2><span id="金额和精确计算">金额和精确计算</span></h2><p>金额、余额、税额和必须按十进制规则结算的值通常应使用 DECIMAL。DECIMAL(M,D) 中 M 是总有效位数，D 是小数位数。设计时要根据最大金额、币种精度、税率计算和中间结果确定范围，不能习惯性使用 DECIMAL(10,2)。</p>
+<p><strong>存储规则</strong> DECIMAL 把整数部分和小数部分分别分组，每 9 个十进制数字使用 4 字节，剩余数字按组占 0 到 4 字节。符号不单独增加一个完整字节。</p>
+<p><strong>写入规则</strong> 小数位超过 D 时会舍入。整数位超出范围时，严格模式通常报错，非严格模式可能截到合法边界并产生警告。</p>
+<h2><span id="浮点数的适用范围">浮点数的适用范围</span></h2><p>FLOAT 和 DOUBLE 适合测量值、统计模型、图形和科学计算等允许近似误差的场景。不要用浮点列直接保存需要逐分一致的金额，也不要依赖直接等值比较。任何近似值参与表达式后，MySQL 会使用浮点运算；字符串参与数值表达式时也可能转换为 DOUBLE，使原本精确的计算变成近似计算。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="number">0.1</span> <span class="operator">+</span> <span class="number">0.2</span> <span class="operator">=</span> <span class="number">0.3</span> <span class="keyword">AS</span> equal_result;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE TABLE</span> number_test (</span><br><span class="line">    f <span class="type">FLOAT</span>,</span><br><span class="line">    d <span class="keyword">DOUBLE</span>,</span><br><span class="line">    amount <span class="type">DECIMAL</span>(<span class="number">20</span>, <span class="number">6</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h1><span id="日期和时间类型">日期和时间类型</span></h1><table>
+<thead>
+<tr>
+<th><strong>含义</strong></th>
+<th><strong>常用类型</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>生日和结算日</td>
+<td>DATE</td>
+<td>只有日期，不应受时区转换影响</td>
+</tr>
+<tr>
+<td>门店营业时间和预约日历值</td>
+<td>DATETIME</td>
+<td>按所在地规则解释，可另存时区标识</td>
+</tr>
+<tr>
+<td>创建时间和事件发生时刻</td>
+<td>TIMESTAMP 或 UTC DATETIME</td>
+<td>需要统一时区策略和驱动配置</td>
+</tr>
+<tr>
+<td>耗时和剩余时间</td>
+<td>整数单位或专门建模</td>
+<td>不要把持续时长误当作日期时间</td>
+</tr>
+</tbody></table>
+<h2><span id="timestamp-和-datetime">TIMESTAMP 和 DATETIME</span></h2><p>TIMESTAMP 写入时按会话时区转换为 UTC，读取时再从 UTC 转回会话时区。DATETIME 保存写入的日历字段，不做这种转换。三个目标版本的官方文档都把 TIMESTAMP 上限列为 2038 年 1 月 19 日 03:14:07 UTC，而 DATETIME 支持到 9999 年。因而 TIMESTAMP 不能仅凭空间较小而成为默认选择。</p>
+<h2><span id="小数秒精度">小数秒精度</span></h2><p>TIME、DATETIME 和 TIMESTAMP 的小数秒精度会增加存储。精度为 1 到 2 位增加 1 字节，3 到 4 位增加 2 字节，5 到 6 位增加 3 字节。只有在排序、去重或审计确实需要时才应使用微秒。</p>
+<h2><span id="零日期和-sql-模式">零日期和 SQL 模式</span></h2><p>把 0000-00-00 或 1970-01-01 当作未发生的哨兵值会把状态混入时间字段，并使范围查询和统计产生假数据。允许空值时应使用 NULL；不允许空值时应把业务状态拆成独立列。不同 sql_mode 对无效日期和零日期的处理存在差异，迁移前必须测试。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> time_zone <span class="operator">=</span> <span class="string">&#x27;+08:00&#x27;</span>;</span><br><span class="line"><span class="keyword">INSERT INTO</span> temporal_test(ts_value, dt_value)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="string">&#x27;2026-09-16 10:00:00&#x27;</span>, <span class="string">&#x27;2026-09-16 10:00:00&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">SET</span> time_zone <span class="operator">=</span> <span class="string">&#x27;+00:00&#x27;</span>;</span><br><span class="line"><span class="keyword">SELECT</span> ts_value, dt_value <span class="keyword">FROM</span> temporal_test;</span><br></pre></td></tr></table></figure>
+
+<h1><span id="字符和长文本类型">字符和长文本类型</span></h1><h2><span id="varchar-长度的含义">VarChar 长度的含义</span></h2><p>VarChar(N) 中的 N 是字符数，而不是字节数。实际数据占用取决于字符编码后的字节长度，并额外使用 1 或 2 字节保存长度。是否需要 2 字节长度前缀取决于列的最大可能字节数。VarChar(255) 使用 utf8mb4 时最大可能达到 1020 字节，因此 255 并不是通用的单字节分界或性能甜点。</p>
+<h2><span id="char-的适用场景">Char 的适用场景</span></h2><p>Char 适合真正定长且尾部空格没有业务意义的值，例如某些固定长度代码。对于变长字符集，InnoDB 的实际存储会做专门处理，不能简单按 N 乘以 4 估算所有情况。尾部空格在存储、读取和比较中的行为还会受类型及排序规则的 PAD 属性影响。</p>
+<h2><span id="二进制标识和值">二进制标识和值</span></h2><p>十六进制散列、UUID 和原始字节若不需要语言学比较，应评估 BINARY 或 VARBINARY。将 16 字节 UUID 存成 Char(36) 会增加聚簇和二级索引宽度。若系统依赖按时间有序写入，还需要评估 UUID 版本和字节排列，不能只替换字段类型。</p>
+<h2><span id="text-与-varchar">TEXT 与 VarChar</span></h2><p>TEXT 与 VarChar 的关键差异主要在最大长度、索引方式和某些 SQL 操作限制。TEXT 索引通常必须指定前缀长度，前缀索引可能无法提供完整唯一性和区分度。使用 DYNAMIC 行格式时，长 VarChar 和 TEXT 都可能完整外置；短 TEXT 值仍可能保存在行内。因此二者不能用行内和行外的简单二分法选择。</p>
+<h2><span id="索引长度和-191-字符误区">索引长度和 191 字符误区</span></h2><p>utf8mb4 索引只能建立 191 字符是带条件的旧结论。COMPACT 和 REDUNDANT 行格式的索引键前缀上限为 767 字节，按每字符最多 4 字节计算得到 191。DYNAMIC 和 COMPRESSED 在默认 16KB 页下支持 3072 字节。页大小降低时，上限会按比例降低。</p>
+<h2><span id="字符串字段决策问题">字符串字段决策问题</span></h2><ul>
+<li><p>字段是自然语言文本、机器标识，还是原始二进制值。</p>
+</li>
+<li><p>最大长度来自业务规则，还是为了省事随意填写。</p>
+</li>
+<li><p>字段是否参与等值查询、范围查询、排序、分组或唯一约束。</p>
+</li>
+<li><p>尾部空格、大小写、重音和 Unicode 补充字符是否具有业务意义。</p>
+</li>
+<li><p>查询是否经常只读其他列，还是每次都需要返回大字段。</p>
+</li>
+</ul>
+<h1><span id="json-类型">JSON 类型</span></h1><p>MySQL 原生 JSON 会验证写入内容并转换为便于按路径访问的二进制格式。二进制编码包含元数据和查找结构，因此空间通常接近文本表示并增加一定开销。JSON 的主要价值是验证、路径函数和索引能力，而不是保证压缩。</p>
+<h2><span id="适合和不适合的字段">适合和不适合的字段</span></h2><p>JSON 适合稀疏、变化快并且大部分不参与关系操作的扩展属性，例如第三方原始响应、设备差异化配置和少量可选元数据。以下字段通常应拆成普通列。</p>
+<ul>
+<li><p>高频过滤、排序、分组和关联字段。</p>
+</li>
+<li><p>需要外键、NOT NULL、唯一约束或严格类型约束的核心属性。</p>
+</li>
+<li><p>更新频繁且可以稳定建模的小字段集合。</p>
+</li>
+<li><p>需要由 BI、数据仓库和多个语言客户端稳定消费的公共字段。</p>
+</li>
+</ul>
+<h2><span id="三个版本的索引路径">三个版本的索引路径</span></h2><p>MySQL 5.7 不能直接为整个 JSON 建普通索引，常见方式是创建提取标量值的生成列并对生成列建索引。MySQL 8.0.13 起支持函数索引，可直接为表达式值建索引。MySQL 8.0.17 起支持面向 JSON 数组的多值索引。多值索引不能覆盖所有普通索引能力，并有排序、外键和在线创建限制。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- MySQL 5.7 兼容方案</span></span><br><span class="line"><span class="keyword">ALTER TABLE</span> orders</span><br><span class="line">  <span class="keyword">ADD</span> customer_id <span class="type">BIGINT</span> UNSIGNED</span><br><span class="line">    GENERATED ALWAYS <span class="keyword">AS</span> (</span><br><span class="line">      <span class="built_in">CAST</span>(JSON_UNQUOTE(JSON_EXTRACT(ext, <span class="string">&#x27;$.customer_id&#x27;</span>)) <span class="keyword">AS</span> UNSIGNED)</span><br><span class="line">    ) VIRTUAL,</span><br><span class="line">  <span class="keyword">ADD</span> INDEX idx_customer_id (customer_id);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- MySQL 8.0.13 及以上</span></span><br><span class="line"><span class="keyword">CREATE</span> INDEX idx_customer</span><br><span class="line"><span class="keyword">ON</span> orders ((<span class="built_in">CAST</span>(ext<span class="operator">-</span><span class="operator">&gt;&gt;</span><span class="string">&#x27;$.customer_id&#x27;</span> <span class="keyword">AS</span> UNSIGNED)));</span><br></pre></td></tr></table></figure>
+
+<h2><span id="函数索引中的类型和排序规则">函数索引中的类型和排序规则</span></h2><p>JSON_UNQUOTE 返回的字符串类型和排序规则可能与 CAST 后的表达式不同。若查询表达式与索引表达式在类型、长度或排序规则上不一致，优化器可能无法使用函数索引。设计函数索引时应把查询 SQL、CAST 类型和 COLLATE 一起固定，并用 EXPLAIN 验证。</p>
+<h2><span id="局部更新的边界">局部更新的边界</span></h2><p>MySQL 8.x 可以在满足条件时对 JSON 做局部原地更新，但不能将其概括为修改 JSON 永远不重写文档。被更新列必须是 JSON，语句需要使用 JSON_SET、JSON_REPLACE 或 JSON_REMOVE 等受支持函数，新值和可用空间还必须符合优化条件。直接把整份 JSON 赋给列不属于局部更新。</p>
+<h1><span id="null-设计">NULL 设计</span></h1><h2><span id="null-表达未知">NULL 表达未知</span></h2><p>NULL 与空字符串、零和空 JSON 对象不同。NULL 通常表示未知、不适用或尚未发生。若业务需要区分未知和明确为空，就必须保留这种差异；用空字符串统一替代 NULL 会丢失信息。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> customer <span class="keyword">WHERE</span> phone <span class="keyword">IS</span> <span class="keyword">NULL</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> customer <span class="keyword">WHERE</span> phone <span class="operator">=</span> <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">AS</span> rows_total,</span><br><span class="line">       <span class="built_in">COUNT</span>(phone) <span class="keyword">AS</span> known_phone_count</span><br><span class="line"><span class="keyword">FROM</span> customer;</span><br></pre></td></tr></table></figure>
+
+<h2><span id="三值逻辑">三值逻辑</span></h2><p>任何值与 NULL 使用等号比较都不会得到 TRUE，包括 NULL 自身。搜索空值必须使用 IS NULL 或 IS NOT NULL。聚合函数通常忽略 NULL，而 COUNT(*) 计算行数。复杂条件中的 UNKNOWN 还会影响 AND、OR 和 NOT 的结果，查询编写和测试必须覆盖空值。</p>
+<h2><span id="存储成本">存储成本</span></h2><p>在 InnoDB COMPACT 和 DYNAMIC 记录中，可空列由位图记录。若索引记录中有 N 个可空列，位图使用 CEILING(N&#x2F;8) 字节。可空变长列为 NULL 时不保存数据内容。因而每个 NULL 浪费一个字节并不准确。NOT NULL 的首要理由应是业务约束，而不是未经测量的性能假设。</p>
+<h2><span id="索引和选择性">索引和选择性</span></h2><p>InnoDB 可以为允许 NULL 的列建立索引，IS NULL 也可能使用索引。是否使用取决于 NULL 比例、统计信息、查询返回列和成本模型。若绝大部分行都是 NULL，索引可能很小且有效；若查询需要返回大部分表，优化器也可能选择全表扫描。</p>
+<h1><span id="字符集和排序规则">字符集和排序规则</span></h1><p>字符集决定字段能编码哪些字符以及最大字节数，排序规则决定字符串如何比较和排序。字段长度、索引大小、唯一约束和查询结果都可能同时受二者影响。</p>
+<h2><span id="使用-utf8mb4">使用 utf8mb4</span></h2><p>MySQL 传统的 utf8 最多使用 3 字节，无法保存 Unicode 补充平面字符。utf8 已作为 utf8mb3 的弃用别名。新系统通常应显式使用 utf8mb4，升级旧系统时要同时检查索引长度、连接字符集和实际脏数据。</p>
+<h1><span id="字段选择框架">字段选择框架</span></h1><table>
+<thead>
+<tr>
+<th><strong>业务数据</strong></th>
+<th><strong>首选候选</strong></th>
+<th><strong>需要确认的问题</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主键</td>
+<td>INT 或 BIGINT</td>
+<td>增长上限 生成策略 二级索引数量</td>
+</tr>
+<tr>
+<td>状态码</td>
+<td>TINYINT SMALLINT 或 VarChar</td>
+<td>可读性 状态扩展 外部协议</td>
+</tr>
+<tr>
+<td>金额</td>
+<td>DECIMAL 或整数最小单位</td>
+<td>最大值 币种精度 舍入规则</td>
+</tr>
+<tr>
+<td>事件时刻</td>
+<td>TIMESTAMP 或 UTC DATETIME</td>
+<td>时区 2038 范围 驱动行为</td>
+</tr>
+<tr>
+<td>日历时间</td>
+<td>DATETIME</td>
+<td>是否需要保存时区标识和夏令时规则</td>
+</tr>
+<tr>
+<td>短文本</td>
+<td>VarChar</td>
+<td>最大字符数 字符集 比较规则 索引</td>
+</tr>
+<tr>
+<td>长文本</td>
+<td>TEXT 系列</td>
+<td>读取频率 前缀索引 排序分组</td>
+</tr>
+<tr>
+<td>固定二进制值</td>
+<td>BINARY 或 VARBINARY</td>
+<td>长度 是否需要语言学比较</td>
+</tr>
+<tr>
+<td>扩展属性</td>
+<td>JSON</td>
+<td>查询路径 约束 更新频率 版本能力</td>
+</tr>
+<tr>
+<td>未知或未发生</td>
+<td>允许 NULL</td>
+<td>业务是否需要区分空值和未知</td>
+</tr>
+</tbody></table>
+<h1><span id="常见误区核查">常见误区核查</span></h1><table>
+<thead>
+<tr>
+<th><strong>常见说法</strong></th>
+<th><strong>更准确的结论</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>字段越小查询越快</td>
+<td>更窄记录可能提高页密度和缓存命中率，收益仍取决于索引、访问模式和数据规模。</td>
+</tr>
+<tr>
+<td>INT(11) 只能保存 11 位</td>
+<td>11 是历史显示宽度，不改变 4 字节存储和整数范围。</td>
+</tr>
+<tr>
+<td>VarChar(255) 性能最好</td>
+<td>没有通用分界。最大字节数、行长度和查询用途更重要。</td>
+</tr>
+<tr>
+<td>Char 永远按最大长度占空间</td>
+<td>InnoDB 对变长字符集和不同 ROW_FORMAT 有专门存储规则。</td>
+</tr>
+<tr>
+<td>TEXT 永远保存在行外</td>
+<td>是否外置取决于行格式、值长度和整行大小。短 TEXT 可能行内。</td>
+</tr>
+<tr>
+<td>TIMESTAMP 永远优于 DATETIME</td>
+<td>二者的时区语义和范围不同，空间只差 1 字节。</td>
+</tr>
+<tr>
+<td>金额用 DOUBLE 再 ROUND 就行</td>
+<td>中间步骤已经可能产生近似误差，ROUND 不能恢复精确原值。</td>
+</tr>
+<tr>
+<td>NOT NULL 一定更快</td>
+<td>应先满足业务约束。可空列使用位图，性能需按查询和分布测试。</td>
+</tr>
+<tr>
+<td>可空列不能使用索引</td>
+<td>InnoDB 可索引 NULL，IS NULL 是否走索引由成本决定。</td>
+</tr>
+<tr>
+<td>MySQL utf8 是完整 UTF 8</td>
+<td>传统 utf8 是 utf8mb3，不能保存全部 Unicode。</td>
+</tr>
+<tr>
+<td>utf8mb4 索引最多 191 字符</td>
+<td>该数字来自旧行格式的 767 字节限制，不是所有配置的上限。</td>
+</tr>
+<tr>
+<td>8.0 修改 JSON 都是局部更新</td>
+<td>只有满足函数和空间等条件的更新才能使用局部优化。</td>
+</tr>
+</tbody></table>
+<h1><span id="迁移和上线检查">迁移和上线检查</span></h1><h2><span id="现状盘点-sql">现状盘点 SQL</span></h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">    TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME,</span><br><span class="line">    COLUMN_TYPE, IS_NULLABLE, COLUMN_DEFAULT,</span><br><span class="line">    CharACTER_SET_NAME, COLLATION_NAME</span><br><span class="line"><span class="keyword">FROM</span> information_schema.COLUMNS</span><br><span class="line"><span class="keyword">WHERE</span> TABLE_SCHEMA <span class="operator">=</span> <span class="string">&#x27;your_database&#x27;</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> TABLE_NAME, ORDINAL_POSITION;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">    TABLE_SCHEMA, TABLE_NAME, ENGINE, ROW_FORMAT,</span><br><span class="line">    TABLE_COLLATION, DATA_LENGTH, INDEX_LENGTH</span><br><span class="line"><span class="keyword">FROM</span> information_schema.TABLES</span><br><span class="line"><span class="keyword">WHERE</span> TABLE_SCHEMA <span class="operator">=</span> <span class="string">&#x27;your_database&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h2><span id="上线策略">上线策略</span></h2><p>字段类型修改可能引发表重建、长事务、复制延迟和额外临时空间。上线方案应明确所需 DDL 算法、锁级别、磁盘峰值、暂停条件和回滚路径。对大表，优先使用影子表迁移、双写校验或经过验证的在线 DDL 工具，并在真实数据分布上演练。</p>
+<h1><span id="综合改造示例">综合改造示例</span></h1><p>下面的旧表可以正常存数据，但多个字段混淆了类型语义。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> orders_bad (</span><br><span class="line">    id <span class="type">VarChar</span>(<span class="number">32</span>),</span><br><span class="line">    status <span class="type">VarChar</span>(<span class="number">255</span>),</span><br><span class="line">    amount <span class="type">FLOAT</span>,</span><br><span class="line">    created_at <span class="type">VarChar</span>(<span class="number">30</span>),</span><br><span class="line">    paid_at DATETIME <span class="keyword">NOT NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;1970-01-01 00:00:00&#x27;</span>,</span><br><span class="line">    customer_name <span class="type">VarChar</span>(<span class="number">255</span>) <span class="keyword">CharACTER SET</span> utf8,</span><br><span class="line">    attributes LONGTEXT</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>在假设订单量需要 BIGINT、金额保留两位、时间表示事件时刻、扩展属性结构不稳定的前提下，可以改为以下定义。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> orders (</span><br><span class="line">    id <span class="type">BIGINT</span> UNSIGNED <span class="keyword">NOT NULL</span> AUTO_INCREMENT,</span><br><span class="line">    status TINYINT UNSIGNED <span class="keyword">NOT NULL</span>,</span><br><span class="line">    amount <span class="type">DECIMAL</span>(<span class="number">18</span>, <span class="number">2</span>) <span class="keyword">NOT NULL</span>,</span><br><span class="line">    created_at <span class="type">TIMESTAMP</span>(<span class="number">6</span>) <span class="keyword">NOT NULL</span>,</span><br><span class="line">    paid_at <span class="type">TIMESTAMP</span>(<span class="number">6</span>) <span class="keyword">NULL</span>,</span><br><span class="line">    customer_name <span class="type">VarChar</span>(<span class="number">100</span>)</span><br><span class="line">        <span class="keyword">CharACTER SET</span> utf8mb4</span><br><span class="line">        <span class="keyword">COLLATE</span> utf8mb4_0900_ai_ci <span class="keyword">NOT NULL</span>,</span><br><span class="line">    attributes JSON <span class="keyword">NULL</span>,</span><br><span class="line">    <span class="keyword">PRIMARY KEY</span> (id)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB ROW_FORMAT<span class="operator">=</span><span class="keyword">DYNAMIC</span>;</span><br></pre></td></tr></table></figure>
+
+<h1><span id="参考资料">参考资料</span></h1><p>0.《高性能 MySQL(第三版)》</p>
+<p>1. <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/E17952_01/mysql-5.7-en/storage-requirements.html">MySQL 5.7 Reference Manual Data Type Storage Requirements</a></p>
+<p>2. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/storage-requirements.html">MySQL 8.0 Reference Manual Data Type Storage Requirements</a></p>
+<p>3. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/storage-requirements.html">MySQL 8.4 Reference Manual Data Type Storage Requirements</a></p>
+<p>4. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/innodb-row-format.html">MySQL 8.4 Reference Manual InnoDB Row Formats</a></p>
+<p>5. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/innodb-index-types.html">MySQL 8.4 Reference Manual Clustered and Secondary Indexes</a></p>
+<p>6. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/innodb-limits.html">MySQL 8.4 Reference Manual InnoDB Limits</a></p>
+<p>7. <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/E17952_01/mysql-5.7-en/numeric-type-attributes.html">MySQL 5.7 Reference Manual Numeric Type Attributes</a></p>
+<p>8. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/numeric-type-attributes.html">MySQL 8.0 Reference Manual Numeric Type Attributes</a></p>
+<p>9. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/integer-types.html">MySQL 8.4 Reference Manual Integer Types</a></p>
+<p>10. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/fixed-point-types.html">MySQL 8.4 Reference Manual Fixed Point Types</a></p>
+<p>11. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/floating-point-types.html">MySQL 8.4 Reference Manual Floating Point Types</a></p>
+<p>12. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/precision-math.html">MySQL 8.4 Reference Manual Precision Math</a></p>
+<p>13. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/precision-math-expressions.html">MySQL 8.4 Reference Manual Expression Handling</a></p>
+<p>14. <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/E17952_01/mysql-5.7-en/datetime.html">MySQL 5.7 Reference Manual Date Datetime and Timestamp Types</a></p>
+<p>15. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/datetime.html">MySQL 8.4 Reference Manual Date Datetime and Timestamp Types</a></p>
+<p>16. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/Char.html">MySQL 8.4 Reference Manual Char and VarChar Types</a></p>
+<p>17. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/blob.html">MySQL 8.4 Reference Manual Blob and Text Types</a></p>
+<p>18. <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/E17952_01/mysql-5.7-en/json.html">MySQL 5.7 Reference Manual JSON Data Type</a></p>
+<p>19. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/json.html">MySQL 8.0 Reference Manual JSON Data Type</a></p>
+<p>20. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/create-index.html">MySQL 8.0 Reference Manual Create Index Statement</a></p>
+<p>21. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/problems-with-null.html">MySQL 8.4 Reference Manual Problems with NULL Values</a></p>
+<p>22. <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/E17952_01/mysql-5.7-en/Charset-server.html">MySQL 5.7 Reference Manual Server Character Set and Collation</a></p>
+<p>23. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/Charset-server.html">MySQL 8.0 Reference Manual Server Character Set and Collation</a></p>
+<p>24. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/Charset-unicode-utf8mb4.html">MySQL 8.4 Reference Manual utf8mb4 Character Set</a></p>
+<p>25. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/optimize-benchmarking.html">MySQL 8.4 Reference Manual Measuring Performance</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>DarkYellowCat
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://darkyellowcat.github.io/2026/09/16/MYSQL%E5%AD%97%E6%AE%B5%E7%B1%BB%E5%9E%8B%E4%BC%98%E5%8C%96/" title="MYSQL字段类型优化">https://darkyellowcat.github.io/2026/09/16/MYSQL字段类型优化/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/07/%E3%80%8A%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-AI-Agent%E3%80%8B%E7%AC%94%E8%AE%B0-2-%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B/" rel="prev" title="《深入理解 AI Agent》笔记 - 2 上下文工程">
+                  <i class="fa fa-angle-left"></i> 《深入理解 AI Agent》笔记 - 2 上下文工程
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">DarkYellowCat</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/darkyellowcat" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>
+  LA.init({ id: '3OnjqyPOaoYCHllV', ck: '3OnjqyPOaoYCHllV', autoTrack: true });
+</script>
+
+</body>
+</html>

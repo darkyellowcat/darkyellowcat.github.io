@@ -173,7 +173,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-count">37</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -204,6 +204,548 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/09/16/MYSQL%E5%AD%97%E6%AE%B5%E7%B1%BB%E5%9E%8B%E4%BC%98%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DarkYellowCat">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DarkYellowCat's Blog">
+      <meta itemprop="description" content="记录学习与成长">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | DarkYellowCat's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/09/16/MYSQL%E5%AD%97%E6%AE%B5%E7%B1%BB%E5%9E%8B%E4%BC%98%E5%8C%96/" class="post-title-link" itemprop="url">MYSQL字段类型优化</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-16 12:55:54" itemprop="dateCreated datePublished" datetime="2026-09-16T12:55:54+00:00">2026-09-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-09-19 03:23:57" itemprop="dateModified" datetime="2026-09-19T03:23:57+00:00">2026-09-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1><span id="核心原则">核心原则</span></h1><h2><span id="范围内选择最小的数据类型">范围内选择最小的数据类型</span></h2><p>字段类型越小，意味着单行数据和索引记录更紧凑。在相同页大小下，数据库可以容纳更多记录，从而可能提高缓存命中率并减少磁盘 I&#x2F;O。</p>
+<h3><span id="辨析">辨析</span></h3><p>类型声明的的大小，不代表按最大长度占用空间</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nickname VarChar(20)</span><br></pre></td></tr></table></figure>
+<p>VarChar(20) 中的 20 表示最多保存 20 个字符，并不意味着每行都会固定占用 20 个字符的空间。VarChar 通常按照实际内容长度保存数据，同时额外使用 1 或 2 字节记录长度。</p>
+<p>如果用户昵称只有 5 个字符，数据库主要保存这 5 个字符编码后的字节，而不是预留完整的 20 个字符空间。实际占用还会受到字符集影响， utf8mb4 中一个字符最多可能需要 4 字节。</p>
+<p>不过，字段声明的最大长度仍可能影响：</p>
+<ul>
+<li>是否需要使用 1 字节或 2 字节的长度前缀；</li>
+<li>InnoDB 对最大行长度的检查；</li>
+<li>临时表、排序和某些执行阶段的内存估算；</li>
+<li>索引键允许的最大长度；</li>
+<li>应用驱动和 ORM 对字段的处理方式。</li>
+</ul>
+<p>整数类型则是固定长度的：</p>
+<p>所以，能用 INT 就不用 BIGINT 。</p>
+<p>但也不要取极限值，字段类型先由业务语义和生命周期确定，再讨论字节数。过窄的类型会把正常增长变成高风险 DDL。</p>
+<h2><span id="选择简单的数据类型">选择简单的数据类型</span></h2><p>复杂的数据类型不利于 MySQL 优化器 进行分析和优化。</p>
+<p>优先使用能够直接表达业务语义的原生类型，避免把结构化数据编码成需要额外解析的字符串、二进制对象或 JSON。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">优先级 整型 &gt; date,time &gt; Char,VarChar &gt; blob</span><br></pre></td></tr></table></figure>
+
+<h2><span id="减少-null">减少 NULL</span></h2><ol>
+<li>引入三值逻辑</li>
+</ol>
+<p>SQL 中的布尔判断不仅有 TRUE 和 FALSE，还存在 UNKNOWN。</p>
+<p>下面的查询不能找到空值：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT *</span><br><span class="line">FROM customer</span><br><span class="line">WHERE phone = NULL;</span><br></pre></td></tr></table></figure>
+<p>必须使用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT *</span><br><span class="line">FROM customer</span><br><span class="line">WHERE phone IS NULL;</span><br></pre></td></tr></table></figure>
+<p>NULL 还会影响 AND、OR、NOT、IN 和 NOT IN 等表达式。如果开发者不了解三值逻辑，容易编写出结果不符合预期的查询。</p>
+<ol start="2">
+<li>影响聚合结果</li>
+</ol>
+<p>大部分聚合函数会忽略 NULL：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SELECT</span><br><span class="line">    COUNT(*) AS total_rows,</span><br><span class="line">    COUNT(phone) AS known_phone_rows</span><br><span class="line">FROM customer;</span><br></pre></td></tr></table></figure>
+<p>COUNT(*) 统计所有行，而 COUNT(phone) 只统计 phone 不为 NULL 的行。两者含义不同，报表和统计代码必须明确区分。</p>
+<ol start="3">
+<li>增加应用判断分支</li>
+</ol>
+<p>允许 NULL 后，应用、ORM、序列化接口和业务代码都需要正确处理可空状态。如果字段实际上不存在“未知”或“不适用”的业务含义，允许 NULL 只会增加无意义的分支。</p>
+<ol start="4">
+<li>影响索引选择性和执行计划</li>
+</ol>
+<p>InnoDB 可以为允许 NULL 的列建立索引，IS NULL 查询也可能使用索引。因此，“可空列不能使用索引”是错误的。</p>
+<p>真正影响执行计划的是数据分布。例如，如果一列 90% 的记录都是 NULL，查询 IS NULL 需要返回大部分数据，优化器就可能认为全表扫描比索引访问更划算。</p>
+<ol start="5">
+<li>产生少量存储开销</li>
+</ol>
+<p>InnoDB 通常使用位图记录哪些可空列是 NULL。若索引记录中包含 (N) 个可空字段，NULL 位图大约需要：</p>
+<p>[
+\operatorname{CEILING}(N &#x2F; 8)
+]</p>
+<p>字节。</p>
+<p>NULL 会影响</p>
+<h3><span id="原因">原因</span></h3><h1><span id="版本差异">版本差异</span></h1><p>同一条设计建议在三个版本中可能有不同前提。</p>
+<table>
+<thead>
+<tr>
+<th><strong>能力或默认行为</strong></th>
+<th><strong>MySQL 5.7</strong></th>
+<th><strong>MySQL 8.0</strong></th>
+<th><strong>MySQL 8.4</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>默认字符集</td>
+<td>latin1</td>
+<td>utf8mb4</td>
+<td>utf8mb4</td>
+</tr>
+<tr>
+<td>默认排序规则</td>
+<td>latin1_swedish_ci</td>
+<td>utf8mb4_0900_ai_ci</td>
+<td>utf8mb4_0900_ai_ci</td>
+</tr>
+<tr>
+<td>原生 JSON</td>
+<td>支持</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>JSON 路径索引</td>
+<td>生成列</td>
+<td>生成列或函数索引</td>
+<td>生成列或函数索引</td>
+</tr>
+<tr>
+<td>函数索引</td>
+<td>不支持</td>
+<td>8.0.13 起支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>JSON 多值索引</td>
+<td>不支持</td>
+<td>8.0.17 起支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>JSON 局部更新</td>
+<td>不支持优化</td>
+<td>有条件支持</td>
+<td>有条件支持</td>
+</tr>
+<tr>
+<td>整数显示宽度</td>
+<td>可用</td>
+<td>8.0.17 起弃用</td>
+<td>弃用</td>
+</tr>
+<tr>
+<td>FLOAT DOUBLE AUTO_INCREMENT</td>
+<td>可用但不建议</td>
+<td>弃用</td>
+<td>8.4.0 起不支持</td>
+</tr>
+</tbody></table>
+<h2><span id="默认值变化的实际影响">默认值变化的实际影响</span></h2><p>MySQL 5.7 默认使用 latin1 和 latin1_swedish_ci，而 8.0 与 8.4 默认使用 utf8mb4 和 utf8mb4_0900_ai_ci。若 DDL 没有显式指定字符集和排序规则，同一份建表语句可能得到不同列定义。比较、排序、唯一索引冲突和索引长度都可能随之改变。升级方案应把隐式默认值改成显式定义。</p>
+<h1><span id="innodb-存储基础">InnoDB 存储基础</span></h1><p>字段类型的物理成本不能只看类型表。InnoDB 将表组织为以主键为序的聚簇索引。聚簇索引叶子记录保存完整行，二级索引叶子记录保存二级索引列和对应的主键列。变长列可能保存在索引页内，也可能通过 20 字节指针引用溢出页。</p>
+<h2><span id="主键宽度的放大效应">主键宽度的放大效应</span></h2><p>假设一张表有五个二级索引，把主键从 4 字节 INT 改成 8 字节 BIGINT，会给每条二级索引记录增加最多 4 字节的主键负担。实际空间还受记录头、页填充率、压缩和主键列是否已包含在索引中影响，但方向明确。选择主键类型时应把所有二级索引计入成本。</p>
+<h2><span id="行格式决定长列位置">行格式决定长列位置</span></h2><p>COMPACT 行格式会在记录内保留长变长值的前 768 字节，再把其余部分放到溢出页。DYNAMIC 行格式可以把长值完整放到行外，并在聚簇记录中保留 20 字节指针。是否外置取决于页面能否容纳整行，而不是只由列名是 VarChar 还是 TEXT 决定。DYNAMIC 同时支持更大的索引键前缀。</p>
+<table>
+<thead>
+<tr>
+<th><strong>类型</strong></th>
+<th><strong>基本存储量</strong></th>
+<th><strong>设计提示</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TINYINT</td>
+<td>1 字节</td>
+<td>适合小范围代码和值域明确的状态</td>
+</tr>
+<tr>
+<td>SMALLINT</td>
+<td>2 字节</td>
+<td>适合中小范围计数或代码</td>
+</tr>
+<tr>
+<td>MEDIUMINT</td>
+<td>3 字节</td>
+<td>节省 1 字节但生态使用较少</td>
+</tr>
+<tr>
+<td>INT</td>
+<td>4 字节</td>
+<td>常用整数和中等规模标识</td>
+</tr>
+<tr>
+<td>BIGINT</td>
+<td>8 字节</td>
+<td>适合大规模标识和大范围累计值</td>
+</tr>
+<tr>
+<td>DATE</td>
+<td>3 字节</td>
+<td>只保存日期</td>
+</tr>
+<tr>
+<td>TIMESTAMP</td>
+<td>4 字节加小数秒</td>
+<td>带时区转换且存在 2038 范围边界</td>
+</tr>
+<tr>
+<td>DATETIME</td>
+<td>5 字节加小数秒</td>
+<td>保存日历日期时间</td>
+</tr>
+<tr>
+<td>VarChar</td>
+<td>实际字节加 1 或 2 字节</td>
+<td>前缀长度由最大可能字节数决定</td>
+</tr>
+<tr>
+<td>DECIMAL</td>
+<td>按 9 位十进制数分组</td>
+<td>精度和小数位分别影响存储</td>
+</tr>
+</tbody></table>
+<h1><span id="整数类型">整数类型</span></h1><h2><span id="按生命周期估算取值域">按生命周期估算取值域</span></h2><p>整数类型应覆盖字段在整个生命周期内的最大和最小值。估算时不能只看当前行数，还要加入数据保留年限、业务增长、历史导入、分库编码、ID 生成策略和计算中间值。对于主键，范围不足后的扩容通常需要修改所有引用列，并可能触发表重建。</p>
+<table>
+<thead>
+<tr>
+<th><strong>类型</strong></th>
+<th><strong>字节</strong></th>
+<th><strong>有符号范围</strong></th>
+<th><strong>无符号范围</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TINYINT</td>
+<td>1</td>
+<td>-128 到 127</td>
+<td>0 到 255</td>
+</tr>
+<tr>
+<td>SMALLINT</td>
+<td>2</td>
+<td>-32768 到 32767</td>
+<td>0 到 65535</td>
+</tr>
+<tr>
+<td>MEDIUMINT</td>
+<td>3</td>
+<td>-8388608 到 8388607</td>
+<td>0 到 16777215</td>
+</tr>
+<tr>
+<td>INT</td>
+<td>4</td>
+<td>-2147483648 到 2147483647</td>
+<td>0 到 4294967295</td>
+</tr>
+<tr>
+<td>BIGINT</td>
+<td>8</td>
+<td>约负 9.22e18 到正 9.22e18</td>
+<td>0 到约 1.84e19</td>
+</tr>
+</tbody></table>
+<h2><span id="整数显示宽度不是容量">整数显示宽度不是容量</span></h2><p>INT(4) 和 INT(11) 都占 4 字节，也具有相同取值范围。括号中的数字是历史显示宽度，不能限制输入位数。与 ZEROFILL 配合时，它可以影响格式化显示，但该能力从 MySQL 8.0.17 起被弃用。需要前导零的业务编号应作为字符串存储，或者在展示层格式化。</p>
+<h2><span id="unsigned-的取舍">Unsigned 的取舍</span></h2><p>Unsigned 可以把负数区间换成更大的正数区间，但它也扩展了 MySQL 与其他数据库、语言类型和 ORM 之间的差异。主外键及所有关联列应保持整数宽度和符号属性一致。对金额、测量值和 DECIMAL 使用 Unsigned 的做法在 8.0.17 起被弃用，更清晰的业务下界可由 CHECK 或应用验证表达。</p>
+<h2><span id="布尔值和状态值">布尔值和状态值</span></h2><p>MySQL 的 BOOL 和 BOOLEAN 是 TINYINT(1) 的同义形式，并不会自动阻止写入 2 或负数。若字段确实只允许两个状态，应在 8.x 使用 CHECK 约束，或者通过应用和测试保证输入。若业务存在未知、未处理和失败等额外状态，则不应强行压成布尔值。</p>
+<h1><span id="精确数和近似数">精确数和近似数</span></h1><p>DECIMAL 保存十进制定点精确值，FLOAT 和 DOUBLE 保存二进制浮点近似值。两类类型的差异不仅体现在展示小数位，还体现在表达式传播、聚合、相等判断和跨平台结果。</p>
+<h2><span id="金额和精确计算">金额和精确计算</span></h2><p>金额、余额、税额和必须按十进制规则结算的值通常应使用 DECIMAL。DECIMAL(M,D) 中 M 是总有效位数，D 是小数位数。设计时要根据最大金额、币种精度、税率计算和中间结果确定范围，不能习惯性使用 DECIMAL(10,2)。</p>
+<p><strong>存储规则</strong> DECIMAL 把整数部分和小数部分分别分组，每 9 个十进制数字使用 4 字节，剩余数字按组占 0 到 4 字节。符号不单独增加一个完整字节。</p>
+<p><strong>写入规则</strong> 小数位超过 D 时会舍入。整数位超出范围时，严格模式通常报错，非严格模式可能截到合法边界并产生警告。</p>
+<h2><span id="浮点数的适用范围">浮点数的适用范围</span></h2><p>FLOAT 和 DOUBLE 适合测量值、统计模型、图形和科学计算等允许近似误差的场景。不要用浮点列直接保存需要逐分一致的金额，也不要依赖直接等值比较。任何近似值参与表达式后，MySQL 会使用浮点运算；字符串参与数值表达式时也可能转换为 DOUBLE，使原本精确的计算变成近似计算。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="number">0.1</span> <span class="operator">+</span> <span class="number">0.2</span> <span class="operator">=</span> <span class="number">0.3</span> <span class="keyword">AS</span> equal_result;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE TABLE</span> number_test (</span><br><span class="line">    f <span class="type">FLOAT</span>,</span><br><span class="line">    d <span class="keyword">DOUBLE</span>,</span><br><span class="line">    amount <span class="type">DECIMAL</span>(<span class="number">20</span>, <span class="number">6</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h1><span id="日期和时间类型">日期和时间类型</span></h1><table>
+<thead>
+<tr>
+<th><strong>含义</strong></th>
+<th><strong>常用类型</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>生日和结算日</td>
+<td>DATE</td>
+<td>只有日期，不应受时区转换影响</td>
+</tr>
+<tr>
+<td>门店营业时间和预约日历值</td>
+<td>DATETIME</td>
+<td>按所在地规则解释，可另存时区标识</td>
+</tr>
+<tr>
+<td>创建时间和事件发生时刻</td>
+<td>TIMESTAMP 或 UTC DATETIME</td>
+<td>需要统一时区策略和驱动配置</td>
+</tr>
+<tr>
+<td>耗时和剩余时间</td>
+<td>整数单位或专门建模</td>
+<td>不要把持续时长误当作日期时间</td>
+</tr>
+</tbody></table>
+<h2><span id="timestamp-和-datetime">TIMESTAMP 和 DATETIME</span></h2><p>TIMESTAMP 写入时按会话时区转换为 UTC，读取时再从 UTC 转回会话时区。DATETIME 保存写入的日历字段，不做这种转换。三个目标版本的官方文档都把 TIMESTAMP 上限列为 2038 年 1 月 19 日 03:14:07 UTC，而 DATETIME 支持到 9999 年。因而 TIMESTAMP 不能仅凭空间较小而成为默认选择。</p>
+<h2><span id="小数秒精度">小数秒精度</span></h2><p>TIME、DATETIME 和 TIMESTAMP 的小数秒精度会增加存储。精度为 1 到 2 位增加 1 字节，3 到 4 位增加 2 字节，5 到 6 位增加 3 字节。只有在排序、去重或审计确实需要时才应使用微秒。</p>
+<h2><span id="零日期和-sql-模式">零日期和 SQL 模式</span></h2><p>把 0000-00-00 或 1970-01-01 当作未发生的哨兵值会把状态混入时间字段，并使范围查询和统计产生假数据。允许空值时应使用 NULL；不允许空值时应把业务状态拆成独立列。不同 sql_mode 对无效日期和零日期的处理存在差异，迁移前必须测试。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> time_zone <span class="operator">=</span> <span class="string">&#x27;+08:00&#x27;</span>;</span><br><span class="line"><span class="keyword">INSERT INTO</span> temporal_test(ts_value, dt_value)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="string">&#x27;2026-09-16 10:00:00&#x27;</span>, <span class="string">&#x27;2026-09-16 10:00:00&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">SET</span> time_zone <span class="operator">=</span> <span class="string">&#x27;+00:00&#x27;</span>;</span><br><span class="line"><span class="keyword">SELECT</span> ts_value, dt_value <span class="keyword">FROM</span> temporal_test;</span><br></pre></td></tr></table></figure>
+
+<h1><span id="字符和长文本类型">字符和长文本类型</span></h1><h2><span id="varchar-长度的含义">VarChar 长度的含义</span></h2><p>VarChar(N) 中的 N 是字符数，而不是字节数。实际数据占用取决于字符编码后的字节长度，并额外使用 1 或 2 字节保存长度。是否需要 2 字节长度前缀取决于列的最大可能字节数。VarChar(255) 使用 utf8mb4 时最大可能达到 1020 字节，因此 255 并不是通用的单字节分界或性能甜点。</p>
+<h2><span id="char-的适用场景">Char 的适用场景</span></h2><p>Char 适合真正定长且尾部空格没有业务意义的值，例如某些固定长度代码。对于变长字符集，InnoDB 的实际存储会做专门处理，不能简单按 N 乘以 4 估算所有情况。尾部空格在存储、读取和比较中的行为还会受类型及排序规则的 PAD 属性影响。</p>
+<h2><span id="二进制标识和值">二进制标识和值</span></h2><p>十六进制散列、UUID 和原始字节若不需要语言学比较，应评估 BINARY 或 VARBINARY。将 16 字节 UUID 存成 Char(36) 会增加聚簇和二级索引宽度。若系统依赖按时间有序写入，还需要评估 UUID 版本和字节排列，不能只替换字段类型。</p>
+<h2><span id="text-与-varchar">TEXT 与 VarChar</span></h2><p>TEXT 与 VarChar 的关键差异主要在最大长度、索引方式和某些 SQL 操作限制。TEXT 索引通常必须指定前缀长度，前缀索引可能无法提供完整唯一性和区分度。使用 DYNAMIC 行格式时，长 VarChar 和 TEXT 都可能完整外置；短 TEXT 值仍可能保存在行内。因此二者不能用行内和行外的简单二分法选择。</p>
+<h2><span id="索引长度和-191-字符误区">索引长度和 191 字符误区</span></h2><p>utf8mb4 索引只能建立 191 字符是带条件的旧结论。COMPACT 和 REDUNDANT 行格式的索引键前缀上限为 767 字节，按每字符最多 4 字节计算得到 191。DYNAMIC 和 COMPRESSED 在默认 16KB 页下支持 3072 字节。页大小降低时，上限会按比例降低。</p>
+<h2><span id="字符串字段决策问题">字符串字段决策问题</span></h2><ul>
+<li><p>字段是自然语言文本、机器标识，还是原始二进制值。</p>
+</li>
+<li><p>最大长度来自业务规则，还是为了省事随意填写。</p>
+</li>
+<li><p>字段是否参与等值查询、范围查询、排序、分组或唯一约束。</p>
+</li>
+<li><p>尾部空格、大小写、重音和 Unicode 补充字符是否具有业务意义。</p>
+</li>
+<li><p>查询是否经常只读其他列，还是每次都需要返回大字段。</p>
+</li>
+</ul>
+<h1><span id="json-类型">JSON 类型</span></h1><p>MySQL 原生 JSON 会验证写入内容并转换为便于按路径访问的二进制格式。二进制编码包含元数据和查找结构，因此空间通常接近文本表示并增加一定开销。JSON 的主要价值是验证、路径函数和索引能力，而不是保证压缩。</p>
+<h2><span id="适合和不适合的字段">适合和不适合的字段</span></h2><p>JSON 适合稀疏、变化快并且大部分不参与关系操作的扩展属性，例如第三方原始响应、设备差异化配置和少量可选元数据。以下字段通常应拆成普通列。</p>
+<ul>
+<li><p>高频过滤、排序、分组和关联字段。</p>
+</li>
+<li><p>需要外键、NOT NULL、唯一约束或严格类型约束的核心属性。</p>
+</li>
+<li><p>更新频繁且可以稳定建模的小字段集合。</p>
+</li>
+<li><p>需要由 BI、数据仓库和多个语言客户端稳定消费的公共字段。</p>
+</li>
+</ul>
+<h2><span id="三个版本的索引路径">三个版本的索引路径</span></h2><p>MySQL 5.7 不能直接为整个 JSON 建普通索引，常见方式是创建提取标量值的生成列并对生成列建索引。MySQL 8.0.13 起支持函数索引，可直接为表达式值建索引。MySQL 8.0.17 起支持面向 JSON 数组的多值索引。多值索引不能覆盖所有普通索引能力，并有排序、外键和在线创建限制。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- MySQL 5.7 兼容方案</span></span><br><span class="line"><span class="keyword">ALTER TABLE</span> orders</span><br><span class="line">  <span class="keyword">ADD</span> customer_id <span class="type">BIGINT</span> UNSIGNED</span><br><span class="line">    GENERATED ALWAYS <span class="keyword">AS</span> (</span><br><span class="line">      <span class="built_in">CAST</span>(JSON_UNQUOTE(JSON_EXTRACT(ext, <span class="string">&#x27;$.customer_id&#x27;</span>)) <span class="keyword">AS</span> UNSIGNED)</span><br><span class="line">    ) VIRTUAL,</span><br><span class="line">  <span class="keyword">ADD</span> INDEX idx_customer_id (customer_id);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- MySQL 8.0.13 及以上</span></span><br><span class="line"><span class="keyword">CREATE</span> INDEX idx_customer</span><br><span class="line"><span class="keyword">ON</span> orders ((<span class="built_in">CAST</span>(ext<span class="operator">-</span><span class="operator">&gt;&gt;</span><span class="string">&#x27;$.customer_id&#x27;</span> <span class="keyword">AS</span> UNSIGNED)));</span><br></pre></td></tr></table></figure>
+
+<h2><span id="函数索引中的类型和排序规则">函数索引中的类型和排序规则</span></h2><p>JSON_UNQUOTE 返回的字符串类型和排序规则可能与 CAST 后的表达式不同。若查询表达式与索引表达式在类型、长度或排序规则上不一致，优化器可能无法使用函数索引。设计函数索引时应把查询 SQL、CAST 类型和 COLLATE 一起固定，并用 EXPLAIN 验证。</p>
+<h2><span id="局部更新的边界">局部更新的边界</span></h2><p>MySQL 8.x 可以在满足条件时对 JSON 做局部原地更新，但不能将其概括为修改 JSON 永远不重写文档。被更新列必须是 JSON，语句需要使用 JSON_SET、JSON_REPLACE 或 JSON_REMOVE 等受支持函数，新值和可用空间还必须符合优化条件。直接把整份 JSON 赋给列不属于局部更新。</p>
+<h1><span id="null-设计">NULL 设计</span></h1><h2><span id="null-表达未知">NULL 表达未知</span></h2><p>NULL 与空字符串、零和空 JSON 对象不同。NULL 通常表示未知、不适用或尚未发生。若业务需要区分未知和明确为空，就必须保留这种差异；用空字符串统一替代 NULL 会丢失信息。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> customer <span class="keyword">WHERE</span> phone <span class="keyword">IS</span> <span class="keyword">NULL</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> customer <span class="keyword">WHERE</span> phone <span class="operator">=</span> <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">AS</span> rows_total,</span><br><span class="line">       <span class="built_in">COUNT</span>(phone) <span class="keyword">AS</span> known_phone_count</span><br><span class="line"><span class="keyword">FROM</span> customer;</span><br></pre></td></tr></table></figure>
+
+<h2><span id="三值逻辑">三值逻辑</span></h2><p>任何值与 NULL 使用等号比较都不会得到 TRUE，包括 NULL 自身。搜索空值必须使用 IS NULL 或 IS NOT NULL。聚合函数通常忽略 NULL，而 COUNT(*) 计算行数。复杂条件中的 UNKNOWN 还会影响 AND、OR 和 NOT 的结果，查询编写和测试必须覆盖空值。</p>
+<h2><span id="存储成本">存储成本</span></h2><p>在 InnoDB COMPACT 和 DYNAMIC 记录中，可空列由位图记录。若索引记录中有 N 个可空列，位图使用 CEILING(N&#x2F;8) 字节。可空变长列为 NULL 时不保存数据内容。因而每个 NULL 浪费一个字节并不准确。NOT NULL 的首要理由应是业务约束，而不是未经测量的性能假设。</p>
+<h2><span id="索引和选择性">索引和选择性</span></h2><p>InnoDB 可以为允许 NULL 的列建立索引，IS NULL 也可能使用索引。是否使用取决于 NULL 比例、统计信息、查询返回列和成本模型。若绝大部分行都是 NULL，索引可能很小且有效；若查询需要返回大部分表，优化器也可能选择全表扫描。</p>
+<h1><span id="字符集和排序规则">字符集和排序规则</span></h1><p>字符集决定字段能编码哪些字符以及最大字节数，排序规则决定字符串如何比较和排序。字段长度、索引大小、唯一约束和查询结果都可能同时受二者影响。</p>
+<h2><span id="使用-utf8mb4">使用 utf8mb4</span></h2><p>MySQL 传统的 utf8 最多使用 3 字节，无法保存 Unicode 补充平面字符。utf8 已作为 utf8mb3 的弃用别名。新系统通常应显式使用 utf8mb4，升级旧系统时要同时检查索引长度、连接字符集和实际脏数据。</p>
+<h1><span id="字段选择框架">字段选择框架</span></h1><table>
+<thead>
+<tr>
+<th><strong>业务数据</strong></th>
+<th><strong>首选候选</strong></th>
+<th><strong>需要确认的问题</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主键</td>
+<td>INT 或 BIGINT</td>
+<td>增长上限 生成策略 二级索引数量</td>
+</tr>
+<tr>
+<td>状态码</td>
+<td>TINYINT SMALLINT 或 VarChar</td>
+<td>可读性 状态扩展 外部协议</td>
+</tr>
+<tr>
+<td>金额</td>
+<td>DECIMAL 或整数最小单位</td>
+<td>最大值 币种精度 舍入规则</td>
+</tr>
+<tr>
+<td>事件时刻</td>
+<td>TIMESTAMP 或 UTC DATETIME</td>
+<td>时区 2038 范围 驱动行为</td>
+</tr>
+<tr>
+<td>日历时间</td>
+<td>DATETIME</td>
+<td>是否需要保存时区标识和夏令时规则</td>
+</tr>
+<tr>
+<td>短文本</td>
+<td>VarChar</td>
+<td>最大字符数 字符集 比较规则 索引</td>
+</tr>
+<tr>
+<td>长文本</td>
+<td>TEXT 系列</td>
+<td>读取频率 前缀索引 排序分组</td>
+</tr>
+<tr>
+<td>固定二进制值</td>
+<td>BINARY 或 VARBINARY</td>
+<td>长度 是否需要语言学比较</td>
+</tr>
+<tr>
+<td>扩展属性</td>
+<td>JSON</td>
+<td>查询路径 约束 更新频率 版本能力</td>
+</tr>
+<tr>
+<td>未知或未发生</td>
+<td>允许 NULL</td>
+<td>业务是否需要区分空值和未知</td>
+</tr>
+</tbody></table>
+<h1><span id="常见误区核查">常见误区核查</span></h1><table>
+<thead>
+<tr>
+<th><strong>常见说法</strong></th>
+<th><strong>更准确的结论</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>字段越小查询越快</td>
+<td>更窄记录可能提高页密度和缓存命中率，收益仍取决于索引、访问模式和数据规模。</td>
+</tr>
+<tr>
+<td>INT(11) 只能保存 11 位</td>
+<td>11 是历史显示宽度，不改变 4 字节存储和整数范围。</td>
+</tr>
+<tr>
+<td>VarChar(255) 性能最好</td>
+<td>没有通用分界。最大字节数、行长度和查询用途更重要。</td>
+</tr>
+<tr>
+<td>Char 永远按最大长度占空间</td>
+<td>InnoDB 对变长字符集和不同 ROW_FORMAT 有专门存储规则。</td>
+</tr>
+<tr>
+<td>TEXT 永远保存在行外</td>
+<td>是否外置取决于行格式、值长度和整行大小。短 TEXT 可能行内。</td>
+</tr>
+<tr>
+<td>TIMESTAMP 永远优于 DATETIME</td>
+<td>二者的时区语义和范围不同，空间只差 1 字节。</td>
+</tr>
+<tr>
+<td>金额用 DOUBLE 再 ROUND 就行</td>
+<td>中间步骤已经可能产生近似误差，ROUND 不能恢复精确原值。</td>
+</tr>
+<tr>
+<td>NOT NULL 一定更快</td>
+<td>应先满足业务约束。可空列使用位图，性能需按查询和分布测试。</td>
+</tr>
+<tr>
+<td>可空列不能使用索引</td>
+<td>InnoDB 可索引 NULL，IS NULL 是否走索引由成本决定。</td>
+</tr>
+<tr>
+<td>MySQL utf8 是完整 UTF 8</td>
+<td>传统 utf8 是 utf8mb3，不能保存全部 Unicode。</td>
+</tr>
+<tr>
+<td>utf8mb4 索引最多 191 字符</td>
+<td>该数字来自旧行格式的 767 字节限制，不是所有配置的上限。</td>
+</tr>
+<tr>
+<td>8.0 修改 JSON 都是局部更新</td>
+<td>只有满足函数和空间等条件的更新才能使用局部优化。</td>
+</tr>
+</tbody></table>
+<h1><span id="迁移和上线检查">迁移和上线检查</span></h1><h2><span id="现状盘点-sql">现状盘点 SQL</span></h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">    TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME,</span><br><span class="line">    COLUMN_TYPE, IS_NULLABLE, COLUMN_DEFAULT,</span><br><span class="line">    CharACTER_SET_NAME, COLLATION_NAME</span><br><span class="line"><span class="keyword">FROM</span> information_schema.COLUMNS</span><br><span class="line"><span class="keyword">WHERE</span> TABLE_SCHEMA <span class="operator">=</span> <span class="string">&#x27;your_database&#x27;</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> TABLE_NAME, ORDINAL_POSITION;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">    TABLE_SCHEMA, TABLE_NAME, ENGINE, ROW_FORMAT,</span><br><span class="line">    TABLE_COLLATION, DATA_LENGTH, INDEX_LENGTH</span><br><span class="line"><span class="keyword">FROM</span> information_schema.TABLES</span><br><span class="line"><span class="keyword">WHERE</span> TABLE_SCHEMA <span class="operator">=</span> <span class="string">&#x27;your_database&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h2><span id="上线策略">上线策略</span></h2><p>字段类型修改可能引发表重建、长事务、复制延迟和额外临时空间。上线方案应明确所需 DDL 算法、锁级别、磁盘峰值、暂停条件和回滚路径。对大表，优先使用影子表迁移、双写校验或经过验证的在线 DDL 工具，并在真实数据分布上演练。</p>
+<h1><span id="综合改造示例">综合改造示例</span></h1><p>下面的旧表可以正常存数据，但多个字段混淆了类型语义。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> orders_bad (</span><br><span class="line">    id <span class="type">VarChar</span>(<span class="number">32</span>),</span><br><span class="line">    status <span class="type">VarChar</span>(<span class="number">255</span>),</span><br><span class="line">    amount <span class="type">FLOAT</span>,</span><br><span class="line">    created_at <span class="type">VarChar</span>(<span class="number">30</span>),</span><br><span class="line">    paid_at DATETIME <span class="keyword">NOT NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;1970-01-01 00:00:00&#x27;</span>,</span><br><span class="line">    customer_name <span class="type">VarChar</span>(<span class="number">255</span>) <span class="keyword">CharACTER SET</span> utf8,</span><br><span class="line">    attributes LONGTEXT</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>在假设订单量需要 BIGINT、金额保留两位、时间表示事件时刻、扩展属性结构不稳定的前提下，可以改为以下定义。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> orders (</span><br><span class="line">    id <span class="type">BIGINT</span> UNSIGNED <span class="keyword">NOT NULL</span> AUTO_INCREMENT,</span><br><span class="line">    status TINYINT UNSIGNED <span class="keyword">NOT NULL</span>,</span><br><span class="line">    amount <span class="type">DECIMAL</span>(<span class="number">18</span>, <span class="number">2</span>) <span class="keyword">NOT NULL</span>,</span><br><span class="line">    created_at <span class="type">TIMESTAMP</span>(<span class="number">6</span>) <span class="keyword">NOT NULL</span>,</span><br><span class="line">    paid_at <span class="type">TIMESTAMP</span>(<span class="number">6</span>) <span class="keyword">NULL</span>,</span><br><span class="line">    customer_name <span class="type">VarChar</span>(<span class="number">100</span>)</span><br><span class="line">        <span class="keyword">CharACTER SET</span> utf8mb4</span><br><span class="line">        <span class="keyword">COLLATE</span> utf8mb4_0900_ai_ci <span class="keyword">NOT NULL</span>,</span><br><span class="line">    attributes JSON <span class="keyword">NULL</span>,</span><br><span class="line">    <span class="keyword">PRIMARY KEY</span> (id)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB ROW_FORMAT<span class="operator">=</span><span class="keyword">DYNAMIC</span>;</span><br></pre></td></tr></table></figure>
+
+<h1><span id="参考资料">参考资料</span></h1><p>0.《高性能 MySQL(第三版)》</p>
+<p>1. <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/E17952_01/mysql-5.7-en/storage-requirements.html">MySQL 5.7 Reference Manual Data Type Storage Requirements</a></p>
+<p>2. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/storage-requirements.html">MySQL 8.0 Reference Manual Data Type Storage Requirements</a></p>
+<p>3. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/storage-requirements.html">MySQL 8.4 Reference Manual Data Type Storage Requirements</a></p>
+<p>4. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/innodb-row-format.html">MySQL 8.4 Reference Manual InnoDB Row Formats</a></p>
+<p>5. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/innodb-index-types.html">MySQL 8.4 Reference Manual Clustered and Secondary Indexes</a></p>
+<p>6. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/innodb-limits.html">MySQL 8.4 Reference Manual InnoDB Limits</a></p>
+<p>7. <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/E17952_01/mysql-5.7-en/numeric-type-attributes.html">MySQL 5.7 Reference Manual Numeric Type Attributes</a></p>
+<p>8. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/numeric-type-attributes.html">MySQL 8.0 Reference Manual Numeric Type Attributes</a></p>
+<p>9. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/integer-types.html">MySQL 8.4 Reference Manual Integer Types</a></p>
+<p>10. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/fixed-point-types.html">MySQL 8.4 Reference Manual Fixed Point Types</a></p>
+<p>11. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/floating-point-types.html">MySQL 8.4 Reference Manual Floating Point Types</a></p>
+<p>12. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/precision-math.html">MySQL 8.4 Reference Manual Precision Math</a></p>
+<p>13. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/precision-math-expressions.html">MySQL 8.4 Reference Manual Expression Handling</a></p>
+<p>14. <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/E17952_01/mysql-5.7-en/datetime.html">MySQL 5.7 Reference Manual Date Datetime and Timestamp Types</a></p>
+<p>15. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/datetime.html">MySQL 8.4 Reference Manual Date Datetime and Timestamp Types</a></p>
+<p>16. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/Char.html">MySQL 8.4 Reference Manual Char and VarChar Types</a></p>
+<p>17. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/blob.html">MySQL 8.4 Reference Manual Blob and Text Types</a></p>
+<p>18. <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/E17952_01/mysql-5.7-en/json.html">MySQL 5.7 Reference Manual JSON Data Type</a></p>
+<p>19. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/json.html">MySQL 8.0 Reference Manual JSON Data Type</a></p>
+<p>20. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/create-index.html">MySQL 8.0 Reference Manual Create Index Statement</a></p>
+<p>21. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/problems-with-null.html">MySQL 8.4 Reference Manual Problems with NULL Values</a></p>
+<p>22. <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/E17952_01/mysql-5.7-en/Charset-server.html">MySQL 5.7 Reference Manual Server Character Set and Collation</a></p>
+<p>23. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/Charset-server.html">MySQL 8.0 Reference Manual Server Character Set and Collation</a></p>
+<p>24. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/Charset-unicode-utf8mb4.html">MySQL 8.4 Reference Manual utf8mb4 Character Set</a></p>
+<p>25. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/optimize-benchmarking.html">MySQL 8.4 Reference Manual Measuring Performance</a></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -249,7 +791,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-09 13:37:12" itemprop="dateModified" datetime="2026-09-09T13:37:12+00:00">2026-09-09</time>
+      <time title="修改时间：2026-09-19 03:23:57" itemprop="dateModified" datetime="2026-09-19T03:23:57+00:00">2026-09-19</time>
     </span>
 
   
@@ -285,7 +827,8 @@
 <li>tool 消息通过 tool_call_id 与对应的工具调用关联——模型据此知道哪个结果对应哪个调用。</li>
 </ol>
 <p>这里我重点关注的是：下一次请求会包含上一次的对话历史。这意味着：随着对话次数增多，可能你只是问一个小问题，但也会带上之前所有的对话历史，这也是上下文窗口不足的主要原因。对codex来说，过长的上下文会触发上下文压缩机制，但这也会导致 codex 失去对历史信息的精度。所以，要妥善处理上下文的长度，及时开启新的对话。</p>
-<p>我一般会在上下文达到 70% 以上时告诉codex：由于上下文长度原因，我需要重新开启一个对话窗口，总结本次任务的进度并生成可直接交付给下个窗口的命令。</p>
+<h2><span id="我一般会在上下文达到-70-以上时告诉codex由于上下文长度原因我需要重新开启一个对话窗口总结本次任务的进度并生成可直接交付给下个窗口的命令">我一般会在上下文达到 70% 以上时告诉codex：由于上下文长度原因，我需要重新开启一个对话窗口，总结本次任务的进度并生成可直接交付给下个窗口的命令。</span></h2><p>我学到了一种新的更好用的方式，更新一下：</p>
+<p>在系统提示从中让 agent 维护一份 progress.md ,里面记录 agent进行的所有操作，并在根目录中维护一份 AGENT.md ，存在核心规则和重要记忆。</p>
 <h1><span id="kv-cache">KV Cache</span></h1><p>解释：</p>
 <p>算是一种缓存机制：把前文的中间计
 算结果缓存下来，下一轮只需要计算新增 token 的部分。前提是要复用的上下文 token 前缀保持不变——若 token
@@ -427,7 +970,7 @@ PowerPoint 的详细工作流）、reference.md（格式技术细节）等。Age
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-09 13:37:12" itemprop="dateModified" datetime="2026-09-09T13:37:12+00:00">2026-09-09</time>
+      <time title="修改时间：2026-09-19 03:23:57" itemprop="dateModified" datetime="2026-09-19T03:23:57+00:00">2026-09-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -662,7 +1205,7 @@ Augmented Generation，详见第三章）动态检索引入的外部知识——
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-09 13:37:12" itemprop="dateModified" datetime="2026-09-09T13:37:12+00:00">2026-09-09</time>
+      <time title="修改时间：2026-09-19 03:23:57" itemprop="dateModified" datetime="2026-09-19T03:23:57+00:00">2026-09-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -976,7 +1519,7 @@ Augmented Generation，详见第三章）动态检索引入的外部知识——
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-09 13:37:12" itemprop="dateModified" datetime="2026-09-09T13:37:12+00:00">2026-09-09</time>
+      <time title="修改时间：2026-09-19 03:23:57" itemprop="dateModified" datetime="2026-09-19T03:23:57+00:00">2026-09-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1203,7 +1746,7 @@ Augmented Generation，详见第三章）动态检索引入的外部知识——
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-09 13:37:12" itemprop="dateModified" datetime="2026-09-09T13:37:12+00:00">2026-09-09</time>
+      <time title="修改时间：2026-09-19 03:23:57" itemprop="dateModified" datetime="2026-09-19T03:23:57+00:00">2026-09-19</time>
     </span>
 
   
@@ -1293,7 +1836,7 @@ Augmented Generation，详见第三章）动态检索引入的外部知识——
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-09 13:37:12" itemprop="dateModified" datetime="2026-09-09T13:37:12+00:00">2026-09-09</time>
+      <time title="修改时间：2026-09-19 03:23:57" itemprop="dateModified" datetime="2026-09-19T03:23:57+00:00">2026-09-19</time>
     </span>
 
   
@@ -1402,7 +1945,7 @@ Augmented Generation，详见第三章）动态检索引入的外部知识——
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-09 13:37:12" itemprop="dateModified" datetime="2026-09-09T13:37:12+00:00">2026-09-09</time>
+      <time title="修改时间：2026-09-19 03:23:57" itemprop="dateModified" datetime="2026-09-19T03:23:57+00:00">2026-09-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1744,7 +2287,7 @@ Augmented Generation，详见第三章）动态检索引入的外部知识——
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-09 13:37:12" itemprop="dateModified" datetime="2026-09-09T13:37:12+00:00">2026-09-09</time>
+      <time title="修改时间：2026-09-19 03:23:57" itemprop="dateModified" datetime="2026-09-19T03:23:57+00:00">2026-09-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1927,7 +2470,7 @@ Augmented Generation，详见第三章）动态检索引入的外部知识——
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-09 13:37:12" itemprop="dateModified" datetime="2026-09-09T13:37:12+00:00">2026-09-09</time>
+      <time title="修改时间：2026-09-19 03:23:57" itemprop="dateModified" datetime="2026-09-19T03:23:57+00:00">2026-09-19</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -2063,337 +2606,6 @@ Augmented Generation，详见第三章）动态检索引入的外部知识——
 <li><a target="_blank" rel="noopener" href="https://uaxe.github.io/geektime-docs/%E5%90%8E%E7%AB%AF-%E6%9E%B6%E6%9E%84/SQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/%E5%8A%A0%E9%A4%9005-SQL%E5%AE%9E%E6%88%98%EF%BC%9A%E6%96%B0%E8%83%BD%E6%BA%90%E8%BD%A6%E4%BC%81%E7%9A%84%E6%95%B0%E6%8D%AE%E6%9F%A5%E8%AF%A2%E4%B8%8E%E4%BC%98%E5%8C%96/">新能源车企</a></li>
 <li><a target="_blank" rel="noopener" href="https://uaxe.github.io/geektime-docs/%E5%90%8E%E7%AB%AF-%E6%9E%B6%E6%9E%84/SQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/%E5%8A%A0%E9%A4%9006-SQL%E5%AE%9E%E6%88%98%EF%BC%9A%E5%BF%AB%E6%B6%88%E5%9C%BA%E6%99%AF%E7%9A%84%E6%95%B0%E6%8D%AE%E6%9F%A5%E8%AF%A2%E4%B8%8E%E4%BC%98%E5%8C%96/">快消场景</a></li>
 </ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/07/17/%E3%80%8ASQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A%E3%80%8B%E5%AD%A6%E4%B9%A0%E9%9A%8F%E7%AC%94-%E5%9F%BA%E7%A1%80%E7%AF%87/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="DarkYellowCat">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="DarkYellowCat's Blog">
-      <meta itemprop="description" content="记录学习与成长">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | DarkYellowCat's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/07/17/%E3%80%8ASQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A%E3%80%8B%E5%AD%A6%E4%B9%A0%E9%9A%8F%E7%AC%94-%E5%9F%BA%E7%A1%80%E7%AF%87/" class="post-title-link" itemprop="url">《SQL必知必会》学习随笔-基础篇：SQL 基础与 MySQL 执行流程</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-07-17 12:00:28" itemprop="dateCreated datePublished" datetime="2026-07-17T12:00:28+00:00">2026-07-17</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-09 13:37:12" itemprop="dateModified" datetime="2026-09-09T13:37:12+00:00">2026-09-09</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1><span id="前言">前言</span></h1><p>在这里推荐一下 <a target="_blank" rel="noopener" href="https://github.com/zkep/my-geektime">my-geektime</a>，里面收录了不少开发类学习资料，我一般把它当作在线阅读索引使用。</p>
-<p><a target="_blank" rel="noopener" href="https://uaxe.github.io/geektime-docs/%E5%90%8E%E7%AB%AF-%E6%9E%B6%E6%9E%84/SQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/SQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/">《SQL 必知必会》专栏地址</a></p>
-<p>作者将课程分成了四个模块：</p>
-<ul>
-<li><strong>基础篇</strong>：以 NBA 球队、球员数据和游戏数据为案例，讲解 SQL 基础语法；</li>
-<li><strong>进阶篇</strong>：从执行效率出发，分析常见的 SQL 性能问题；</li>
-<li><strong>高级篇</strong>：介绍不同关系型数据库管理系统中的 SQL 使用场景；</li>
-<li><strong>实战篇</strong>：把前面的内容用于数据清洗、数据集成和分析项目。</li>
-</ul>
-<p>这篇文章按照作者的思路整理基础篇，但我会重新调整顺序，省略一部分太基础的语法，并补上我自己查资料后对原笔记的修正。如有漏误，欢迎指正。</p>
-<img data-src="/2026/07/17/%E3%80%8ASQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A%E3%80%8B%E5%AD%A6%E4%B9%A0%E9%9A%8F%E7%AC%94-%E5%9F%BA%E7%A1%80%E7%AF%87/sql-query-pipeline.png" class title="SQL查询执行流程">
-
-<h1><span id="sql-基本概念">SQL 基本概念</span></h1><h2><span id="sql-语言的常见分类">SQL 语言的常见分类</span></h2><p>学习资料中通常会把 SQL 按功能分成下面几类：</p>
-<table>
-<thead>
-<tr>
-<th>分类</th>
-<th>英文</th>
-<th>主要用途</th>
-<th>常见语句</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>DDL</td>
-<td>Data Definition Language</td>
-<td>定义数据库对象</td>
-<td><code>CREATE</code>、<code>ALTER</code>、<code>DROP</code></td>
-</tr>
-<tr>
-<td>DML</td>
-<td>Data Manipulation Language</td>
-<td>新增、修改和删除数据</td>
-<td><code>INSERT</code>、<code>UPDATE</code>、<code>DELETE</code></td>
-</tr>
-<tr>
-<td>DQL</td>
-<td>Data Query Language</td>
-<td>查询数据</td>
-<td><code>SELECT</code></td>
-</tr>
-<tr>
-<td>DCL</td>
-<td>Data Control Language</td>
-<td>权限与安全控制</td>
-<td><code>GRANT</code>、<code>REVOKE</code></td>
-</tr>
-<tr>
-<td>TCL</td>
-<td>Transaction Control Language</td>
-<td>控制事务</td>
-<td><code>COMMIT</code>、<code>ROLLBACK</code>、<code>SAVEPOINT</code></td>
-</tr>
-</tbody></table>
-<p>不同资料的分类方式可能略有差异，例如有些资料会把 <code>SELECT</code> 也归入广义的 DML。这类分类主要是为了学习方便，不必太纠结边界。</p>
-<h2><span id="大小写与命名风格">大小写与命名风格</span></h2><p>SQL 关键字通常不区分大小写，但为了可读性，我习惯：</p>
-<ul>
-<li>表名、表别名、字段名和字段别名使用小写；</li>
-<li>SQL 关键字和内置函数使用大写；</li>
-<li>字符串使用单引号包裹。</li>
-</ul>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> name, hp_max</span><br><span class="line"><span class="keyword">FROM</span> heros</span><br><span class="line"><span class="keyword">WHERE</span> role_main <span class="operator">=</span> <span class="string">&#x27;战士&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<p>这是一种代码风格，不是所有数据库都强制要求。标识符是否区分大小写，还会受到数据库类型、操作系统和是否使用引号等因素影响，所以团队最好统一规范。</p>
-<h2><span id="关系型数据库与-nosql">关系型数据库与 NoSQL</span></h2><p>关系型数据库建立在关系模型之上，使用表、行、列和约束来组织数据，常见产品包括 MySQL、PostgreSQL、Oracle 和 SQL Server。</p>
-<p>NoSQL 一般指非关系型数据库，常见类型包括：</p>
-<ul>
-<li>键值数据库；</li>
-<li>文档数据库；</li>
-<li>列族数据库；</li>
-<li>图数据库；</li>
-<li>搜索与分析引擎。</li>
-</ul>
-<p>它们不是简单的“先进”和“落后”关系。关系型数据库擅长事务、约束和复杂查询，NoSQL 往往针对特定访问模式、扩展方式或数据结构进行优化。实际选型还是要看业务需求。</p>
-<h1><span id="mysql-中一条-sql-如何执行">MySQL 中一条 SQL 如何执行</span></h1><p>MySQL 采用客户端&#x2F;服务器架构。客户端建立连接并发送 SQL，服务器完成解析、优化和执行，存储引擎负责真正读取或写入数据。</p>
-<p>为了便于理解，可以把一次查询粗略分成下面几步：</p>
-<ol>
-<li><strong>连接与权限上下文</strong>：建立连接、认证用户，并准备会话环境；</li>
-<li><strong>解析与语义检查</strong>：检查语法，识别表、字段和表达式；</li>
-<li><strong>查询优化</strong>：选择表连接顺序、访问方式和可用索引；</li>
-<li><strong>执行</strong>：执行器调用存储引擎接口读取数据；</li>
-<li><strong>返回结果</strong>：将结果集发送给客户端。</li>
-</ol>
-<p>需要修正原笔记中的一点：MySQL 5.7 还保留查询缓存，但默认关闭；MySQL 8.0 已经移除了查询缓存。因此在 MySQL 8.0 的执行流程中，不应该再把“查询缓存”作为固定步骤。</p>
-<p>优化器给出的执行计划不一定永远最优，因为它依赖统计信息和成本估算。遇到慢查询时，应该使用 <code>EXPLAIN</code> 或 <code>EXPLAIN ANALYZE</code> 检查实际访问方式，而不是只凭 SQL 表面判断。</p>
-<h1><span id="select-的书写顺序与逻辑顺序">SELECT 的书写顺序与逻辑顺序</span></h1><h2><span id="书写顺序">书写顺序</span></h2><p>常见查询的书写顺序如下：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ...</span><br><span class="line"><span class="keyword">FROM</span> ...</span><br><span class="line"><span class="keyword">JOIN</span> ... <span class="keyword">ON</span> ...</span><br><span class="line"><span class="keyword">WHERE</span> ...</span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> ...</span><br><span class="line"><span class="keyword">HAVING</span> ...</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> ...</span><br><span class="line">LIMIT ...;</span><br></pre></td></tr></table></figure>
-
-<h2><span id="逻辑处理顺序">逻辑处理顺序</span></h2><p>从理解查询的角度，可以近似记成：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FROM / JOIN</span><br><span class="line">-&gt; WHERE</span><br><span class="line">-&gt; GROUP BY</span><br><span class="line">-&gt; HAVING</span><br><span class="line">-&gt; SELECT</span><br><span class="line">-&gt; DISTINCT</span><br><span class="line">-&gt; ORDER BY</span><br><span class="line">-&gt; LIMIT</span><br></pre></td></tr></table></figure>
-
-<p>这个顺序主要帮助我们理解为什么：</p>
-<ul>
-<li><code>WHERE</code> 中通常不能直接使用当前层 <code>SELECT</code> 定义的别名；</li>
-<li><code>HAVING</code> 可以过滤聚合后的分组；</li>
-<li><code>ORDER BY</code> 通常可以使用 <code>SELECT</code> 中的别名。</li>
-</ul>
-<p>它不是 MySQL 源码中每一步的机械执行顺序。优化器可能重写查询，只要最终语义保持一致。</p>
-<h1><span id="常见查询细节">常见查询细节</span></h1><h2><span id="为什么生产代码不推荐随手写-select">为什么生产代码不推荐随手写 SELECT *</span></h2><p><code>SELECT *</code> 在临时查看数据时很方便，但在正式查询中有几个问题：</p>
-<ul>
-<li>读取不需要的列，增加网络传输和对象映射开销；</li>
-<li>表结构新增字段后，接口返回可能悄悄发生变化；</li>
-<li>无法直接看出查询真正依赖哪些字段；</li>
-<li>在部分场景下不利于使用覆盖索引。</li>
-</ul>
-<p>因此业务代码中最好明确列名：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> id, name, hp_max</span><br><span class="line"><span class="keyword">FROM</span> heros</span><br><span class="line"><span class="keyword">WHERE</span> role_main <span class="operator">=</span> <span class="string">&#x27;战士&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<h2><span id="常见函数分类">常见函数分类</span></h2><p>内置函数可以粗略分为：</p>
-<ul>
-<li>数值函数；</li>
-<li>字符串函数；</li>
-<li>日期与时间函数；</li>
-<li>类型转换函数；</li>
-<li>聚合函数；</li>
-<li>窗口函数。</li>
-</ul>
-<p>不同数据库的函数名和行为可能不同，特别是日期处理、字符串拼接和类型转换，迁移数据库时要重点检查。</p>
-<h2><span id="where-与-having-的区别">WHERE 与 HAVING 的区别</span></h2><p><code>WHERE</code> 在分组和聚合之前过滤数据行，<code>HAVING</code> 在分组之后过滤分组结果。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> role_main, <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">AS</span> hero_count</span><br><span class="line"><span class="keyword">FROM</span> heros</span><br><span class="line"><span class="keyword">WHERE</span> hp_max <span class="operator">&gt;</span> <span class="number">5000</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> role_main</span><br><span class="line"><span class="keyword">HAVING</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="operator">&gt;=</span> <span class="number">3</span>;</span><br></pre></td></tr></table></figure>
-
-<p>能放进 <code>WHERE</code> 的普通条件通常应该尽量提前过滤，以减少后续需要参与分组的数据量。</p>
-<h2><span id="in-与-exists-怎么选">IN 与 EXISTS 怎么选</span></h2><p>常见写法如下：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">FROM</span> a</span><br><span class="line"><span class="keyword">WHERE</span> a.cc <span class="keyword">IN</span> (<span class="keyword">SELECT</span> b.cc <span class="keyword">FROM</span> b);</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span></span><br><span class="line"><span class="keyword">FROM</span> a</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">EXISTS</span> (</span><br><span class="line">    <span class="keyword">SELECT</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">FROM</span> b</span><br><span class="line">    <span class="keyword">WHERE</span> b.cc <span class="operator">=</span> a.cc</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<p>原笔记使用“外表大就用 <code>IN</code>，外表小就用 <code>EXISTS</code>”来判断，这个经验过于绝对。现代优化器可能把两种写法改写成相近的半连接计划，实际性能还取决于索引、数据分布、空值、选择性和数据库版本。</p>
-<p>更稳妥的做法是：</p>
-<ol>
-<li>先保证写法表达正确语义；</li>
-<li>给关联列建立合适索引；</li>
-<li>使用 <code>EXPLAIN ANALYZE</code> 对真实数据进行比较。</li>
-</ol>
-<p>另外，<code>NOT IN</code> 遇到 <code>NULL</code> 时容易产生不符合直觉的结果。需要排除不存在的数据时，我通常更倾向于明确处理空值，或使用 <code>NOT EXISTS</code>。</p>
-<h1><span id="视图">视图</span></h1><p>视图可以理解为保存下来的查询。普通视图通常不单独保存查询结果，而是在使用时基于底层表执行对应 SQL。</p>
-<p>它的常见作用包括：</p>
-<ol>
-<li><strong>简化查询</strong>：把复杂连接和计算封装起来；</li>
-<li><strong>复用逻辑</strong>：让多个调用方使用同一套查询定义；</li>
-<li><strong>控制暴露字段</strong>：只向特定用户开放允许访问的列；</li>
-<li><strong>兼容接口</strong>：底层表变化时，通过视图保持上层查询相对稳定。</li>
-</ol>
-<p>视图是否可更新取决于数据库和视图定义。包含聚合、分组、<code>DISTINCT</code>、集合运算或复杂连接的视图通常不能直接更新，不能简单认为“所有视图都只读”或“所有单表视图都可写”。</p>
-<h1><span id="存储过程">存储过程</span></h1><p>存储过程是保存在数据库服务器中的一组 SQL 和流程控制语句。创建后可以像调用函数一样执行。</p>
-<p>下面用 MySQL 存储过程计算从 1 到 <code>n</code> 的累加值：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">DELIMITER <span class="operator">/</span><span class="operator">/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> add_num(<span class="keyword">IN</span> n <span class="type">INT</span>)</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">    <span class="keyword">DECLARE</span> i <span class="type">INT</span> <span class="keyword">DEFAULT</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">DECLARE</span> total <span class="type">INT</span> <span class="keyword">DEFAULT</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    WHILE i <span class="operator">&lt;=</span> n DO</span><br><span class="line">        <span class="keyword">SET</span> total <span class="operator">=</span> total <span class="operator">+</span> i;</span><br><span class="line">        <span class="keyword">SET</span> i <span class="operator">=</span> i <span class="operator">+</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">END</span> WHILE;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">SELECT</span> total;</span><br><span class="line"><span class="keyword">END</span> <span class="operator">/</span><span class="operator">/</span></span><br><span class="line"></span><br><span class="line">DELIMITER ;</span><br></pre></td></tr></table></figure>
-
-<p>MySQL 存储过程常见参数类型：</p>
-<table>
-<thead>
-<tr>
-<th>参数类型</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>IN</code></td>
-<td>向存储过程传入参数</td>
-</tr>
-<tr>
-<td><code>OUT</code></td>
-<td>把存储过程中的结果返回给调用方</td>
-</tr>
-<tr>
-<td><code>INOUT</code></td>
-<td>同时作为输入和输出参数</td>
-</tr>
-</tbody></table>
-<p>存储过程的优点是靠近数据、便于封装固定数据库逻辑；缺点是数据库方言差异大、调试和版本管理不如应用代码方便，也容易把业务逻辑过度集中到数据库中。</p>
-<p>因此它并不是“高并发一定不能用”，而是需要结合团队维护能力、数据库压力、部署方式和扩展需求判断。</p>
-<h1><span id="游标">游标</span></h1><p>SQL 更擅长面向集合处理，游标则允许逐行读取查询结果。它适合确实需要逐条处理的场景，但如果能用一条集合 SQL 完成，通常不要优先写游标。</p>
-<p>下面是 MySQL 存储过程中的一个示例，用游标累计所有英雄的最大生命值：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">DELIMITER <span class="operator">/</span><span class="operator">/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">PROCEDURE</span> calc_hp_sum()</span><br><span class="line"><span class="keyword">BEGIN</span></span><br><span class="line">    <span class="keyword">DECLARE</span> done <span class="type">BOOLEAN</span> <span class="keyword">DEFAULT</span> <span class="literal">FALSE</span>;</span><br><span class="line">    <span class="keyword">DECLARE</span> hp <span class="type">INT</span>;</span><br><span class="line">    <span class="keyword">DECLARE</span> hp_sum <span class="type">BIGINT</span> <span class="keyword">DEFAULT</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">DECLARE</span> cur_hero <span class="keyword">CURSOR</span> <span class="keyword">FOR</span></span><br><span class="line">        <span class="keyword">SELECT</span> hp_max <span class="keyword">FROM</span> heros;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">DECLARE</span> CONTINUE HANDLER <span class="keyword">FOR</span> <span class="keyword">NOT</span> FOUND</span><br><span class="line">        <span class="keyword">SET</span> done <span class="operator">=</span> <span class="literal">TRUE</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">OPEN</span> cur_hero;</span><br><span class="line"></span><br><span class="line">    read_loop: LOOP</span><br><span class="line">        <span class="keyword">FETCH</span> cur_hero <span class="keyword">INTO</span> hp;</span><br><span class="line"></span><br><span class="line">        IF done <span class="keyword">THEN</span></span><br><span class="line">            LEAVE read_loop;</span><br><span class="line">        <span class="keyword">END</span> IF;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">SET</span> hp_sum <span class="operator">=</span> hp_sum <span class="operator">+</span> hp;</span><br><span class="line">    <span class="keyword">END</span> LOOP;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">CLOSE</span> cur_hero;</span><br><span class="line">    <span class="keyword">SELECT</span> hp_sum;</span><br><span class="line"><span class="keyword">END</span> <span class="operator">/</span><span class="operator">/</span></span><br><span class="line"></span><br><span class="line">DELIMITER ;</span><br></pre></td></tr></table></figure>
-
-<p>原笔记中写了 <code>DEALLOCATE cursor_name</code>，这不是 MySQL 存储过程游标的语法。MySQL 游标使用 <code>DECLARE</code>、<code>OPEN</code>、<code>FETCH</code> 和 <code>CLOSE</code>，并且只能在存储程序中声明。</p>
-<h1><span id="数据库设计原则不是越少越好">数据库设计：原则不是越少越好</span></h1><p>原文提到了“三少一多”，但如果直接记成“表越少越好、字段越少越好、外键越多越好”，很容易走向另一个极端。</p>
-<p>我现在更愿意把数据库设计理解成下面几条平衡原则。</p>
-<h2><span id="一个表尽量表达一个清晰主题">一个表尽量表达一个清晰主题</span></h2><p>表不是越少越好。把用户、订单、商品全部塞进一张大表，虽然表少了，但会产生大量重复数据和更新异常。</p>
-<p>合理拆表的目标是让实体和关系清晰，同时避免为了“看起来规范”而拆出大量没有实际价值的小表。</p>
-<h2><span id="字段需要保持原子性和明确含义">字段需要保持原子性和明确含义</span></h2><p>字段也不是越少越好。应该避免把多个含义塞进一个字符串字段，也要谨慎保存能够稳定计算出的重复数据。</p>
-<p>但在读取压力大、计算成本高的场景中，适度冗余又可能是合理优化。关键是明确一致性如何维护。</p>
-<h2><span id="主键要稳定联合主键不要滥用">主键要稳定，联合主键不要滥用</span></h2><p>主键应当唯一、非空并尽量稳定。联合主键不是错误，但字段过多会让外键引用、索引和应用代码变复杂。</p>
-<h2><span id="外键约束要结合架构选择">外键约束要结合架构选择</span></h2><p>外键能保证引用完整性，但也会增加写入和迁移时的约束。在单体系统或数据一致性要求高的系统中，外键很有价值；在分库分表或跨服务场景中，关系可能需要由应用和审计机制维护。</p>
-<h1><span id="多表连接优先使用显式-join">多表连接：优先使用显式 JOIN</span></h1><p>旧式写法常把多张表放在 <code>FROM</code> 中，再在 <code>WHERE</code> 中写连接条件：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> h.name, r.role_name</span><br><span class="line"><span class="keyword">FROM</span> heros h, roles r</span><br><span class="line"><span class="keyword">WHERE</span> h.role_id <span class="operator">=</span> r.id;</span><br></pre></td></tr></table></figure>
-
-<p>现在更推荐显式 <code>JOIN ... ON ...</code>：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> h.name, r.role_name</span><br><span class="line"><span class="keyword">FROM</span> heros <span class="keyword">AS</span> h</span><br><span class="line"><span class="keyword">JOIN</span> roles <span class="keyword">AS</span> r <span class="keyword">ON</span> r.id <span class="operator">=</span> h.role_id;</span><br></pre></td></tr></table></figure>
-
-<p>显式 <code>JOIN</code> 能把连接条件和过滤条件分开，层次更清晰，也能减少漏写连接条件导致笛卡尔积的风险。</p>
-<p><code>NATURAL JOIN</code> 和 <code>USING</code> 虽然更短，但会依赖同名列。表结构变化后可能悄悄改变连接行为，所以在业务 SQL 中我更倾向于明确写出 <code>ON</code> 条件。</p>
-<h1><span id="mysql-57-与-80-的几个重要区别">MySQL 5.7 与 8.0 的几个重要区别</span></h1><p>MySQL 8.0 相比 5.7 的变化很多，这里只记我认为最常见的部分：</p>
-<table>
-<thead>
-<tr>
-<th>方面</th>
-<th>MySQL 5.7</th>
-<th>MySQL 8.0</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>查询缓存</td>
-<td>保留，但默认关闭</td>
-<td>已移除</td>
-</tr>
-<tr>
-<td>默认字符集</td>
-<td><code>latin1</code></td>
-<td><code>utf8mb4</code></td>
-</tr>
-<tr>
-<td>窗口函数</td>
-<td>不支持</td>
-<td>支持</td>
-</tr>
-<tr>
-<td>公用表表达式 CTE</td>
-<td>不支持</td>
-<td>支持 <code>WITH</code>，包括递归 CTE</td>
-</tr>
-<tr>
-<td>数据字典</td>
-<td>主要依赖文件和系统表</td>
-<td>使用事务型数据字典</td>
-</tr>
-<tr>
-<td>默认认证插件</td>
-<td><code>mysql_native_password</code></td>
-<td>早期 8.0 默认使用 <code>caching_sha2_password</code></td>
-</tr>
-</tbody></table>
-<p>从 5.7 升级到 8.0 时，除了语法和功能，还要检查字符集、排序规则、保留字、认证方式和已废弃配置，不能只看 SQL 能不能执行。</p>
-<h1><span id="count-count1-与-count字段">COUNT(*)、COUNT(1) 与 COUNT(字段)</span></h1><p>这三个写法最重要的区别不是谁更快，而是语义。</p>
-<ul>
-<li><code>COUNT(*)</code>：统计结果集中的行数；</li>
-<li><code>COUNT(1)</code>：表达式 <code>1</code> 对每一行都不为 <code>NULL</code>，通常也统计行数；</li>
-<li><code>COUNT(column)</code>：只统计该字段不为 <code>NULL</code> 的行数。</li>
-</ul>
-<p>在 MySQL InnoDB 中，<code>COUNT(*)</code> 和 <code>COUNT(1)</code> 通常会得到相同的执行计划，没有必要为了所谓的性能差异把所有代码改成 <code>COUNT(1)</code>。</p>
-<p>对于没有 <code>WHERE</code> 和 <code>GROUP BY</code> 的精确行数统计，InnoDB 不能像 MyISAM 那样直接返回一个始终准确的固定行数，因为它需要考虑事务和 MVCC。优化器会选择合适的索引进行扫描，通常倾向于较小的可用二级索引；没有二级索引时才扫描聚簇索引。</p>
-<p>这里要避免另一个误区：不要只为了 <code>COUNT(*)</code> 就盲目创建一个没有业务价值的二级索引。索引会占空间，也会增加写入成本。是否建立索引，应该结合整个查询和写入负载判断。</p>
-<p>我的结论是：</p>
-<ol>
-<li>统计行数时优先写语义清楚的 <code>COUNT(*)</code>；</li>
-<li>统计某字段非空数量时使用 <code>COUNT(column)</code>；</li>
-<li>真正遇到性能问题时，用执行计划和真实数据验证，不要只背固定结论。</li>
-</ol>
 
       
     </div>
