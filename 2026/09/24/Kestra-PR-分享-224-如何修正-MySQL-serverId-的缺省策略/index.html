@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"darkyellowcat.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"default","show_result":true},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"night eighties"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="记录 Kestra plugin-debezium PR #224 的实现与评审过程：复用 connector identity，稳定派生 MySQL serverId，并补齐测试、文档和完整验证。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kestra PR 分享: #224 如何修正 MySQL serverId 的缺省策略">
+<meta property="og:url" content="https://darkyellowcat.github.io/2026/09/24/Kestra-PR-%E5%88%86%E4%BA%AB-224-%E5%A6%82%E4%BD%95%E4%BF%AE%E6%AD%A3-MySQL-serverId-%E7%9A%84%E7%BC%BA%E7%9C%81%E7%AD%96%E7%95%A5/index.html">
+<meta property="og:site_name" content="DarkYellowCat&#39;s Blog">
+<meta property="og:description" content="记录 Kestra plugin-debezium PR #224 的实现与评审过程：复用 connector identity，稳定派生 MySQL serverId，并补齐测试、文档和完整验证。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-24T00:16:28.000Z">
+<meta property="article:modified_time" content="2026-10-09T07:55:08.529Z">
+<meta property="article:author" content="DarkYellowCat">
+<meta property="article:tag" content="Debezium">
+<meta property="article:tag" content="GitHub">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Kestra">
+<meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="Testing">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://darkyellowcat.github.io/2026/09/24/Kestra-PR-%E5%88%86%E4%BA%AB-224-%E5%A6%82%E4%BD%95%E4%BF%AE%E6%AD%A3-MySQL-serverId-%E7%9A%84%E7%BC%BA%E7%9C%81%E7%AD%96%E7%95%A5/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://darkyellowcat.github.io/2026/09/24/Kestra-PR-%E5%88%86%E4%BA%AB-224-%E5%A6%82%E4%BD%95%E4%BF%AE%E6%AD%A3-MySQL-serverId-%E7%9A%84%E7%BC%BA%E7%9C%81%E7%AD%96%E7%95%A5/","path":"2026/09/24/Kestra-PR-分享-224-如何修正-MySQL-serverId-的缺省策略/","title":"Kestra PR 分享: #224 如何修正 MySQL serverId 的缺省策略"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Kestra PR 分享: #224 如何修正 MySQL serverId 的缺省策略 | DarkYellowCat's Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.1/pangu.umd.js" integrity="sha256-kRsxecBnwG6mULFPe2E6UKnNm8XfDOuDwCOprjLZuX8=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">DarkYellowCat's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">分享技术与思考</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">找到可以复用的稳定身份</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">把 connector identity 映射到指定范围</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">保留显式配置和动态表达式的优先级</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">真的做到惰性计算了吗</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">6.</span> <span class="nav-text">更新测试：不仅在范围内，还必须保持稳定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">7.</span> <span class="nav-text">稳定不等于唯一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">8.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">9.</span> <span class="nav-text">最终合并结果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">10.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">10.1.</span> <span class="nav-text">1. 第一个 PR 解决可用性，第二个 PR 修正语义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">10.2.</span> <span class="nav-text">2. 优先复用已有身份模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">10.3.</span> <span class="nav-text">3. 确定性映射要注意负数和边界</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">10.4.</span> <span class="nav-text">4. orElseGet 不只是写法差异</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">10.5.</span> <span class="nav-text">5. 文档应写清承诺边界</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">10.6.</span> <span class="nav-text">6. 小步 follow-up 是正常的开源协作方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">11.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">12.</span> <span class="nav-text">相关链接</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">DarkYellowCat</p>
+  <div class="site-description" itemprop="description">记录学习与成长</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">58</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/09/24/Kestra-PR-%E5%88%86%E4%BA%AB-224-%E5%A6%82%E4%BD%95%E4%BF%AE%E6%AD%A3-MySQL-serverId-%E7%9A%84%E7%BC%BA%E7%9C%81%E7%AD%96%E7%95%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DarkYellowCat">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DarkYellowCat's Blog">
+      <meta itemprop="description" content="记录学习与成长">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Kestra PR 分享: #224 如何修正 MySQL serverId 的缺省策略 | DarkYellowCat's Blog">
+      <meta itemprop="description" content="记录 Kestra plugin-debezium PR #224 的实现与评审过程：复用 connector identity，稳定派生 MySQL serverId，并补齐测试、文档和完整验证。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Kestra PR 分享: #224 如何修正 MySQL serverId 的缺省策略
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-24 00:16:28" itemprop="dateCreated datePublished" datetime="2026-09-24T00:16:28+00:00">2026-09-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-10-09 07:55:08" itemprop="dateModified" datetime="2026-10-09T07:55:08+00:00">2026-10-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%BC%80%E6%BA%90/" itemprop="url" rel="index"><span itemprop="name">开源</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">记录 Kestra plugin-debezium PR #224 的实现与评审过程：复用 connector identity，稳定派生 MySQL serverId，并补齐测试、文档和完整验证。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>上一篇文章记录了我向 Kestra <a target="_blank" rel="noopener" href="https://github.com/kestra-io/plugin-debezium"><code>plugin-debezium</code></a> 提交 PR #221 的过程：把 MySQL <code>serverId</code> 从必填配置改为可选配置，并在省略时生成一个 5400 到 6400 之间的值。</p>
+<p>PR #221 已经解决了“必须手动配置”的问题，但它采用的随机缺省值留下了一个更隐蔽的问题：<strong>同一个逻辑连接器在不同时间构建属性时，可能得到不同的 <code>serverId</code>。</strong></p>
+<p>对应的后续 Pull Request 是 <a target="_blank" rel="noopener" href="https://github.com/kestra-io/plugin-debezium/pull/224"><code>#224 fix(mysql): stabilize generated serverId</code></a>。这篇文章重点记录如何从评审意见出发，把“能用的默认值”改造成“符合连接器生命周期的默认值”。</p>
+<span id="more"></span>
+
+<h2><span id="问题">问题</span></h2><p>PR #221 合并时，缺省逻辑如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">runContext.render(<span class="built_in">this</span>.serverId)</span><br><span class="line">    .as(String.class)</span><br><span class="line">    .orElseGet(() -&gt; String.valueOf(</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Random</span>().nextInt(<span class="number">5400</span>, <span class="number">6401</span>)</span><br><span class="line">    ));</span><br></pre></td></tr></table></figure>
+
+<p>这段代码可以保证结果落在 <code>[5400, 6400]</code>，也不会覆盖用户显式配置或动态表达式渲染出来的值。从单次调用来看，它完全可用。</p>
+<p>问题在于，<code>properties()</code> 不一定只调用一次。</p>
+<p>Trigger 在轮询过程中可能重新构建 Capture，并再次生成 Debezium 属性。随机回退意味着：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">同一个 namespace + flow + task</span><br><span class="line">第一次构建属性 → serverId = 5712</span><br><span class="line">第二次构建属性 → serverId = 6341</span><br><span class="line">第三次构建属性 → serverId = 5890</span><br></pre></td></tr></table></figure>
+
+<p><code>serverId</code> 表示连接器加入 MySQL 集群时使用的客户端身份。对于同一个逻辑连接器，让它随着属性重建不断变化，并不符合这个字段的语义。</p>
+<p>所以这次 follow-up 的目标并不是改变上游指定的 <code>[5400, 6400]</code> 范围，而是满足下面的关系：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">相同逻辑身份 → 相同默认 serverId</span><br></pre></td></tr></table></figure>
+
+<p>同时还必须保留原有行为：</p>
+<ul>
+<li>用户显式配置的值优先；</li>
+<li>动态表达式渲染后的值优先；</li>
+<li>只有没有得到配置值时才计算默认值；</li>
+<li>默认值仍位于闭区间 <code>[5400, 6400]</code>。</li>
+</ul>
+<h2><span id="找到可以复用的稳定身份">找到可以复用的稳定身份</span></h2><p>继续阅读公共模块后，我发现 <code>AbstractDebeziumTask</code> 已经提供了一个很合适的能力：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String <span class="title function_">deriveConnectorId</span><span class="params">(RunContext runContext)</span></span><br></pre></td></tr></table></figure>
+
+<p>它根据任务的逻辑上下文生成稳定的 connector identity，使用的信息包括：</p>
+<ul>
+<li>namespace；</li>
+<li>flow ID；</li>
+<li>task ID；</li>
+<li><code>ForEach</code> 等场景下的迭代值。</li>
+</ul>
+<p>其核心关系可以简化为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">namespace | flow | task | iteration</span><br><span class="line">                  ↓</span><br><span class="line">            connector identity</span><br></pre></td></tr></table></figure>
+
+<p>这个身份原本已经用于 <code>name</code>、<code>topic.prefix</code> 和 <code>database.server.name</code>。与其为 MySQL 再设计一套身份规则，不如复用项目已有的定义。</p>
+<p>不过这里遇到了一个 Java 可见性问题。</p>
+<p><code>AbstractDebeziumTask</code> 位于：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">io.kestra.plugin.debezium</span><br></pre></td></tr></table></figure>
+
+<p>MySQL <code>Capture</code> 位于：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">io.kestra.plugin.debezium.mysql</span><br></pre></td></tr></table></figure>
+
+<p>Java 的子包并不是父包的一部分。原方法采用包级可见性，因此即使 <code>Capture</code> 继承了 <code>AbstractDebeziumTask</code>，也不能跨包调用它。</p>
+<p>最终只需要把方法改为 <code>protected</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> String <span class="title function_">deriveConnectorId</span><span class="params">(RunContext runContext)</span></span><br></pre></td></tr></table></figure>
+
+<p>同时增加说明：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Subclasses may reuse <span class="built_in">this</span> identity to derive other stable</span><br><span class="line">connector-scoped values.</span><br></pre></td></tr></table></figure>
+
+<p>这句话不会改变程序行为，只是在解释为什么子类需要访问该方法。当前最直接的使用场景，就是派生 MySQL 的默认 <code>serverId</code>。</p>
+<h2><span id="把-connector-identity-映射到指定范围">把 connector identity 映射到指定范围</span></h2><p>有了稳定身份，下一步是把字符串映射成 <code>[5400, 6400]</code> 范围内的整数。</p>
+<p>首先把边界提取为常量：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">DEFAULT_SERVER_ID_MIN</span> <span class="operator">=</span> <span class="number">5400</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">DEFAULT_SERVER_ID_RANGE</span> <span class="operator">=</span> <span class="number">1001</span>;</span><br></pre></td></tr></table></figure>
+
+<p>为什么范围长度是 <code>1001</code>？因为这里是闭区间：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">6400 - 5400 + 1 = 1001</span><br></pre></td></tr></table></figure>
+
+<p>最终计算逻辑如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">defaultServerId</span> <span class="operator">=</span> DEFAULT_SERVER_ID_MIN</span><br><span class="line">    + Math.floorMod(</span><br><span class="line">        deriveConnectorId(runContext).hashCode(),</span><br><span class="line">        DEFAULT_SERVER_ID_RANGE</span><br><span class="line">    );</span><br></pre></td></tr></table></figure>
+
+<p>其中：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Math.floorMod(hash, 1001) → [0, 1000]</span><br><span class="line">加上 5400                  → [5400, 6400]</span><br></pre></td></tr></table></figure>
+
+<p>这里不能简单写成：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hashCode % <span class="number">1001</span></span><br></pre></td></tr></table></figure>
+
+<p>因为 Java 的 <code>%</code> 在被除数为负数时可能产生负数结果。如果哈希值为负，最终结果就可能小于 5400。<code>Math.floorMod</code> 可以保证余数始终处于非负范围，避免这个边界错误。</p>
+<p><code>String#hashCode()</code> 在这里不是用于密码学或安全校验，只承担稳定映射的作用。相同 connector identity 会得到相同哈希，从而得到相同的默认 <code>serverId</code>。</p>
+<h2><span id="保留显式配置和动态表达式的优先级">保留显式配置和动态表达式的优先级</span></h2><p>完整实现并不是直接覆盖 <code>database.server.id</code>，而是继续通过 <code>orElseGet</code> 保留原有优先级：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">props.setProperty(</span><br><span class="line">    <span class="string">&quot;database.server.id&quot;</span>,</span><br><span class="line">    runContext.render(<span class="built_in">this</span>.serverId).as(String.class).orElseGet(() -&gt; &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">defaultServerId</span> <span class="operator">=</span> DEFAULT_SERVER_ID_MIN</span><br><span class="line">            + Math.floorMod(</span><br><span class="line">                deriveConnectorId(runContext).hashCode(),</span><br><span class="line">                DEFAULT_SERVER_ID_RANGE</span><br><span class="line">            );</span><br><span class="line">        <span class="keyword">return</span> String.valueOf(defaultServerId);</span><br><span class="line">    &#125;)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>执行顺序是：</p>
+<ol>
+<li>尝试渲染用户配置的 <code>serverId</code>；</li>
+<li>如果得到显式值或表达式结果，直接使用；</li>
+<li>只有结果为空时，才根据 connector identity 计算缺省值。</li>
+</ol>
+<p>这保证了 follow-up PR 只修正缺省行为，不改变现有接口。</p>
+<h2><span id="真的做到惰性计算了吗">真的做到惰性计算了吗</span></h2><p>这个分支最初的实现其实是先计算默认值，再交给 <code>orElseGet</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">defaultServerId</span> <span class="operator">=</span> deriveDefaultServerId(...);</span><br><span class="line"></span><br><span class="line">runContext.render(<span class="built_in">this</span>.serverId)</span><br><span class="line">    .as(String.class)</span><br><span class="line">    .orElseGet(() -&gt; String.valueOf(defaultServerId));</span><br></pre></td></tr></table></figure>
+
+<p>功能上没有错误，但即使用户已经显式配置 <code>serverId</code>，程序仍然会提前计算一次不会被使用的默认值。</p>
+<p>这几乎没有性能影响，却让 <code>orElseGet</code> 的语义变得不够纯粹：既然选择的是惰性回退，就应该只在真正缺省时执行回退逻辑。</p>
+<p>因此我又补了第二个提交：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fix(mysql): defer default serverId calculation</span><br></pre></td></tr></table></figure>
+
+<p>把计算移动到 lambda 内部后，执行路径就和代码表达的意图完全一致了。</p>
+<p>这件小事也说明，自我审查不应只问“结果对不对”，还应该问：</p>
+<blockquote>
+<p>代码的结构是否准确表达了它的执行条件？</p>
+</blockquote>
+<h2><span id="更新测试不仅在范围内还必须保持稳定">更新测试：不仅在范围内，还必须保持稳定</span></h2><p>PR #221 中的测试已经覆盖三种输入：</p>
+<ul>
+<li>未配置；</li>
+<li>显式值；</li>
+<li>动态表达式。</li>
+</ul>
+<p>PR #224 保留这些覆盖，并增加稳定性断言。在没有配置 <code>serverId</code> 时，对同一个任务和 <code>RunContext</code> 再次调用 <code>properties()</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">var</span> <span class="variable">repeatedProperties</span> <span class="operator">=</span> task.properties(</span><br><span class="line">    runContext,</span><br><span class="line">    runContext.workingDir().path().resolve(<span class="string">&quot;offsets.dat&quot;</span>),</span><br><span class="line">    runContext.workingDir().path().resolve(<span class="string">&quot;dbhistory.dat&quot;</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">assertEquals(</span><br><span class="line">    properties.getProperty(<span class="string">&quot;database.server.id&quot;</span>),</span><br><span class="line">    repeatedProperties.getProperty(<span class="string">&quot;database.server.id&quot;</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>如果实现仍然使用随机数，这个断言就可能失败；改成确定性映射后，两次结果必然相同。</p>
+<p>评审还指出，测试任务 ID 不应硬编码为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.id(<span class="string">&quot;capture&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>于是改为项目测试约定中的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.id(IdUtils.create())</span><br></pre></td></tr></table></figure>
+
+<p>这两项改动解决的是不同问题：</p>
+<ul>
+<li><code>IdUtils.create()</code> 避免测试 ID 硬编码并遵循仓库规范；</li>
+<li>重复调用断言验证稳定 <code>serverId</code> 的回归行为。</li>
+</ul>
+<p>不能把“稳定性由 <code>IdUtils.create()</code> 保证”混为一谈。</p>
+<h2><span id="稳定不等于唯一">稳定不等于唯一</span></h2><p>确定性映射解决了同一逻辑身份反复变化的问题，但 <code>[5400, 6400]</code> 只有 1001 个值，不同连接器仍然可能映射到同一个数字。</p>
+<p>这个范围是上游方案的一部分，本次 PR 没有擅自扩大，而是在 Schema 和插件文档中准确说明限制：</p>
+<ul>
+<li>省略配置时，从 connector identity 派生稳定值；</li>
+<li>结果位于 5400 到 6400；</li>
+<li>有限范围仍然可能碰撞；</li>
+<li>多个连接器访问同一个 MySQL 集群时，生产环境建议显式配置唯一值。</li>
+</ul>
+<p>这里需要区分两个概念：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">稳定：同一个逻辑身份重复计算，结果相同</span><br><span class="line">唯一：不同逻辑身份之间，结果绝不重复</span><br></pre></td></tr></table></figure>
+
+<p>当前实现承诺前者，不承诺后者。文档如果把“稳定”写成“保证唯一”，就会给用户错误预期。</p>
+<h2><span id="测试">测试</span></h2><p>修改完成后，我先运行聚焦测试：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.\gradlew.bat :plugin<span class="literal">-debezium-mysql</span>:test `</span><br><span class="line">  <span class="literal">--tests</span> <span class="string">&quot;io.kestra.plugin.debezium.mysql.ServerIdTest&quot;</span> `</span><br><span class="line">  <span class="literal">--console</span>=plain</span><br></pre></td></tr></table></figure>
+
+<p>聚焦结果为：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3 passed, 0 failed, 0 skipped</span><br></pre></td></tr></table></figure>
+
+<p>随后启动测试所需的 MySQL 服务，运行完整模块测试和插件文档检查。为避免本地测试存储目录互相影响，我为本次运行设置了独立路径：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$runId</span> = <span class="built_in">Get-Date</span> <span class="literal">-Format</span> <span class="string">&quot;yyyyMMddHHmmss&quot;</span></span><br><span class="line"><span class="variable">$env:JAVA_TOOL_OPTIONS</span> = <span class="string">&quot;-Dkestra.storage.local.base-path=build/test-storage-<span class="variable">$runId</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    .\gradlew.bat <span class="literal">--no-daemon</span> `</span><br><span class="line">      :plugin<span class="literal">-debezium-mysql</span>:test `</span><br><span class="line">      :plugin<span class="literal">-debezium-mysql</span>:lintPluginDocs `</span><br><span class="line">      <span class="literal">--rerun-tasks</span> `</span><br><span class="line">      <span class="literal">--console</span>=plain</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">finally</span> &#123;</span><br><span class="line">    <span class="built_in">Remove-Item</span> Env:JAVA_TOOL_OPTIONS <span class="literal">-ErrorAction</span> SilentlyContinue</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最终结果：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">MySQL module: 14 passed, 0 failed, 0 skipped</span><br><span class="line">Plugin documentation: all 25 rules passed</span><br><span class="line">git diff --check: passed</span><br><span class="line">BUILD SUCCESSFUL</span><br></pre></td></tr></table></figure>
+
+<p>完整测试还实际连接了 MySQL 8.0，并完成了 binlog 流读取。这比只验证一个计算方法更有价值，因为它确认新的 <code>serverId</code> 最终能被 Debezium 和 MySQL 接受。</p>
+<h2><span id="最终合并结果">最终合并结果</span></h2><p>PR #224 最终修改了 5 个文件：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">5 files changed, 26 insertions(+), 7 deletions(-)</span><br></pre></td></tr></table></figure>
+
+<p>它被合并为上游提交：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">5ce215b fix(mysql): stabilize generated serverId (#224)</span><br></pre></td></tr></table></figure>
+
+<p>从功能上看，这次 PR 只把一行随机数换成了确定性映射；但从设计上看，它补齐了缺省值的身份语义、测试约束和用户预期。</p>
+<h2><span id="总结">总结</span></h2><h3><span id="1-第一个-pr-解决可用性第二个-pr-修正语义">1. 第一个 PR 解决可用性，第二个 PR 修正语义</span></h3><p>PR #221 让用户可以省略 <code>serverId</code>，解决的是配置门槛。</p>
+<p>PR #224 让相同连接器得到稳定的默认值，解决的是生命周期语义。</p>
+<p>这两个目标都合理，但后者只有在理解 Trigger 如何重复构建 Capture 后才能看清。</p>
+<h3><span id="2-优先复用已有身份模型">2. 优先复用已有身份模型</span></h3><p>项目已经定义了 connector identity，就不应该在 MySQL 子模块中重新拼接 namespace、flow 和 task。复用公共模型可以减少不同连接器之间的语义漂移。</p>
+<h3><span id="3-确定性映射要注意负数和边界">3. 确定性映射要注意负数和边界</span></h3><p>从哈希映射到闭区间时，至少要确认：</p>
+<ul>
+<li>区间长度是否包含两端；</li>
+<li>负哈希是否会产生负余数；</li>
+<li>最小值和最大值能否被覆盖；</li>
+<li>同一输入跨调用是否稳定。</li>
+</ul>
+<p><code>1001</code> 和 <code>Math.floorMod</code> 分别解决了前两个容易忽略的问题。</p>
+<h3><span id="4-orelseget-不只是写法差异">4. <code>orElseGet</code> 不只是写法差异</span></h3><p><code>orElse</code> 表示值已经准备好，<code>orElseGet</code> 表示只有缺省时才计算。既然选择后者，就应该把完整的回退逻辑放进 supplier，而不是提前求值。</p>
+<h3><span id="5-文档应写清承诺边界">5. 文档应写清承诺边界</span></h3><p>稳定值仍可能碰撞。与其用“自动生成唯一值”制造错误安全感，不如明确说明有限范围，并告诉生产用户何时应该显式配置。</p>
+<h3><span id="6-小步-follow-up-是正常的开源协作方式">6. 小步 follow-up 是正常的开源协作方式</span></h3><p>第一个 PR 合并后继续改进，并不代表第一次贡献失败。相反，能够把非阻塞反馈整理成边界清楚、验证完整的第二个 PR，本身就是一次更成熟的协作。</p>
+<h2><span id="总结">总结</span></h2><p>PR #224 的核心公式很短：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">5400</span> + Math.floorMod(connectorIdentity.hashCode(), <span class="number">1001</span>)</span><br></pre></td></tr></table></figure>
+
+<p>但这行代码背后需要回答一整组问题：身份从哪里来、为什么要稳定、如何处理负数、如何保留用户配置、如何验证重复调用、如何描述碰撞限制，以及是否应该扩大本次 PR 的范围。</p>
+<p>两次 PR 连在一起，让我对“默认值”有了更具体的认识：</p>
+<blockquote>
+<p>好的默认值不仅要类型合法，还要在正确的生命周期中保持正确。</p>
+</blockquote>
+<p>对于数据库连接器、消息系统客户端、分布式锁或任何带身份含义的配置，这条原则都值得反复检查。</p>
+<h2><span id="相关链接">相关链接</span></h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/kestra-io/plugin-debezium">Kestra plugin-debezium</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/kestra-io/plugin-debezium/pull/221">PR #221：fix(mysql): make serverId optional</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/kestra-io/plugin-debezium/pull/224">PR #224：fix(mysql): stabilize generated serverId</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>DarkYellowCat
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://darkyellowcat.github.io/2026/09/24/Kestra-PR-%E5%88%86%E4%BA%AB-224-%E5%A6%82%E4%BD%95%E4%BF%AE%E6%AD%A3-MySQL-serverId-%E7%9A%84%E7%BC%BA%E7%9C%81%E7%AD%96%E7%95%A5/" title="Kestra PR 分享: #224 如何修正 MySQL serverId 的缺省策略">https://darkyellowcat.github.io/2026/09/24/Kestra-PR-分享-224-如何修正-MySQL-serverId-的缺省策略/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/Kestra/" rel="tag"># Kestra</a>
+              <a href="/tags/Debezium/" rel="tag"># Debezium</a>
+              <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+              <a href="/tags/Testing/" rel="tag"># Testing</a>
+              <a href="/tags/GitHub/" rel="tag"># GitHub</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/09/24/Kestra-PR-%E5%88%86%E4%BA%AB%E6%8F%90%E4%BA%A4-fix-MySQL-%E8%AE%A9-Debezium-serverId-%E4%BB%8E%E5%BF%85%E5%A1%AB%E5%8F%98%E4%B8%BA%E5%8F%AF%E9%80%89/" rel="prev" title="Kestra PR 分享提交 fix(MySQL):让 Debezium serverId 从必填变为可选">
+                  <i class="fa fa-angle-left"></i> Kestra PR 分享提交 fix(MySQL):让 Debezium serverId 从必填变为可选
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/09/29/HTTP%E8%AF%B7%E6%B1%82%E4%B8%8E%E5%93%8D%E5%BA%94%E6%80%8E%E4%B9%88%E7%BB%84%E6%88%90/" rel="next" title="HTTP 请求与响应怎么组成">
+                  HTTP 请求与响应怎么组成 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">DarkYellowCat</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/darkyellowcat" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>
+  LA.init({ id: '3OnjqyPOaoYCHllV', ck: '3OnjqyPOaoYCHllV', autoTrack: true });
+</script>
+
+</body>
+</html>
