@@ -172,7 +172,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-count">45</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -203,6 +203,236 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DarkYellowCat">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DarkYellowCat's Blog">
+      <meta itemprop="description" content="记录学习与成长">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | DarkYellowCat's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/" class="post-title-link" itemprop="url">claude/codex配置分享</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-05-25 19:18:24" itemprop="dateCreated datePublished" datetime="2026-05-25T19:18:24+00:00">2026-05-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-10-14 01:10:50" itemprop="dateModified" datetime="2026-10-14T01:10:50+00:00">2026-10-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B7%A5%E5%85%B7%E6%8E%A8%E8%8D%90/" itemprop="url" rel="index"><span itemprop="name">工具推荐</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1><span id="前言">前言</span></h1><p>我个人在大学生活中的感受是：虽然有小部分人能勇争桥头，但大部分同学是与热门技术脱节的（无歧义）。我在计算机学院发现，很多同学对ai的使用还停留在和网页版豆包扯皮，更进一步的则是设法使用gpt或其他更好用的模型，有些人为了更好的体验会选择找代充开会员。但我认为，一方面，这些工具提供的生产力与我们专业的需要还是不够的。虽然体验起来可能觉得已经很强了，但和agent比起来差别太大了；另一方面，我不认为普通学生有场景用完会员的额度，相比之下，随用随买的token模式在我看来是更适合的（家庭条件好可以忽略）。</p>
+<p>因此，我想要分享我对智能体的使用经验，希望能帮到同样想要尝试新技术的朋友。也希望大家能敢于尝试新事物，不要畏难（我帮助一位同学从头配置好了所有流程，但当我在命令行中唤出claude code时，他却觉得自己用不好命令行，主动放弃了，去找代充开网页端的会员）。</p>
+<p>本文主要介绍三个方面：<strong>cc-switch</strong>（管理工具）、<strong>skills</strong>（技能插件）、<strong>MCP</strong>（模型上下文协议服务）。</p>
+<hr>
+<h1><span id="cc-switch">cc-switch</span></h1><h2><span id="介绍">介绍</span></h2><p><a target="_blank" rel="noopener" href="https://github.com/farion1231/cc-switch">cc-switch</a> 是一个跨平台的桌面端 All-in-One 管理工具，支持 Claude Code、Codex、OpenCode、Gemini CLI 等多种 AI 编程 CLI 工具的统一管理。它的核心价值在于：<strong>你不再需要手动编辑各种 JSON、TOML 配置文件</strong>，所有操作都可以在图形界面中完成。</p>
+<p>简单来说，cc-switch 就是这些命令行 AI 工具的”控制面板”。</p>
+<h2><span id="具体功能">具体功能</span></h2><h3><span id="配置智能体">配置智能体</span></h3><p>cc-switch 支持对 Claude Code &#x2F; Codex 的 API Provider 进行可视化配置和一键切换。你可以：</p>
+<ul>
+<li>配置多个 API 提供商（官方 Anthropic、OpenRouter、各种中转站等）</li>
+<li>一键切换当前使用的模型和 Provider</li>
+<li>管理 API Key，避免手动修改环境变量</li>
+</ul>
+<p>对于使用中转 API 的同学来说，这个功能非常实用——不用每次都去改配置文件。</p>
+<h3><span id="下载并管理skills">下载并管理skills</span></h3><p>cc-switch支持下载并管理skills
+<img data-src="/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/image-2.png" alt="alt text">
+点击发现技能即可进入下载页面，它会自行在Github中查找对应的仓库，点击安装即可进行自动下载并配置。（有些skills无法使用cc-switch安装，点击安装左侧的查看即可跳转到GitHub下载，安装好后在cc-switch选择导入已有即可进行管理）</p>
+<p><img data-src="/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/image-3.png" alt="alt text"></p>
+<h3><span id="管理mcp">管理MCP</span></h3><p>cc-switch 提供了 MCP Server 的可视化管理界面，可以方便地添加、启用、禁用各种 MCP 服务，不需要手动编辑 <code>settings.json</code>。</p>
+<p><img data-src="/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/image-1.png" alt="alt text"></p>
+<h3><span id="管理历史对话">管理历史对话</span></h3><p>cc-switch 可以浏览和搜索 Claude Code 的历史会话记录，方便你回顾之前的工作内容。</p>
+<p><img data-src="/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/image.png" alt="alt text"></p>
+<h3><span id="管理提示词">管理提示词</span></h3><p>支持管理自定义的系统提示词（System Prompt），可以为不同项目或场景配置不同的提示词模板，实现快速切换。</p>
+<hr>
+<h1><span id="skills推荐">skills推荐</span></h1><p>skills更多的是根据自己工作的方向进行配置，这里附带一份我自己的配置供参考。</p>
+<p>注：有些skills用cc-switch无法下载，需要自己手动安装。而我发现Claude code在GitHub上的生态远好于codex，建议大家用Claude-code下载，然后在cc-switch中 Skills 管理 -》 导入已有 -》 勾选其他智能体。</p>
+<h2><span id="karpathy-guideline">karpathy-guideline</span></h2><p><strong>仓库地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/forrestchang/andrej-karpathy-skills">forrestchang&#x2F;andrej-karpathy-skills</a></p>
+<p>这是一个源自 Andrej Karpathy（前 Tesla AI 总监、OpenAI 联合创始人）对 LLM 编程陷阱观察的 CLAUDE.md 配置文件。它通过四条核心原则来约束 AI 的编码行为：</p>
+<ol>
+<li><strong>先读再写</strong>：修改代码前必须先阅读相关文件，理解上下文</li>
+<li><strong>最小改动</strong>：只做必要的修改，不要过度重构</li>
+<li><strong>保持简单</strong>：避免过度工程化，不引入不必要的抽象</li>
+<li><strong>验证有效</strong>：改完之后要验证代码能正常工作</li>
+</ol>
+<p>简单来说，它让 AI 从一个”过度自信的初级程序员”变成一个”有纪律的工程师”。这个 skill 几乎是必装的，能显著减少 AI 写代码时的”幻觉”和过度修改问题。</p>
+<h2><span id="prompt-optimizer">prompt-optimizer</span></h2><p><strong>仓库地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/Hashaam101/prompt-optimizer">Hashaam101&#x2F;prompt-optimizer</a></p>
+<p>这个 skill 有两种模式：</p>
+<ul>
+<li><strong>自动模式（auto）</strong>：在你每次输入 prompt 时，它会在后台静默优化你的提示词，让 AI 更好地理解你的意图</li>
+<li><strong>手动模式（manual）</strong>：通过 <code>/optimize</code> 命令，将你写的粗略 prompt 转化为结构化的、高质量的提示词</li>
+</ul>
+<p>对于不太擅长写 prompt 的同学来说，这个 skill 能帮你把”帮我写个登录页面”这样模糊的需求，自动补充为包含技术栈、样式要求、错误处理等细节的完整指令。</p>
+<h2><span id="baoyu-format-markdown">baoyu-format-markdown</span></h2><p><strong>仓库地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/JimLiu/baoyu-skills">JimLiu&#x2F;baoyu-skills</a></p>
+<p>这个 skill 用于将纯文本或格式混乱的 Markdown 文件整理为结构清晰、排版规范的格式。它会：</p>
+<ul>
+<li>添加和规范化 frontmatter（标题、摘要等元信息）</li>
+<li>规范标题层级</li>
+<li>添加适当的加粗、列表、代码块</li>
+<li>处理中英文之间的空格（CJK spacing）</li>
+<li>保持原始内容不变，只优化格式</li>
+</ul>
+<p>写博客、整理笔记的时候非常好用。输出文件为 <code>{filename}-formatted.md</code>。</p>
+<h2><span id="agent-browser">agent-browser</span></h2><p><strong>仓库地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/vercel-labs/agent-browser">vercel-labs&#x2F;agent-browser</a></p>
+<p>这是 Vercel Labs 推出的浏览器自动化 CLI 工具，专为 AI Agent 设计。安装后，Claude Code 就能：</p>
+<ul>
+<li>打开网页并导航</li>
+<li>读取页面内容</li>
+<li>填写表单、点击按钮</li>
+<li>截图</li>
+<li>执行端到端测试</li>
+</ul>
+<p>它使用基于 ref（引用标记）的交互方式，比传统的 CSS 选择器更可靠。当你需要 AI 帮你查资料、测试网页、或者做一些需要浏览器的操作时，这个 skill 就派上用场了。</p>
+<hr>
+<h1><span id="mcp">MCP</span></h1><p>注意：MCP与skills不同，它会占据上下文的大小，所以不建议同一时间开太多。MCP（Model Context Protocol）是 Anthropic 推出的开放标准，可以理解为”AI 的 USB-C 接口”——让 AI 能够标准化地连接各种外部工具和数据源。</p>
+<h2><span id="codegraph">codegraph</span></h2><p><strong>仓库地址</strong>：<a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=aStudioPlus.codegraph">aStudioPlus&#x2F;codegraph</a></p>
+<p>CodeGraph 会对你的代码库进行 AST（抽象语法树）解析，构建一个包含函数、类、导入关系、调用链的语义图谱。支持 37+ 种编程语言。</p>
+<p>主要能力：</p>
+<ul>
+<li><strong>符号搜索</strong>：快速定位函数&#x2F;类的定义位置</li>
+<li><strong>调用链追踪</strong>：查看谁调用了某个函数、某个函数又调用了谁</li>
+<li><strong>影响分析</strong>：修改某个符号时，分析哪些代码会受影响</li>
+<li><strong>代码探索</strong>：一次调用就能获取多个文件的相关源码，替代反复 grep + read 的低效循环</li>
+</ul>
+<p>对于大型项目来说，codegraph 能让 AI 更快地理解代码结构，减少不必要的文件读取，节省上下文空间。</p>
+<h2><span id="github-mcp-server">GitHub MCP Server</span></h2><p><strong>来源</strong>：GitHub 官方维护</p>
+<p>GitHub MCP Server 让 AI 能够直接与 GitHub 平台交互，提供 90+ 种工具，包括：</p>
+<ul>
+<li>创建和管理 Issue、Pull Request</li>
+<li>搜索代码和仓库</li>
+<li>读取文件内容和提交历史</li>
+<li>管理 Branch 和 Release</li>
+<li>操作 GitHub Actions</li>
+</ul>
+<p>配置方式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">claude mcp add github --scope user</span><br></pre></td></tr></table></figure>
+
+<p>对于日常开发来说，有了它你可以直接让 AI 帮你创建 PR、查看 Issue、搜索相关代码，不用再手动切换到浏览器操作。</p>
+<h2><span id="agentmemory">agentmemory</span></h2><p><strong>仓库地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/kishan0725/AgentMemory">kishan0725&#x2F;AgentMemory</a></p>
+<p>AI 编程工具的一个痛点是：每次新会话都会”失忆”。agentmemory 通过 MCP 协议为 AI 提供持久化记忆能力：</p>
+<ul>
+<li><strong>跨会话记忆</strong>：上一次对话中做的决策、偏好设置，下次还能记住</li>
+<li><strong>项目上下文</strong>：记住项目的架构决策、技术选型、编码规范</li>
+<li><strong>本地存储</strong>：所有数据存在本地，不上传到云端，保护隐私</li>
+</ul>
+<p>有了它，AI 不会每次都问你”这个项目用什么框架”、”你喜欢什么代码风格”这类重复问题。</p>
+<hr>
+<h1><span id="总结">总结</span></h1><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>工具</th>
+<th>一句话描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>管理工具</td>
+<td>cc-switch</td>
+<td>图形化管理 Claude Code&#x2F;Codex 的一切配置</td>
+</tr>
+<tr>
+<td>Skill</td>
+<td>karpathy-guideline</td>
+<td>让 AI 写代码更有纪律</td>
+</tr>
+<tr>
+<td>Skill</td>
+<td>prompt-optimizer</td>
+<td>自动优化你的提示词</td>
+</tr>
+<tr>
+<td>Skill</td>
+<td>baoyu-format-markdown</td>
+<td>一键美化 Markdown 格式</td>
+</tr>
+<tr>
+<td>Skill</td>
+<td>agent-browser</td>
+<td>让 AI 能操作浏览器</td>
+</tr>
+<tr>
+<td>MCP</td>
+<td>codegraph</td>
+<td>代码语义图谱，加速代码理解</td>
+</tr>
+<tr>
+<td>MCP</td>
+<td>GitHub MCP Server</td>
+<td>直接操作 GitHub</td>
+</tr>
+<tr>
+<td>MCP</td>
+<td>agentmemory</td>
+<td>跨会话持久记忆</td>
+</tr>
+</tbody></table>
+<p>这套配置的核心思路是：<strong>用 cc-switch 降低配置门槛，用 skills 增强 AI 的行为质量，用 MCP 扩展 AI 的能力边界</strong>。</p>
+<p>如果你是刚接触 AI 编程工具的同学，建议按这个顺序来：先装 cc-switch 把环境配好，再装 karpathy-guideline 这个基础 skill，然后根据自己的需要逐步添加其他插件。不要一次性全装上——记住 MCP 会占上下文，按需开启就好。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -248,7 +478,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-09 07:55:08" itemprop="dateModified" datetime="2026-10-09T07:55:08+00:00">2026-10-09</time>
+      <time title="修改时间：2026-10-14 01:10:50" itemprop="dateModified" datetime="2026-10-14T01:10:50+00:00">2026-10-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -340,7 +570,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-09 07:55:08" itemprop="dateModified" datetime="2026-10-09T07:55:08+00:00">2026-10-09</time>
+      <time title="修改时间：2026-10-14 01:10:50" itemprop="dateModified" datetime="2026-10-14T01:10:50+00:00">2026-10-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -586,7 +816,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-09 07:55:08" itemprop="dateModified" datetime="2026-10-09T07:55:08+00:00">2026-10-09</time>
+      <time title="修改时间：2026-10-14 01:10:50" itemprop="dateModified" datetime="2026-10-14T01:10:50+00:00">2026-10-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -908,7 +1138,7 @@ i
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-09 07:55:08" itemprop="dateModified" datetime="2026-10-09T07:55:08+00:00">2026-10-09</time>
+      <time title="修改时间：2026-10-14 01:10:50" itemprop="dateModified" datetime="2026-10-14T01:10:50+00:00">2026-10-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1099,7 +1329,7 @@ a ^ a &#x3D; 0<br>a ^ 0 &#x3D; a<br>满足交换律和结合律</p>
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-09 07:55:08" itemprop="dateModified" datetime="2026-10-09T07:55:08+00:00">2026-10-09</time>
+      <time title="修改时间：2026-10-14 01:10:50" itemprop="dateModified" datetime="2026-10-14T01:10:50+00:00">2026-10-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1261,7 +1491,7 @@ a ^ a &#x3D; 0<br>a ^ 0 &#x3D; a<br>满足交换律和结合律</p>
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-09 07:55:08" itemprop="dateModified" datetime="2026-10-09T07:55:08+00:00">2026-10-09</time>
+      <time title="修改时间：2026-10-14 01:10:50" itemprop="dateModified" datetime="2026-10-14T01:10:50+00:00">2026-10-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1540,7 +1770,7 @@ a ^ a &#x3D; 0<br>a ^ 0 &#x3D; a<br>满足交换律和结合律</p>
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-09 07:55:08" itemprop="dateModified" datetime="2026-10-09T07:55:08+00:00">2026-10-09</time>
+      <time title="修改时间：2026-10-14 01:10:50" itemprop="dateModified" datetime="2026-10-14T01:10:50+00:00">2026-10-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1683,7 +1913,7 @@ a ^ a &#x3D; 0<br>a ^ 0 &#x3D; a<br>满足交换律和结合律</p>
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-09 07:55:08" itemprop="dateModified" datetime="2026-10-09T07:55:08+00:00">2026-10-09</time>
+      <time title="修改时间：2026-10-14 01:10:50" itemprop="dateModified" datetime="2026-10-14T01:10:50+00:00">2026-10-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1775,7 +2005,7 @@ a ^ a &#x3D; 0<br>a ^ 0 &#x3D; a<br>满足交换律和结合律</p>
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-09 07:55:08" itemprop="dateModified" datetime="2026-10-09T07:55:08+00:00">2026-10-09</time>
+      <time title="修改时间：2026-10-14 01:10:50" itemprop="dateModified" datetime="2026-10-14T01:10:50+00:00">2026-10-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1832,125 +2062,6 @@ a ^ a &#x3D; 0<br>a ^ 0 &#x3D; a<br>满足交换律和结合律</p>
 <p>给出的树结构：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line"> \</span><br><span class="line">  2</span><br><span class="line"> /</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
 <p>中序遍历（左 → 根 → 右）：[1, 3, 2]</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2025/12/17/%E5%8D%95%E8%B0%83%E9%98%9F%E5%88%97/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="DarkYellowCat">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="DarkYellowCat's Blog">
-      <meta itemprop="description" content="记录学习与成长">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | DarkYellowCat's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2025/12/17/%E5%8D%95%E8%B0%83%E9%98%9F%E5%88%97/" class="post-title-link" itemprop="url">'单调队列'</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2025-12-17 15:27:24" itemprop="dateCreated datePublished" datetime="2025-12-17T15:27:24+00:00">2025-12-17</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-09 07:55:08" itemprop="dateModified" datetime="2026-10-09T07:55:08+00:00">2026-10-09</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1><span id="简介">简介</span></h1><p><a target="_blank" rel="noopener" href="https://oi-wiki.org/ds/monotonous-queue/">oi-wiki</a> 中对单调队列的解释是：「单调」指的是队列中元素具有某种单调性（递增或递减），而「队列」指元素只能在队头和队尾进行操作。</p>
-<p>单调队列并不是一种新的数据结构，而是一种<strong>维护队列内部元素有序性的思想</strong>。它通常配合滑动窗口问题使用，用于在均摊 O(1) 的时间复杂度内维护区间最值。</p>
-<p>常见形式包括：</p>
-<ul>
-<li>单调递增队列：队头元素最小</li>
-<li>单调递减队列：队头元素最大</li>
-</ul>
-<h1><span id="java实现">Java实现</span></h1><p>以下以「维护区间最大值的单调递减队列」为例进行说明。</p>
-<p>实现要点：</p>
-<ol>
-<li>队列中存储的是<strong>数组下标</strong>而不是元素值，便于判断是否滑出窗口</li>
-<li>新元素入队时，从队尾删除所有比它小的元素，维持单调性</li>
-<li>队头若已经不在当前窗口范围内，需要及时弹出</li>
-</ol>
-<p>示例代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Deque;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayDeque;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MonotonicQueue</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Deque&lt;Integer&gt; deque = <span class="keyword">new</span> <span class="title class_">ArrayDeque</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 入队：维护单调递减</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">push</span><span class="params">(<span class="type">int</span>[] nums, <span class="type">int</span> index)</span> &#123;</span><br><span class="line">        <span class="keyword">while</span> (!deque.isEmpty() &amp;&amp; nums[deque.peekLast()] &lt;= nums[index]) &#123;</span><br><span class="line">            deque.pollLast();</span><br><span class="line">        &#125;</span><br><span class="line">        deque.offerLast(index);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 出队：移除滑出窗口的元素</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">pop</span><span class="params">(<span class="type">int</span> indexLimit)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!deque.isEmpty() &amp;&amp; deque.peekFirst() &lt; indexLimit) &#123;</span><br><span class="line">            deque.pollFirst();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取当前窗口最大值</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">max</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> nums[deque.peekFirst()];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h1><span id="例题">例题</span></h1><p>给出一个长度为 n 的数组，编程输出每 k 个连续的数中的最大值和最小值。</p>
-<p>该问题是单调队列的经典应用，也被称为「滑动窗口最值问题」。</p>
-<p>思路说明：</p>
-<ul>
-<li>使用一个单调递减队列维护最大值</li>
-<li>使用一个单调递增队列维护最小值</li>
-<li>窗口每向右移动一步，只需对新元素入队、对过期元素出队即可</li>
-</ul>
-<p>示例实现如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SlidingWindowMinMax</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span>[] nums = &#123;<span class="number">1</span>, <span class="number">3</span>, -<span class="number">1</span>, -<span class="number">3</span>, <span class="number">5</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">7</span>&#125;;</span><br><span class="line">        <span class="type">int</span> <span class="variable">k</span> <span class="operator">=</span> <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line">        Deque&lt;Integer&gt; maxQ = <span class="keyword">new</span> <span class="title class_">ArrayDeque</span>&lt;&gt;();</span><br><span class="line">        Deque&lt;Integer&gt; minQ = <span class="keyword">new</span> <span class="title class_">ArrayDeque</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; nums.length; i++) &#123;</span><br><span class="line">            <span class="comment">// 维护最大值队列（递减）</span></span><br><span class="line">            <span class="keyword">while</span> (!maxQ.isEmpty() &amp;&amp; nums[maxQ.peekLast()] &lt;= nums[i]) &#123;</span><br><span class="line">                maxQ.pollLast();</span><br><span class="line">            &#125;</span><br><span class="line">            maxQ.offerLast(i);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 维护最小值队列（递增）</span></span><br><span class="line">            <span class="keyword">while</span> (!minQ.isEmpty() &amp;&amp; nums[minQ.peekLast()] &gt;= nums[i]) &#123;</span><br><span class="line">                minQ.pollLast();</span><br><span class="line">            &#125;</span><br><span class="line">            minQ.offerLast(i);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 移除滑出窗口的元素</span></span><br><span class="line">            <span class="keyword">if</span> (maxQ.peekFirst() &lt;= i - k) maxQ.pollFirst();</span><br><span class="line">            <span class="keyword">if</span> (minQ.peekFirst() &lt;= i - k) minQ.pollFirst();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 从第一个完整窗口开始输出结果</span></span><br><span class="line">            <span class="keyword">if</span> (i &gt;= k - <span class="number">1</span>) &#123;</span><br><span class="line">                System.out.println(</span><br><span class="line">                    <span class="string">&quot;max=&quot;</span> + nums[maxQ.peekFirst()] + <span class="string">&quot;, min=&quot;</span> + nums[minQ.peekFirst()]</span><br><span class="line">                );</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>时间复杂度分析：</p>
-<ul>
-<li>每个元素最多入队、出队一次</li>
-<li>总时间复杂度为 O(n)</li>
-<li>空间复杂度为 O(k)</li>
-</ul>
-<p>该题展示了单调队列在处理区间最值问题时，相比朴素枚举 O(nk) 解法的巨大优势。</p>
 
       
     </div>

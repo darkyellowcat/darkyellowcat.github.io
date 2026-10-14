@@ -172,7 +172,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-count">45</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -203,6 +203,241 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/09/07/%E3%80%8A%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-AI-Agent%E3%80%8B%E7%AC%94%E8%AE%B0-1-AI-Agent-%E5%85%A5%E9%97%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="DarkYellowCat">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="DarkYellowCat's Blog">
+      <meta itemprop="description" content="记录学习与成长">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | DarkYellowCat's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/09/07/%E3%80%8A%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-AI-Agent%E3%80%8B%E7%AC%94%E8%AE%B0-1-AI-Agent-%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">《深入理解 AI Agent》笔记 - 1 AI Agent 入门</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-09-07 15:23:45" itemprop="dateCreated datePublished" datetime="2026-09-07T15:23:45+00:00">2026-09-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-10-14 01:10:50" itemprop="dateModified" datetime="2026-10-14T01:10:50+00:00">2026-10-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1><span id="前言">前言</span></h1><h2><span id="解释和个人阅读感受">解释和个人阅读感受</span></h2><p>本书《深入理解 AI Agent：设计原理与工程实践》为李博杰所著并开源，地址为：<a target="_blank" rel="noopener" href="https://github.com/bojieli/ai-agent-book%EF%BC%8C">https://github.com/bojieli/ai-agent-book，</a> 截止 2026-09-07 已有 79 位贡献者， star 45k 。</p>
+<p>本书的核心观点是：Agent &#x3D; LLM + 上下文 + 工具。作者开源了图书，并配套了 109 个实验，具体实验这里不做解释，需要的朋友可以在前面的链接自行查看并下载。</p>
+<p><img data-src="/2026/09/07/%E3%80%8A%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-AI-Agent%E3%80%8B%E7%AC%94%E8%AE%B0-1-AI-Agent-%E5%85%A5%E9%97%A8/%E6%80%BB%E8%A7%82%E7%82%B9.png" alt="alt text"></p>
+<p>我是一位大三的计科学生，主要的方向是 Java web ，但结合我平时的所见所闻，我认为开发岗位与 Agent 的结合是势不可挡的，这也是我慕名学习本书的主要原因之一。</p>
+<p>我在阅读时主要看重开发人员应该怎么去认识和使用Agent，实验部分我只会看得出的结论，没有实机测试。因此，这篇笔记可能更适合有同样情况的网友。如果您更希望深入理解其中的原理，我更推荐阅读原书。</p>
+<p>而我阅读下来的体验是：虽然我之前没有系统了解 LLM 或 Agent 的原理，但这不影响我的阅读体验，我依然能从零开始理解各家 Agent 的设计结构和思路，并尝试怎么更好使用大模型来进行开发。作者的行文也平实易懂，我推荐大家有时间的话都可以阅读原著。</p>
+<p>另外难得的一点是，他是少数成体系且时间上接近当前的书籍，不会出现书中的结论已经过时或被证伪的情况。我第一次在一本书中看到 GPT-5.6 的身影。</p>
+<h2><span id="要求的前置知识-书中要求">要求的前置知识-书中要求</span></h2><h3><span id="必需阅读全书的基础">必需：阅读全书的基础</span></h3><p>Python 编程：书中几乎所有实验都基于 Python。你需要熟悉 Python 的基本语法、常用的数据结构、包管
+理（pip）等基本概念。不要求精通，但应能读懂和修改中等复杂度的 Python 代码。</p>
+<p>LLM 的基本使用经验：你应该用过 ChatGPT、Claude 或类似的产品，理解“提示词（Prompt）→ 模型回
+复”的基本交互模式。</p>
+<p>一款 AI 辅助编程工具：强烈建议安装并熟悉至少一款 AI 辅助编程工具，如 Claude Code、Codex、Cursor、
+TRAE 等。一方面，这些工具能显著提高书中实验的开发效率，因为实验涉及大量代码编写和调试。另一方
+面，这些编程工具本身就是成熟的 Coding Agent，你在使用它们的过程中会直观地体验到 ReAct 循环、工
+具调用、上下文管理等书中反复讨论的核心机制。这种第一手体验对理解 Agent 的设计原则极有价值。</p>
+<p>软件工程常识：熟悉命令行操作、Git 版本控制、JSON 数据格式、REST API 等基本概念。这些是运行实
+验和理解 Agent 工具调用机制的基础。</p>
+<h3><span id="推荐提升特定章节的阅读体验">推荐：提升特定章节的阅读体验</span></h3><p>机器学习基础（第八章）：了解训练与推理、损失函数、梯度下降、过拟合等基本概念，有助于理解模型后训
+练。</p>
+<p>基础数学（第 2-3、8 章）：对线性代数有直观的理解（比如知道向量可以表示方向和大小、矩阵可以做批量运
+算）有助于理解嵌入和注意力机制；基本的概率统计知识有助于理解评估指标和强化学习中的期望奖励。书
+中的数学不涉及复杂的推导，侧重直观解释。</p>
+<p>Web 开发基础（第 6 章）：了解 HTTP、WebSocket、前后端分离架构等概念，有助于理解事件驱动的异步
+Agent 架构和语音 Agent 的实时通信实验。</p>
+<p>对 Transformer 架构的基本了解（第 2、8 章）：Transformer 是当前几乎所有大语言模型的底层架构。对于
+希望系统地补充大模型基础知识的读者，推荐阅读《图解大模型》（图灵出版）。该书以直观的图解方式讲解
+了 Transformer 架构、预训练与微调等核心概念，与本书的 Agent 工程视角形成良好的互补。</p>
+<h1><span id="第一章总观">第一章总观</span></h1><p>从多个真实 Agent 产品出发，建立对 Agent 的直观理解。深入解析 Agent 的核心公式：从实现层的 LLM + 上下文 + 工具，到直觉层的大脑 + 眼睛 + 手脚，再到学术层的策略（Policy）、观察空间（Observation Space）与动作空间（Action Space）。同时通过实验剖析 ReAct 循环的运作机制，也就是“思考 → 行动 → 观察”的迭代过程，并区分任务内的上下文适应、跨任务的外部产物（artifact）更新和
+训练周期中的参数更新。最后讨论从工作流到自主 Agent 的编排设计模式，为后续章节建立统一的概念框架。</p>
+<h1><span id="对总观点的解释">对总观点的解释</span></h1><p>Agent &#x3D; LLM + 上下文 + 工具</p>
+<ul>
+<li>LLM 是 Agent 的大脑：它不只是一组模型参数，而是 Agent 的整个决策内核——理解意图、思考规划、做出
+判断。就像人类大脑不只是神经元的集合，还包括通过经验塑造的思维方式，LLM 的能力也来自两部分：预
+训练所积累的世界知识与语言能力，以及后训练所固化的决策策略——后者的具体技术（如监督微调与强化
+学习）将在第八章展开。</li>
+<li>上下文是 Agent 的眼睛：它不只是输入给模型的那段文本，而是 Agent 在每个决策点收到并保留的信息表示
+——来自环境的观察、用户记忆、领域知识、自身状态和任务进展。</li>
+<li>工具是 Agent 的手脚：这里的“工具”指 Agent 用来感知或改变外部世界的接口，包括工具定义、调用协议和
+适配器——从预定义的工具调用到动态生成代码，从委托子 Agent 协作到主动与用户沟通。</li>
+</ul>
+<h2><span id="agent-x3d-model-harness">Agent &#x3D; Model + Harness</span></h2><p><img data-src="/2026/09/07/%E3%80%8A%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-AI-Agent%E3%80%8B%E7%AC%94%E8%AE%B0-1-AI-Agent-%E5%85%A5%E9%97%A8/%E7%8E%AF%E5%A2%83%E4%BA%A4%E4%BA%92.png" alt="alt text"></p>
+<h3><span id="harness">Harness</span></h3><p>Harness 把环境返回的观察转换为模型能够处
+理的上下文，再把模型选择的行动转换为对环境的工具调用。没有通过观察通道进入上下文的信息，对模型来说就
+像不存在；没有被动作接口允许的操作，模型即使知道该怎么做，也只能停留在文字建议上。</p>
+<h3><span id="manus">Manus</span></h3><p>合并原本分离的空间。在 Manus 出现之前，生产级 Agent 大多沿着 Deep Research（深度调研）、
+Coding（代码生成）和 Computer Use（电脑操控）三条相对独立的路线发展。Manus 的突破在于率先把三者放进
+同一个有广泛影响力的生产级 Agent：虚拟浏览器扩大了观察空间，文件系统、代码执行与命令行执行扩大了动作
+空间。它没有仅靠替换一个更强的模型来成为通用 Agent，而是取三类 Agent 观察空间与动作空间的并集，使同一
+个 Agent 能跨越原有产品边界完成任务。</p>
+<h3><span id="openclaw">OpenClaw</span></h3><p>把接口延伸到用户的数字生活。 OpenClaw 又把这两个空间向外推进了一层。它通过用户已经在使用的 WhatsApp、Telegram、Slack、Discord、iMessage 等消息渠道接收任务和返回结果，让 Agent 可以随时随地被触达；同时采用本地 Gateway，连接 Google Drive、Notion 等云应用以及本地文件系统。这样一来，分散在不同账号与设备中的数字文件都可以在用户明确授权后进入同一个 Agent 的观察空间，并被其工具处理。相较于早期 Manus 以隔离云端沙盒为中心、往往需要上传文件或另行配置连接器的形态，本地优先的 OpenClaw 跨越了更大的数据边界。值得注意的是，Manus 后来也加入了 Google Drive 连接器和桌面端本地访问，这恰好再次说明，产品能力的演进往往就是观察空间和动作空间的演进。</p>
+<p>这里顺便纠正一个观念：小龙虾本身不是模型、小龙虾本身不是模型、小龙虾本身不是模型！它更像是一层外置框架，去对模型塑形。你可以在小龙虾中使用各类支持的模型，但不存在 小龙虾 &gt; gpt 之类的比较关系。</p>
+<h2><span id="工具">工具</span></h2><p>只有调用了工具，Agent 才能真正读取并进行操作。这也是我认为 Agent 突飞猛进的一点：在之前，你让 AI 写文案，AI只能输出一段 markdown ，需要你自己调整为合适的格式。但现在， AI 可以直接调用工具生成pdf、pptx或你需要的格式，只要工具中有申明。许多MCP、Skill也是为了让 Agent 更好调用工具。</p>
+<h3><span id="工具调用tool-calling-x2f-function-calling">工具调用（Tool Calling &#x2F; Function Calling）</span></h3><p>是现代 LLM Agent 的一项核心能力，它让模型能够通过结
+构化的方式调用外部工具。这种能力将 LLM 从一个纯粹的文本生成器转变为能够执行实际操作的智能系统。本书
+后续统一使用“工具调用”这一术语。</p>
+<p>工具调用的流程分为四步：首先，在上下文里告诉模型有哪些工具可用（包括名称、用途和参数）；然后，模型
+自主判断要不要调用工具、调用哪个、传什么参数；接着，工具执行完毕后，结果被追加到上下文中；最后，模型
+据此决定下一步行动。这个循环就是后文要介绍的 ReAct 的基础。</p>
+<p>以一个查天气的场景为例，四步流程在 API 层面的简化表示如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">第一步：声明工具 </span><br><span class="line">tools: [&#123;</span><br><span class="line">  name: &quot;get_weather&quot;,</span><br><span class="line">  parameters: &#123;</span><br><span class="line">    city: &quot;string&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;]</span><br><span class="line">第二步：模型决定调用</span><br><span class="line">assistant: &#123;</span><br><span class="line">  tool_calls: [&#123;</span><br><span class="line">    function: &quot;get_weather&quot;,</span><br><span class="line">    arguments: &#123;city: &quot; 北京&quot;&#125;</span><br><span class="line">  &#125;]</span><br><span class="line">&#125;</span><br><span class="line">第三步：结果追加到上下文 </span><br><span class="line">tool: &#123;</span><br><span class="line">  tool_call_id: &quot;call_1&quot;,</span><br><span class="line">  content: &#x27;&#123;&quot;temp&quot;:28,&quot;sky&quot;:&quot; 晴&quot;&#125;&#x27;</span><br><span class="line">&#125;</span><br><span class="line">第四步：模型基于结果回复</span><br><span class="line">assistant: &#123;</span><br><span class="line">  content: &quot; 北京今天 28°C、晴。&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2><span id="llm">LLM</span></h2><p>大语言模型（Large Language Model, LLM）是 Agent 的决策核心。收到用户的请求后，它需要先解析真实
+意图（用户说的往往不是他真正想要的），再将模糊或复杂的任务拆解成可执行的步骤。执行过程中它还要持续做出
+判断：下一步该做什么、要不要调用工具、调哪个工具、传什么参数。这种“理解-规划-执行”的能力来自预训练所积
+累的知识，是工作流和自主 Agent 都依赖的基础。</p>
+<h3><span id="模型即-agent能力内化但-harness-仍然重要">模型即 Agent：能力内化，但 Harness 仍然重要</span></h3><p>一些先进模型通过后训练，尤其是强化学习，将工具调用策略内化为原生能力：何时调用工具、调用哪个工具、传什么参数，都可以由模型自行决定。这里需要区分“决策”和“执行”：强化学习写入模型参数的是决策策略，工具本身的实现、权限、调用循环和结果回传仍由 Agent 框架或 API 服务端完成。</p>
+<p>模型越能自主决策，出错时的影响面也越大，因此围绕模型的 Harness 并不会消失。它负责上下文管理、工具接口、安全约束、验证和纠正，把模型能力引导成可靠的任务执行。</p>
+<h3><span id="agent-的学习机制三种更新路径">Agent 的学习机制：三种更新路径</span></h3><p>Agent 的行为改变不只发生在训练阶段，可以按更新位置和持续时间分成三条路径：<strong>上下文适应</strong>是在当前任务中加入示例、状态或检索结果，立即生效但不会跨会话保留；<strong>外部产物更新</strong>是把事实写入知识文档，把策略写入 Prompt 或 Skill，把确定性约束写进程序和 Harness，能够跨任务积累且便于审计；<strong>参数更新</strong>则通过后训练改变模型本身，适合内化难以用规则表达的通用能力，但成本和部署风险更高。</p>
+<h2><span id="上下文">上下文</span></h2><p>从 API 的视角看，每次调用 LLM 时的上下文由以下五个部分构成：</p>
+<ul>
+<li>系统提示词（System Prompt）：与用户每次输入的提示词不同，系统提示词由开发者编写，在整个对话过
+程中保持不变，相当于 Agent 的“岗位说明书”——定义它的身份、权限和行为准则。通过提示工程（Prompt
+Engineering）精心设计系统提示词，我们可以塑造 Agent 的工作方式。系统提示词中还会包含跨会话保存的
+用户记忆（用户偏好、历史行为、背景设定等个性化信息，详见第三章）和动态注入的环境状态。</li>
+<li>工具定义（Tool Definitions）：声明 Agent 可用工具的名称、功能描述和参数格式。没有工具定义，Agent 就
+无法识别和调用任何工具——消融实验（实验 1-1）将验证这一点。工具定义与系统提示词一起构成对话中保
+持不变的静态前缀（这是基础模式；2026 年以来，生产框架中工具的完整 schema 也可以按需动态加载到上
+下文末尾而不破坏前缀，详见第二章工具定义一节和第四章）。</li>
+<li>用户消息（User Messages）：来自用户的输入。用户消息中还可能包含通过 RAG（检索增强生成，Retrieval-
+Augmented Generation，详见第三章）动态检索引入的外部知识——覆盖训练数据截止后的信息或私有领域
+知识。</li>
+<li>模型回复（Assistant Messages）：模型之前生成的回复，最多包含三个部分——思考过程（reasoning，即内
+部思考链，用于保持思维的连贯性和决策的可解释性）、文本内容（content，即对用户的回复）和工具调用
+请求（tool_calls，即 Agent 采取行动的方式）。在一次具体的回复中，三者不一定同时出现：例如 Agent
+决定调用工具时通常只有 reasoning + tool_calls，给出最终回答时通常只有 reasoning + content。</li>
+<li>工具执行结果（Tool Results）：Agent 框架执行工具后返回的结果。这些结果是 Agent 下一步思考的直接依
+据，也让它能够从执行结果中学习、避免重复犯错。</li>
+</ul>
+<p>前两项（系统提示词 + 工具定义）是静态前缀，后三项（用户消息 + 模型回复 + 工具执行结果）是随交互不
+断增长的动态消息历史。这五个部分共同构成了 LLM 每次推理时的上下文。</p>
+<h3><span id="消融实验">消融实验</span></h3><p>此处为了体现各模块的重要性，进行了消融实验：</p>
+<p><img data-src="/2026/09/07/%E3%80%8A%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-AI-Agent%E3%80%8B%E7%AC%94%E8%AE%B0-1-AI-Agent-%E5%85%A5%E9%97%A8/%E6%B6%88%E8%9E%8D%E5%AE%9E%E9%AA%8C.png" alt="alt text"></p>
+<p>工具定义（Tool Definitions，静态前缀的一部分）是 Agent
+行动能力的基础，没有它，Agent 就无法识别和调用任何工具。工具执行结果（Tool Results）是闭环控制的关
+键，缺失它会导致 Agent “盲目”执行，陷入无限循环。思考过程（模型回复中的 reasoning 部分）保留了 Agent
+此前做出决策的原因，使思维流程更加连贯，避免做出前后矛盾的决策。历史消息（之前轮次的用户消息、模型
+回复和工具执行结果）则防止了冗余操作，保持任务执行的连贯性，避免重复犯同样的错误。</p>
+<h3><span id="react-循环">ReAct 循环</span></h3><p>Agent 执行任务的核心模式叫做 ReAct（Reasoning + Acting）。虽然名字只体现了思考（Reasoning）和行动
+（Acting）两个词，但实际循环包含三个环节：模型先思考当前应该做什么，然后调用工具行动，再观察工具返回的
+结果并继续思考下一步。这个“想 → 做 → 看 → 想 → 做 → 看”的循环不断重复，直到任务完成。</p>
+<h2><span id="harness-工程从能做事到可靠地做事">Harness 工程：从“能做事”到“可靠地做事”</span></h2><p>如果把 LLM 看作 Model，那么 Agent 边界内围绕模型运行的代码、配置和服务可以统称为 Harness。生产形态可以写成：<strong>Agent &#x3D; Model + Harness</strong>，其中 <strong>Harness &#x3D; 上下文管理 + 工具接口 + 约束 + 验证 + 纠正</strong>。前两项让 Agent 能理解任务并采取行动，后三项负责限制危险行为、检查结果并在失败时重试、回退或交给人处理。</p>
+<p>Harness 不包括它所操作的环境本身：工具适配器、权限和沙箱属于 Harness，沙箱中的文件、进程、数据库和网页属于 Environment。生产系统的主要工程量往往不在调用模型，而在这些运行与治理机制上。</p>
+<h3><span id="发展历程">发展历程</span></h3><p>提示工程（Prompt Engineering）是第一波创新——通过优化输入给模型的自然语言指令来提升输出质量。
+上下文工程（Context Engineering）是第二波——人们认识到单纯优化提示词还不够，需要系统性地管理模型
+能看到的所有信息（系统指令、工具定义、对话历史、外部知识）。</p>
+<p>Harness 工程是第三波——它将视野从“模型能看到什么”进一步扩展到“Agent 如何组织模型运行并与环境交
+互”，涵盖上下文与工具接口、约束机制、验证手段、反馈循环和错误恢复等 Agent 边界内、模型之外的运行与治理
+机制。</p>
+<p>随后出现的 Loop 工程（Loop Engineering）又把视野从单次运行扩展到跨轮次的持续自主运转：谁来发现下
+一件该做的事、何时验证、何时才算真正完成（第十章将结合多 Agent 协作系统展开）。</p>
+<p>2026 年 7 月，业界又开始用 Graph 工程（Graph Engineering）描述一种更高层的编排视角：把 Agent 循环、
+确定性程序和人工审批组织成显式的执行图，其中节点承担具体能力，边规定路由与依赖，结构化状态沿边传递并
+在关键边界处持久化。</p>
+<h3><span id="工作流与自主-agent">工作流与自主 Agent</span></h3><p>工作流把 LLM 和工具放进开发者预先定义的固定路径，适合步骤明确、合规要求严格的任务；自主 Agent 则根据环境反馈动态决定下一步，适合开放式、步骤数量难以预估的任务，但会付出更多延迟、成本和复合错误风险。实践中常把两者混合：关键边界使用确定性流程，灵活部分交给自主循环。选择顺序通常应是：先尝试单次模型调用，再考虑工作流，只有确实需要动态决策时才引入自主 Agent，并为其设置最大迭代次数、错误处理和人工检查点。</p>
+<h3><span id="成功的-agent-系统遵循三个核心原则">成功的 Agent 系统遵循三个核心原则</span></h3><p>保持简单。从最简单的方案开始，只在确实必要时才增加复杂度。直接的 API 调用优于复杂的框架，清晰的代
+码优于聪明的抽象。因为每多一层抽象都会成为以后调试时新的盲区。</p>
+<p>保持透明。明确显示 Agent 的规划步骤、执行日志和决策轨迹——这不只是为了调试方便，也是让用户建立信
+任的前提。因为黑箱里的错误一旦发生，外部观察者既无法定位也无法纠正。</p>
+<p>设计好工具接口（ACI，Agent-Computer Interface）。ACI 强调的是从 Agent 视角设计接口（让 Agent 容易
+理解和使用），而非传统 API 从程序员视角设计接口。工具的命名和参数要直观，容易误用的地方要从设计上让错
+误无法发生——比如 SIM 卡的缺角让卡片只能从一个方向插进卡槽，避免了用户插反的错误；微波炉门没关好就
+绝不加热，避免了用户开门加热的危险行为。这种“用设计消除错误”的思路，在制造业里有一个专门的术语，叫防
+呆（Poka-yoke），源自丰田生产体系。设计不好的工具会让再强的模型也频繁出错——因为模型与工具之间唯一的
+沟通通道就是接口本身，模糊的接口会被模型放大成系统性的错误。</p>
+<h2><span id="护栏与安全性">护栏与安全性</span></h2><p>护栏（Guardrails）构成了保障 Agent 行为安全可控的分层防线，可用于管理数据隐私风险（例如防止系统提
+示泄露）或声誉风险（例如确保模型行为与品牌形象一致）。实践中可以先针对已识别的风险设置护栏，再在发现新
+漏洞时逐步添加。本节只做高层次的概览，确立全书统一的分层骨架；具体的实现细节将在第二章（上下文层：提
+示注入防护）、第四章（执行层：工具权限控制）和第五章（执行层与数据层：代码执行安全、信任边界下移）分别
+展开，初次阅读无需深究。</p>
+<p>单个护栏不太可能提供足够的保护，多个专门的护栏组合使用，才能构建出更有韧性的 Agent 系统。
+护栏也存在另一类失败：误拒绝。为了降低危险请求被放行的概率，模型可能同时拒绝一部分合法但形式敏感
+的任务，例如经过授权的安全测试、模型蒸馏研究。因此，护栏评估不能只测试“应当拒绝的请求是否被拦截”，还要
+测试“明确允许的请求是否能够正常完成”。</p>
+<h2><span id="设计模式">设计模式</span></h2><p>提议者—审核者（Proposer-Reviewer）：产出与评判由两个不共享上下文的角色分别承担，评判方看到的是产
+物本身——渲染结果、测试输出、结构化的调用参数——而不是产出方的推理过程。它成立的前提是自审不可靠：同
+一个上下文中的模型难以发现自己的认知盲区，也很难判断自己是否已被注入。第三章用它更新知识，第四章用它
+做工具调用的事前审批与事后验证（Sidecar 是它的一个只读变体），第五章的 PPT、视频与日志三个实验都以它
+为骨架，第七章用它评估 UI，第九章用它审核更新提案，第十章讨论了它在对等协作中的形态，以及为什么不能让
+同一个 Agent 自审。</p>
+<p>渐进式披露（Progressive Disclosure）：不把全部信息一次性放进上下文，而是先给一份可检索的目录，再按
+需加载细节。它同时优化两件事——上下文预算与选择精度。第二章的 Agent Skills 是最典型的形态（元数据常驻、
+正文按需加载），第三章的分层检索、第四章的主动工具发现与分页截断、第十章的 Agent 发现都是它的变体。
+只增不改（Append-only）：状态以追加的方式演进，已经写下的内容不再回头修改。换来的是可缓存、可重放、
+可审计。第二章的 KV Cache 前缀稳定性是它的性能形态——改动越靠前，作废的缓存越多；第三章的事件式记忆、
+第四章把新工具的 schema 追加到轨迹末尾而不是插回前缀，都是同一条纪律。</p>
+<p>边界集 + 保留集（Boundary Set + Retention Set）：任何一次修改都要同时在”它应当改变的那批样本”和”它
+不应当影响的那批样本”上验证。只测前者会把过拟合当成进步，只测后者会把无效修改当成安全。第七章的回归任
+务、第八章的训练与评估隔离、第九章的更新提案验证都建立在这对集合上。</p>
+<p>最小 diff + 可回滚：每次修改尽量小、带来源、可单独回滚，而不是整体重写。它让归因成为可能——出了问
+题能定位到具体哪一次改动。第三章的知识更新、第五章的代码补丁、第九章的 Prompt 与程序更新都遵循这条；
+本章开头给出的三条更新路径（上下文内适应、外部产物更新、参数更新），也正是按可回滚程度从高到低排列的。</p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -248,7 +483,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-09 07:55:08" itemprop="dateModified" datetime="2026-10-09T07:55:08+00:00">2026-10-09</time>
+      <time title="修改时间：2026-10-14 01:10:50" itemprop="dateModified" datetime="2026-10-14T01:10:50+00:00">2026-10-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -562,7 +797,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-09 07:55:08" itemprop="dateModified" datetime="2026-10-09T07:55:08+00:00">2026-10-09</time>
+      <time title="修改时间：2026-10-14 01:10:50" itemprop="dateModified" datetime="2026-10-14T01:10:50+00:00">2026-10-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -789,7 +1024,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-09 07:55:08" itemprop="dateModified" datetime="2026-10-09T07:55:08+00:00">2026-10-09</time>
+      <time title="修改时间：2026-10-14 01:10:50" itemprop="dateModified" datetime="2026-10-14T01:10:50+00:00">2026-10-14</time>
     </span>
 
   
@@ -879,7 +1114,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-09 07:55:08" itemprop="dateModified" datetime="2026-10-09T07:55:08+00:00">2026-10-09</time>
+      <time title="修改时间：2026-10-14 01:10:50" itemprop="dateModified" datetime="2026-10-14T01:10:50+00:00">2026-10-14</time>
     </span>
 
   
@@ -988,7 +1223,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-09 07:55:08" itemprop="dateModified" datetime="2026-10-09T07:55:08+00:00">2026-10-09</time>
+      <time title="修改时间：2026-10-14 01:10:50" itemprop="dateModified" datetime="2026-10-14T01:10:50+00:00">2026-10-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1330,7 +1565,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-09 07:55:08" itemprop="dateModified" datetime="2026-10-09T07:55:08+00:00">2026-10-09</time>
+      <time title="修改时间：2026-10-14 01:10:50" itemprop="dateModified" datetime="2026-10-14T01:10:50+00:00">2026-10-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1513,7 +1748,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-09 07:55:08" itemprop="dateModified" datetime="2026-10-09T07:55:08+00:00">2026-10-09</time>
+      <time title="修改时间：2026-10-14 01:10:50" itemprop="dateModified" datetime="2026-10-14T01:10:50+00:00">2026-10-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1711,7 +1946,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-09 07:55:08" itemprop="dateModified" datetime="2026-10-09T07:55:08+00:00">2026-10-09</time>
+      <time title="修改时间：2026-10-14 01:10:50" itemprop="dateModified" datetime="2026-10-14T01:10:50+00:00">2026-10-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -2042,7 +2277,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-09 07:55:08" itemprop="dateModified" datetime="2026-10-09T07:55:08+00:00">2026-10-09</time>
+      <time title="修改时间：2026-10-14 01:10:50" itemprop="dateModified" datetime="2026-10-14T01:10:50+00:00">2026-10-14</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -2420,236 +2655,6 @@
 <p>这次面试给我的最大提醒是：项目经历只能证明“做过”，但面试会继续追问“为什么这么做、底层怎么实现、出问题怎么排查”。后面还是要把 JVM、Spring、Redis、MySQL、Linux 排查这些内容系统补一遍，不能只停留在会用 API 的层面。</p>
 <p>总体而言，第一次面试还是受益匪浅，面试官也很友善，在知道我没有学习计网后就直接换了题型。三位面试官也都在我思考问题时耐心等待，也没有压力面，可以说体验很好。</p>
 <p>出于隐私原因，这里就不放公司名称了。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="DarkYellowCat">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="DarkYellowCat's Blog">
-      <meta itemprop="description" content="记录学习与成长">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | DarkYellowCat's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/" class="post-title-link" itemprop="url">claude/codex配置分享</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-05-25 19:18:24" itemprop="dateCreated datePublished" datetime="2026-05-25T19:18:24+00:00">2026-05-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-10-09 07:55:08" itemprop="dateModified" datetime="2026-10-09T07:55:08+00:00">2026-10-09</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%B7%A5%E5%85%B7%E6%8E%A8%E8%8D%90/" itemprop="url" rel="index"><span itemprop="name">工具推荐</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1><span id="前言">前言</span></h1><p>我个人在大学生活中的感受是：虽然有小部分人能勇争桥头，但大部分同学是与热门技术脱节的（无歧义）。我在计算机学院发现，很多同学对ai的使用还停留在和网页版豆包扯皮，更进一步的则是设法使用gpt或其他更好用的模型，有些人为了更好的体验会选择找代充开会员。但我认为，一方面，这些工具提供的生产力与我们专业的需要还是不够的。虽然体验起来可能觉得已经很强了，但和agent比起来差别太大了；另一方面，我不认为普通学生有场景用完会员的额度，相比之下，随用随买的token模式在我看来是更适合的（家庭条件好可以忽略）。</p>
-<p>因此，我想要分享我对智能体的使用经验，希望能帮到同样想要尝试新技术的朋友。也希望大家能敢于尝试新事物，不要畏难（我帮助一位同学从头配置好了所有流程，但当我在命令行中唤出claude code时，他却觉得自己用不好命令行，主动放弃了，去找代充开网页端的会员）。</p>
-<p>本文主要介绍三个方面：<strong>cc-switch</strong>（管理工具）、<strong>skills</strong>（技能插件）、<strong>MCP</strong>（模型上下文协议服务）。</p>
-<hr>
-<h1><span id="cc-switch">cc-switch</span></h1><h2><span id="介绍">介绍</span></h2><p><a target="_blank" rel="noopener" href="https://github.com/farion1231/cc-switch">cc-switch</a> 是一个跨平台的桌面端 All-in-One 管理工具，支持 Claude Code、Codex、OpenCode、Gemini CLI 等多种 AI 编程 CLI 工具的统一管理。它的核心价值在于：<strong>你不再需要手动编辑各种 JSON、TOML 配置文件</strong>，所有操作都可以在图形界面中完成。</p>
-<p>简单来说，cc-switch 就是这些命令行 AI 工具的”控制面板”。</p>
-<h2><span id="具体功能">具体功能</span></h2><h3><span id="配置智能体">配置智能体</span></h3><p>cc-switch 支持对 Claude Code &#x2F; Codex 的 API Provider 进行可视化配置和一键切换。你可以：</p>
-<ul>
-<li>配置多个 API 提供商（官方 Anthropic、OpenRouter、各种中转站等）</li>
-<li>一键切换当前使用的模型和 Provider</li>
-<li>管理 API Key，避免手动修改环境变量</li>
-</ul>
-<p>对于使用中转 API 的同学来说，这个功能非常实用——不用每次都去改配置文件。</p>
-<h3><span id="下载并管理skills">下载并管理skills</span></h3><p>cc-switch支持下载并管理skills
-<img data-src="/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/image-2.png" alt="alt text">
-点击发现技能即可进入下载页面，它会自行在Github中查找对应的仓库，点击安装即可进行自动下载并配置。（有些skills无法使用cc-switch安装，点击安装左侧的查看即可跳转到GitHub下载，安装好后在cc-switch选择导入已有即可进行管理）</p>
-<p><img data-src="/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/image-3.png" alt="alt text"></p>
-<h3><span id="管理mcp">管理MCP</span></h3><p>cc-switch 提供了 MCP Server 的可视化管理界面，可以方便地添加、启用、禁用各种 MCP 服务，不需要手动编辑 <code>settings.json</code>。</p>
-<p><img data-src="/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/image-1.png" alt="alt text"></p>
-<h3><span id="管理历史对话">管理历史对话</span></h3><p>cc-switch 可以浏览和搜索 Claude Code 的历史会话记录，方便你回顾之前的工作内容。</p>
-<p><img data-src="/2026/05/25/claude-codex%E9%85%8D%E7%BD%AE%E5%88%86%E4%BA%AB/image.png" alt="alt text"></p>
-<h3><span id="管理提示词">管理提示词</span></h3><p>支持管理自定义的系统提示词（System Prompt），可以为不同项目或场景配置不同的提示词模板，实现快速切换。</p>
-<hr>
-<h1><span id="skills推荐">skills推荐</span></h1><p>skills更多的是根据自己工作的方向进行配置，这里附带一份我自己的配置供参考。</p>
-<p>注：有些skills用cc-switch无法下载，需要自己手动安装。而我发现Claude code在GitHub上的生态远好于codex，建议大家用Claude-code下载，然后在cc-switch中 Skills 管理 -》 导入已有 -》 勾选其他智能体。</p>
-<h2><span id="karpathy-guideline">karpathy-guideline</span></h2><p><strong>仓库地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/forrestchang/andrej-karpathy-skills">forrestchang&#x2F;andrej-karpathy-skills</a></p>
-<p>这是一个源自 Andrej Karpathy（前 Tesla AI 总监、OpenAI 联合创始人）对 LLM 编程陷阱观察的 CLAUDE.md 配置文件。它通过四条核心原则来约束 AI 的编码行为：</p>
-<ol>
-<li><strong>先读再写</strong>：修改代码前必须先阅读相关文件，理解上下文</li>
-<li><strong>最小改动</strong>：只做必要的修改，不要过度重构</li>
-<li><strong>保持简单</strong>：避免过度工程化，不引入不必要的抽象</li>
-<li><strong>验证有效</strong>：改完之后要验证代码能正常工作</li>
-</ol>
-<p>简单来说，它让 AI 从一个”过度自信的初级程序员”变成一个”有纪律的工程师”。这个 skill 几乎是必装的，能显著减少 AI 写代码时的”幻觉”和过度修改问题。</p>
-<h2><span id="prompt-optimizer">prompt-optimizer</span></h2><p><strong>仓库地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/Hashaam101/prompt-optimizer">Hashaam101&#x2F;prompt-optimizer</a></p>
-<p>这个 skill 有两种模式：</p>
-<ul>
-<li><strong>自动模式（auto）</strong>：在你每次输入 prompt 时，它会在后台静默优化你的提示词，让 AI 更好地理解你的意图</li>
-<li><strong>手动模式（manual）</strong>：通过 <code>/optimize</code> 命令，将你写的粗略 prompt 转化为结构化的、高质量的提示词</li>
-</ul>
-<p>对于不太擅长写 prompt 的同学来说，这个 skill 能帮你把”帮我写个登录页面”这样模糊的需求，自动补充为包含技术栈、样式要求、错误处理等细节的完整指令。</p>
-<h2><span id="baoyu-format-markdown">baoyu-format-markdown</span></h2><p><strong>仓库地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/JimLiu/baoyu-skills">JimLiu&#x2F;baoyu-skills</a></p>
-<p>这个 skill 用于将纯文本或格式混乱的 Markdown 文件整理为结构清晰、排版规范的格式。它会：</p>
-<ul>
-<li>添加和规范化 frontmatter（标题、摘要等元信息）</li>
-<li>规范标题层级</li>
-<li>添加适当的加粗、列表、代码块</li>
-<li>处理中英文之间的空格（CJK spacing）</li>
-<li>保持原始内容不变，只优化格式</li>
-</ul>
-<p>写博客、整理笔记的时候非常好用。输出文件为 <code>{filename}-formatted.md</code>。</p>
-<h2><span id="agent-browser">agent-browser</span></h2><p><strong>仓库地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/vercel-labs/agent-browser">vercel-labs&#x2F;agent-browser</a></p>
-<p>这是 Vercel Labs 推出的浏览器自动化 CLI 工具，专为 AI Agent 设计。安装后，Claude Code 就能：</p>
-<ul>
-<li>打开网页并导航</li>
-<li>读取页面内容</li>
-<li>填写表单、点击按钮</li>
-<li>截图</li>
-<li>执行端到端测试</li>
-</ul>
-<p>它使用基于 ref（引用标记）的交互方式，比传统的 CSS 选择器更可靠。当你需要 AI 帮你查资料、测试网页、或者做一些需要浏览器的操作时，这个 skill 就派上用场了。</p>
-<hr>
-<h1><span id="mcp">MCP</span></h1><p>注意：MCP与skills不同，它会占据上下文的大小，所以不建议同一时间开太多。MCP（Model Context Protocol）是 Anthropic 推出的开放标准，可以理解为”AI 的 USB-C 接口”——让 AI 能够标准化地连接各种外部工具和数据源。</p>
-<h2><span id="codegraph">codegraph</span></h2><p><strong>仓库地址</strong>：<a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=aStudioPlus.codegraph">aStudioPlus&#x2F;codegraph</a></p>
-<p>CodeGraph 会对你的代码库进行 AST（抽象语法树）解析，构建一个包含函数、类、导入关系、调用链的语义图谱。支持 37+ 种编程语言。</p>
-<p>主要能力：</p>
-<ul>
-<li><strong>符号搜索</strong>：快速定位函数&#x2F;类的定义位置</li>
-<li><strong>调用链追踪</strong>：查看谁调用了某个函数、某个函数又调用了谁</li>
-<li><strong>影响分析</strong>：修改某个符号时，分析哪些代码会受影响</li>
-<li><strong>代码探索</strong>：一次调用就能获取多个文件的相关源码，替代反复 grep + read 的低效循环</li>
-</ul>
-<p>对于大型项目来说，codegraph 能让 AI 更快地理解代码结构，减少不必要的文件读取，节省上下文空间。</p>
-<h2><span id="github-mcp-server">GitHub MCP Server</span></h2><p><strong>来源</strong>：GitHub 官方维护</p>
-<p>GitHub MCP Server 让 AI 能够直接与 GitHub 平台交互，提供 90+ 种工具，包括：</p>
-<ul>
-<li>创建和管理 Issue、Pull Request</li>
-<li>搜索代码和仓库</li>
-<li>读取文件内容和提交历史</li>
-<li>管理 Branch 和 Release</li>
-<li>操作 GitHub Actions</li>
-</ul>
-<p>配置方式：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">claude mcp add github --scope user</span><br></pre></td></tr></table></figure>
-
-<p>对于日常开发来说，有了它你可以直接让 AI 帮你创建 PR、查看 Issue、搜索相关代码，不用再手动切换到浏览器操作。</p>
-<h2><span id="agentmemory">agentmemory</span></h2><p><strong>仓库地址</strong>：<a target="_blank" rel="noopener" href="https://github.com/kishan0725/AgentMemory">kishan0725&#x2F;AgentMemory</a></p>
-<p>AI 编程工具的一个痛点是：每次新会话都会”失忆”。agentmemory 通过 MCP 协议为 AI 提供持久化记忆能力：</p>
-<ul>
-<li><strong>跨会话记忆</strong>：上一次对话中做的决策、偏好设置，下次还能记住</li>
-<li><strong>项目上下文</strong>：记住项目的架构决策、技术选型、编码规范</li>
-<li><strong>本地存储</strong>：所有数据存在本地，不上传到云端，保护隐私</li>
-</ul>
-<p>有了它，AI 不会每次都问你”这个项目用什么框架”、”你喜欢什么代码风格”这类重复问题。</p>
-<hr>
-<h1><span id="总结">总结</span></h1><table>
-<thead>
-<tr>
-<th>类型</th>
-<th>工具</th>
-<th>一句话描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>管理工具</td>
-<td>cc-switch</td>
-<td>图形化管理 Claude Code&#x2F;Codex 的一切配置</td>
-</tr>
-<tr>
-<td>Skill</td>
-<td>karpathy-guideline</td>
-<td>让 AI 写代码更有纪律</td>
-</tr>
-<tr>
-<td>Skill</td>
-<td>prompt-optimizer</td>
-<td>自动优化你的提示词</td>
-</tr>
-<tr>
-<td>Skill</td>
-<td>baoyu-format-markdown</td>
-<td>一键美化 Markdown 格式</td>
-</tr>
-<tr>
-<td>Skill</td>
-<td>agent-browser</td>
-<td>让 AI 能操作浏览器</td>
-</tr>
-<tr>
-<td>MCP</td>
-<td>codegraph</td>
-<td>代码语义图谱，加速代码理解</td>
-</tr>
-<tr>
-<td>MCP</td>
-<td>GitHub MCP Server</td>
-<td>直接操作 GitHub</td>
-</tr>
-<tr>
-<td>MCP</td>
-<td>agentmemory</td>
-<td>跨会话持久记忆</td>
-</tr>
-</tbody></table>
-<p>这套配置的核心思路是：<strong>用 cc-switch 降低配置门槛，用 skills 增强 AI 的行为质量，用 MCP 扩展 AI 的能力边界</strong>。</p>
-<p>如果你是刚接触 AI 编程工具的同学，建议按这个顺序来：先装 cc-switch 把环境配好，再装 karpathy-guideline 这个基础 skill，然后根据自己的需要逐步添加其他插件。不要一次性全装上——记住 MCP 会占上下文，按需开启就好。</p>
 
       
     </div>
