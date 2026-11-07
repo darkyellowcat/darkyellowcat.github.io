@@ -1,307 +1,284 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
+
+
+<!DOCTYPE html><html lang="zh-CN" data-theme="light">
+
 <head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+  
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/2.0.0" theme-name="Stellar" theme-version="2.0.0">
+  
+  
+  <meta name="generator" content="Hexo 8.1.2">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  <title data-stellar-page-meta>文献调研：面向冗余机械臂规划控制的神经动力学模型 - DarkYellowCat's Blog</title>
+  <script data-stellar-script="core">
+    (function () {
+      var key = 'stellar:v2:leftbar-state';
+      var fallback = "expanded";
+      try {
+        var value = localStorage.getItem(key);
+        document.documentElement.dataset.leftbarState = value === 'collapsed' || value === 'expanded' ? value : fallback;
+      } catch (error) {
+        document.documentElement.dataset.leftbarState = fallback;
+      }
+    })();
+  </script>
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="description" content="前言这篇文章是我围绕“面向冗余机械臂规划控制的神经动力学模型”完成的一次课程文献调研。我选取了 15 篇中英文论文，时间跨度从 2008 年到 2026 年，内容覆盖逆运动学、二次规划、递归神经网络、归零神经网络、物理约束、滚动时域控制、数据驱动和任务优先级控制。 读完这些论文后，我大致得出的理解为： 12把冗余机械臂的多解问题写成带约束的时变优化，再把“求最优解”变成一个能够在线演化并收敛的神经" data-stellar-page-meta="">
+<meta property="og:type" content="article" data-stellar-page-meta="">
+<meta property="og:title" content="文献调研：面向冗余机械臂规划控制的神经动力学模型" data-stellar-page-meta="">
+<meta property="og:url" content="https://darkyellowcat.github.io/2026/09/03/%E6%96%87%E7%8C%AE%E8%B0%83%E7%A0%94-%E9%9D%A2%E5%90%91%E5%86%97%E4%BD%99%E6%9C%BA%E6%A2%B0%E8%87%82%E8%A7%84%E5%88%92%E6%8E%A7%E5%88%B6%E7%9A%84%E7%A5%9E%E7%BB%8F%E5%8A%A8%E5%8A%9B%E5%AD%A6%E6%A8%A1%E5%9E%8B/" data-stellar-page-meta="">
+<meta property="og:site_name" content="DarkYellowCat's Blog" data-stellar-page-meta="">
+<meta property="og:description" content="前言这篇文章是我围绕“面向冗余机械臂规划控制的神经动力学模型”完成的一次课程文献调研。我选取了 15 篇中英文论文，时间跨度从 2008 年到 2026 年，内容覆盖逆运动学、二次规划、递归神经网络、归零神经网络、物理约束、滚动时域控制、数据驱动和任务优先级控制。 读完这些论文后，我大致得出的理解为： 12把冗余机械臂的多解问题写成带约束的时变优化，再把“求最优解”变成一个能够在线演化并收敛的神经" data-stellar-page-meta="">
+<meta property="og:locale" content="zh_CN" data-stellar-page-meta="">
+<meta property="article:author" content="DarkYellowCat" data-stellar-page-meta="">
+<meta property="article:published_time" content="2026-09-03T12:10:00.000Z" data-stellar-page-meta="">
+<meta property="article:modified_time" content="2026-11-07T08:57:02.000Z" data-stellar-page-meta="">
+<meta property="article:tag" content="机器人" data-stellar-page-meta="">
+<meta property="article:tag" content="神经动力学" data-stellar-page-meta="">
+<meta property="article:tag" content="论文" data-stellar-page-meta="">
+<meta name="twitter:card" content="summary" data-stellar-page-meta=""><meta name="twitter:title" content="文献调研：面向冗余机械臂规划控制的神经动力学模型" data-stellar-page-meta="">
+  
+  
+  <meta name="keywords" content="机器人,神经动力学,论文" data-stellar-page-meta="">
 
-<link rel="stylesheet" href="/css/main.css">
+  <!-- feed -->
+  
+    
 
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
-
-<script class="next-config" data-name="main" type="application/json">{"hostname":"darkyellowcat.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"default","show_result":true},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"night eighties"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
-
-    <meta name="description" content="前言这篇文章是我围绕“面向冗余机械臂规划控制的神经动力学模型”完成的一次课程文献调研。我选取了 15 篇中英文论文，时间跨度从 2008 年到 2026 年，内容覆盖逆运动学、二次规划、递归神经网络、归零神经网络、物理约束、滚动时域控制、数据驱动和任务优先级控制。 读完这些论文后，我大致得出的理解为： 12把冗余机械臂的多解问题写成带约束的时变优化，再把“求最优解”变成一个能够在线演化并收敛的神经">
-<meta property="og:type" content="article">
-<meta property="og:title" content="文献调研：面向冗余机械臂规划控制的神经动力学模型">
-<meta property="og:url" content="https://darkyellowcat.github.io/2026/09/03/%E6%96%87%E7%8C%AE%E8%B0%83%E7%A0%94-%E9%9D%A2%E5%90%91%E5%86%97%E4%BD%99%E6%9C%BA%E6%A2%B0%E8%87%82%E8%A7%84%E5%88%92%E6%8E%A7%E5%88%B6%E7%9A%84%E7%A5%9E%E7%BB%8F%E5%8A%A8%E5%8A%9B%E5%AD%A6%E6%A8%A1%E5%9E%8B/index.html">
-<meta property="og:site_name" content="DarkYellowCat&#39;s Blog">
-<meta property="og:description" content="前言这篇文章是我围绕“面向冗余机械臂规划控制的神经动力学模型”完成的一次课程文献调研。我选取了 15 篇中英文论文，时间跨度从 2008 年到 2026 年，内容覆盖逆运动学、二次规划、递归神经网络、归零神经网络、物理约束、滚动时域控制、数据驱动和任务优先级控制。 读完这些论文后，我大致得出的理解为： 12把冗余机械臂的多解问题写成带约束的时变优化，再把“求最优解”变成一个能够在线演化并收敛的神经">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-09-03T12:10:00.000Z">
-<meta property="article:modified_time" content="2026-11-07T07:43:31.054Z">
-<meta property="article:author" content="DarkYellowCat">
-<meta property="article:tag" content="机器人">
-<meta property="article:tag" content="神经动力学">
-<meta property="article:tag" content="论文">
-<meta name="twitter:card" content="summary">
-
-
-<link rel="canonical" href="https://darkyellowcat.github.io/2026/09/03/%E6%96%87%E7%8C%AE%E8%B0%83%E7%A0%94-%E9%9D%A2%E5%90%91%E5%86%97%E4%BD%99%E6%9C%BA%E6%A2%B0%E8%87%82%E8%A7%84%E5%88%92%E6%8E%A7%E5%88%B6%E7%9A%84%E7%A5%9E%E7%BB%8F%E5%8A%A8%E5%8A%9B%E5%AD%A6%E6%A8%A1%E5%9E%8B/">
-
-
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://darkyellowcat.github.io/2026/09/03/%E6%96%87%E7%8C%AE%E8%B0%83%E7%A0%94-%E9%9D%A2%E5%90%91%E5%86%97%E4%BD%99%E6%9C%BA%E6%A2%B0%E8%87%82%E8%A7%84%E5%88%92%E6%8E%A7%E5%88%B6%E7%9A%84%E7%A5%9E%E7%BB%8F%E5%8A%A8%E5%8A%9B%E5%AD%A6%E6%A8%A1%E5%9E%8B/","path":"2026/09/03/文献调研-面向冗余机械臂规划控制的神经动力学模型/","title":"文献调研：面向冗余机械臂规划控制的神经动力学模型"}</script>
-
-<script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>文献调研：面向冗余机械臂规划控制的神经动力学模型 | DarkYellowCat's Blog</title>
+    
+      
+        <link rel="alternate" href="/atom.xml" title="DarkYellowCat's Blog" type="application/atom+xml">
+      
+    
   
 
-
-
-
-
-
-
-
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.1/pangu.umd.js" integrity="sha256-kRsxecBnwG6mULFPe2E6UKnNm8XfDOuDwCOprjLZuX8=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
-<script src="/js/third-party/search/local-search.js" defer></script>
-
-
-
-
-
+  <link rel="preload" href="/css/main.css?v=2.0.0" as="style">
+  <link rel="stylesheet" href="/css/main.css?v=2.0.0">
+  <style>:root{--text-loading:"正在加载";--text-loading-error:"加载失败，请稍后重试。"}</style>
 
 
   
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <link rel="shortcut icon" href="/assets/brand/cat.svg">
+  
+
+  
+
+  <script type="application/ld+json" data-stellar-page-meta="">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"DarkYellowCat","sameAs":[]},"dateCreated":"2026-09-03T12:10:00+00:00","dateModified":"2026-11-07T08:57:02+00:00","datePublished":"2026-09-03T12:10:00+00:00","description":"前言这篇文章是我围绕“面向冗余机械臂规划控制的神经动力学模型”完成的一次课程文献调研。我选取了 15 篇中英文论文，时间跨度从 2008 年到 2026 年，内容覆盖逆运动学、二次规划、递归神经网络、归零神经网络、物理约束、滚动时域控制、数据驱动和任务优先级控制。\n读完这些论文后，我大致得出的理解为：\n12把冗余机械臂的多解问题写成带约束的时变优化，再把“求最优解”变成一个能够在线演化并收敛...","headline":"文献调研：面向冗余机械臂规划控制的神经动力学模型","mainEntityOfPage":{"@type":"WebPage","@id":"https://darkyellowcat.github.io/2026/09/03/%E6%96%87%E7%8C%AE%E8%B0%83%E7%A0%94-%E9%9D%A2%E5%90%91%E5%86%97%E4%BD%99%E6%9C%BA%E6%A2%B0%E8%87%82%E8%A7%84%E5%88%92%E6%8E%A7%E5%88%B6%E7%9A%84%E7%A5%9E%E7%BB%8F%E5%8A%A8%E5%8A%9B%E5%AD%A6%E6%A8%A1%E5%9E%8B/"},"publisher":{"@type":"Organization","name":"DarkYellowCat","sameAs":[]},"url":"https://darkyellowcat.github.io/2026/09/03/%E6%96%87%E7%8C%AE%E8%B0%83%E7%A0%94-%E9%9D%A2%E5%90%91%E5%86%97%E4%BD%99%E6%9C%BA%E6%A2%B0%E8%87%82%E8%A7%84%E5%88%92%E6%8E%A7%E5%88%B6%E7%9A%84%E7%A5%9E%E7%BB%8F%E5%8A%A8%E5%8A%9B%E5%AD%A6%E6%A8%A1%E5%9E%8B/","image":["https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg"],"keywords":"机器人, 神经动力学, 论文","thumbnailUrl":"https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg"}</script>
+  <link rel="stylesheet" href="/assets/site.css">
+<meta name="theme-color" content="#f7f6f2">
 
 
-
-
-
-  <noscript>
-    <link rel="stylesheet" href="/css/noscript.css">
-  </noscript>
+  <link rel="stylesheet" href="/css/stellar-icons.css?v=7c185ad1a9a79674">
+  <link rel="preload" as="script" href="/js/stellar-icons.js?v=39c6ac17e854ffe2">
+  
+  
 </head>
+<body data-page-type="content" data-page-layout="post" data-article-style="tech"><div data-stellar-runtime-region id="site-cover" class="site-cover"></div><div class="site-shell" id="start" data-regions="leftbar rightbar"><div class="site-workspace">
+<aside data-stellar-runtime-region id="leftbar-region" class="site-region site-region--leftbar" data-region="leftbar" aria-label="Leftbar"><div class="site-region__surface ui-surface"><div class="site-region__decoration" aria-hidden="true"></div><div class="site-region__viewport"><header class="site-region__header site-region__zone site-region__zone--top">
+    <div class="widget-instance widget-instance--brand" data-widget-id="leftbar:fixed:brand" data-presentation="leftbar" data-leftbar-rail>
+<header class="brand-header brand-header--regular brand-header--site"><div class="brand-wrap"><a class="brand-image brand-image--icon" href="&#x2F;"><img no-lazy src="&#x2F;assets&#x2F;brand&#x2F;cat.svg" alt="" onerror="this.onerror&#x3D;null;this.src&#x3D;&quot;&#x2F;images&#x2F;stellar-error.491ee870f4940739.svg&quot;"></a><a class="brand-title" href="&#x2F;"><div class="brand-name">DarkYellowCat</div><div class="brand-tagline cap">技术笔记与开源实践</div></a></div><div class="brand-search">
 
-<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
-  <div class="headband"></div>
+<div class="ui-collection" data-layout="list" data-variant="nav" data-density="auto">
+  
+    
+<button class="ui-collection__item ui-interactive card-hover card-hover--spotlight search-trigger has-hover-surface" type="button" title="搜索" aria-label="搜索" data-shell-action="open-search" data-search-instance="leftbar-brand-search" data-search-domain="blog" data-search-domain-label="博客" data-search-domain-blog="true">
+  
+  <span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Adapted from Google Material Icons by Material Design Authors - https://github.com/material-icons/material-icons/blob/master/LICENSE --><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h3M3 13h3M3 18h8M16.83 13.83l3.76 3.76"/><circle cx="14" cy="11" r="4"/></g></svg></span>
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">搜索</span>
+      
+      
+    </span>
+  
+  <kbd class="search-shortcut" aria-hidden="true">⌘K</kbd>
 
-  <main class="main">
-    <div class="column">
-      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏" role="button">
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-    </div>
-  </div>
+  
+</button>
 
-  <div class="site-meta">
-
-    <a href="/" class="brand" rel="start">
-      <i class="logo-line"></i>
-      <p class="site-title">DarkYellowCat's Blog</p>
-      <i class="logo-line"></i>
-    </a>
-      <p class="site-subtitle" itemprop="description">分享技术与思考</p>
-  </div>
-
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger" aria-label="搜索" role="button">
-        <i class="fa fa-search fa-fw fa-lg"></i>
-    </div>
-  </div>
+  
 </div>
 
 
+</div></header>
+</div>
+  </header>
+  <div class="site-region__body site-region__zone site-region__zone--body">
+    <div class="widget-instance widget-instance--menu" data-widget-id="leftbar:fixed:menu" data-presentation="leftbar" data-leftbar-rail>
 
-<nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
-        </a>
-      </li>
-  </ul>
+
+<nav class="menu dis-select">
+<div class="ui-collection" data-layout="list" data-variant="nav" data-density="auto">
+  
+    
+<a class="ui-collection__item ui-interactive card-hover card-hover--spotlight" href="&#x2F;" title="首页">
+  
+  <span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7M5 9v12h5v-7h4v7h5V9"/></svg></span>
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">首页</span>
+      
+      
+    </span>
+  
+  
+  
+</a>
+
+  
+    
+<a class="ui-collection__item ui-interactive card-hover card-hover--spotlight is-active" href="&#x2F;blog&#x2F;" title="文章" aria-current="page">
+  
+  <span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></span>
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">文章</span>
+      
+      
+    </span>
+  
+  
+  <span class="ui-collection__indicator"></span>
+</a>
+
+  
+    
+<a class="ui-collection__item ui-interactive card-hover card-hover--spotlight" href="&#x2F;topic&#x2F;" title="专题">
+  
+  <span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m12 16.068l-3.771 3.905c-.54.559-.81.839-1.04.935c-.52.22-1.099.032-1.373-.448c-.12-.21-.158-.59-.232-1.35c-.043-.43-.064-.644-.128-.824a1.43 1.43 0 0 0-.835-.864c-.173-.067-.38-.089-.795-.133c-.734-.077-1.101-.116-1.305-.24c-.463-.284-.646-.883-.433-1.422c.094-.237.364-.517.904-1.076L5.456 12l1.238-1.238zl5.306-5.306L18.544 12l2.464 2.55c.54.56.81.84.904 1.076c.213.54.03 1.139-.433 1.423c-.204.124-.57.163-1.305.24c-.414.044-.622.066-.795.133c-.389.149-.69.462-.835.864c-.064.18-.085.394-.128.823c-.075.76-.112 1.14-.232 1.351c-.274.48-.853.669-1.374.448c-.228-.096-.498-.376-1.038-.935z" opacity=".5"/><path fill="currentColor" fill-rule="evenodd" d="M12 16a7 7 0 1 0 0-14a7 7 0 0 0 0 14m0-10c-.284 0-.474.34-.854 1.023l-.098.176c-.108.194-.162.29-.246.354c-.085.064-.19.088-.4.135l-.19.044c-.738.167-1.107.25-1.195.532s.164.577.667 1.165l.13.152c.143.167.215.25.247.354s.021.215 0 .438l-.02.203c-.076.785-.114 1.178.115 1.352c.23.174.576.015 1.267-.303l.178-.082c.197-.09.295-.135.399-.135s.202.045.399.135l.178.082c.691.319 1.037.477 1.267.303s.191-.567.115-1.352l-.02-.203c-.021-.223-.032-.334 0-.438s.104-.187.247-.354l.13-.152c.503-.588.755-.882.667-1.165c-.088-.282-.457-.365-1.195-.532l-.19-.044c-.21-.047-.315-.07-.4-.135c-.084-.064-.138-.16-.246-.354l-.098-.176C12.474 6.34 12.284 6 12 6" clip-rule="evenodd"/></svg></span>
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">专题</span>
+      
+      
+    </span>
+  
+  
+  
+</a>
+
+  
+    
+<a class="ui-collection__item ui-interactive card-hover card-hover--spotlight" href="&#x2F;archives&#x2F;" title="归档">
+  
+  <span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="currentColor"><path d="M6.94028 2C7.35614 2 7.69326 2.32421 7.69326 2.72414V4.18487C8.36117 4.17241 9.10983 4.17241 9.95219 4.17241H13.9681C14.8104 4.17241 15.5591 4.17241 16.227 4.18487V2.72414C16.227 2.32421 16.5641 2 16.98 2C17.3958 2 17.733 2.32421 17.733 2.72414V4.24894C19.178 4.36022 20.1267 4.63333 20.8236 5.30359C21.5206 5.97385 21.8046 6.88616 21.9203 8.27586L22 9H2.92456H2V8.27586C2.11571 6.88616 2.3997 5.97385 3.09665 5.30359C3.79361 4.63333 4.74226 4.36022 6.1873 4.24894V2.72414C6.1873 2.32421 6.52442 2 6.94028 2Z"/><path d="M21.9995 14.0001V12.0001C21.9995 11.161 21.9963 9.66527 21.9834 9H2.00917C1.99626 9.66527 1.99953 11.161 1.99953 12.0001V14.0001C1.99953 17.7713 1.99953 19.6569 3.1711 20.8285C4.34267 22.0001 6.22829 22.0001 9.99953 22.0001H13.9995C17.7708 22.0001 19.6564 22.0001 20.828 20.8285C21.9995 19.6569 21.9995 17.7713 21.9995 14.0001Z" opacity=".5"/><path d="M18 17C18 17.5523 17.5523 18 17 18C16.4477 18 16 17.5523 16 17C16 16.4477 16.4477 16 17 16C17.5523 16 18 16.4477 18 17Z"/><path d="M18 13C18 13.5523 17.5523 14 17 14C16.4477 14 16 13.5523 16 13C16 12.4477 16.4477 12 17 12C17.5523 12 18 12.4477 18 13Z"/><path d="M13 17C13 17.5523 12.5523 18 12 18C11.4477 18 11 17.5523 11 17C11 16.4477 11.4477 16 12 16C12.5523 16 13 16.4477 13 17Z"/><path d="M13 13C13 13.5523 12.5523 14 12 14C11.4477 14 11 13.5523 11 13C11 12.4477 11.4477 12 12 12C12.5523 12 13 12.4477 13 13Z"/><path d="M8 17C8 17.5523 7.55228 18 7 18C6.44772 18 6 17.5523 6 17C6 16.4477 6.44772 16 7 16C7.55228 16 8 16.4477 8 17Z"/><path d="M8 13C8 13.5523 7.55228 14 7 14C6.44772 14 6 13.5523 6 13C6 12.4477 6.44772 12 7 12C7.55228 12 8 12.4477 8 13Z"/></g></svg></span>
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">归档</span>
+      
+      
+    </span>
+  
+  
+  
+</a>
+
+  
+    
+<a class="ui-collection__item ui-interactive card-hover card-hover--spotlight" href="&#x2F;about&#x2F;" title="关于">
+  
+  <span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20a10 10 0 0 0 0-20" opacity=".5"/><path d="M12 6a3 3 0 1 0 0 6a3 3 0 0 0 0-6m0 7.5c-3.04 0-5.5 1.57-5.5 3.5c0 .65.28 1.26.77 1.77A7.96 7.96 0 0 0 12 20.5a7.96 7.96 0 0 0 4.73-1.73c.49-.51.77-1.12.77-1.77c0-1.93-2.46-3.5-5.5-3.5"/></g></svg></span>
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">关于</span>
+      
+      
+    </span>
+  
+  
+  
+</a>
+
+  
+</div>
+
 </nav>
 
-
-
-  <div class="search-pop-overlay">
-    <div class="popup search-popup">
-      <div class="search-header">
-        <span class="search-icon">
-          <i class="fa fa-search"></i>
-        </span>
-        <div class="search-input-container">
-          <input autocomplete="off" autocapitalize="off" maxlength="80"
-                placeholder="搜索..." spellcheck="false"
-                type="search" class="search-input">
-        </div>
-        <span class="popup-btn-close" role="button">
-          <i class="fa fa-times-circle"></i>
-        </span>
-      </div>
-      <div class="search-result-container">
-        <div class="search-result-icon">
-          <i class="fa fa-spinner fa-pulse fa-5x"></i>
-        </div>
-      </div>
-    </div>
+</div>
+    <div class="widgets widget-stack widget-stack--leftbar widget-stack--body"><div class="widget-instance widget-instance--markdown" data-widget-id="leftbar:0:explore" data-presentation="leftbar">
+<widget class="widget-wrapper markdown"><div class="widget-header dis-select"><span class="name">继续探索</span></div><div class="widget-body fs14"><p><a href="/categories/">分类</a> · <a href="/tags/">标签</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/darkyellowcat">GitHub ↗</a></p>
+</div></widget>
+</div></div>
   </div>
+  <footer class="site-region__footer">
+    
+    <div class="site-region__system ui-collection" data-layout="inline" data-variant="nav" data-density="compact">
+      <div class="site-region__settings"><div class="widget-instance widget-instance--settings" data-widget-id="leftbar:fixed:settings" data-presentation="leftbar" data-leftbar-rail>
+<a class="settings-widget ui-collection__item ui-interactive card-hover card-hover--spotlight" href="&#x2F;settings&#x2F;" data-profile-provider="" data-profile-identity-enabled="false" data-profile-fallback-avatar="https:&#x2F;&#x2F;gcore.jsdelivr.net&#x2F;gh&#x2F;cdn-x&#x2F;placeholder@1.0.12&#x2F;avatar&#x2F;round&#x2F;3442075.svg" data-settings-placement="leftbar" data-settings-label="设置" aria-label="设置" title="设置">
+  <span class="settings-widget__avatar" aria-hidden="true">
+    <span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="currentColor"><path fill-rule="evenodd" d="M12.4277 2C11.3139 2 10.2995 2.6007 8.27081 3.80211L7.58466 4.20846C5.55594 5.40987 4.54158 6.01057 3.98466 7C3.42773 7.98943 3.42773 9.19084 3.42773 11.5937V12.4063C3.42773 14.8092 3.42773 16.0106 3.98466 17C4.54158 17.9894 5.55594 18.5901 7.58466 19.7915L8.27081 20.1979C10.2995 21.3993 11.3139 22 12.4277 22C13.5416 22 14.5559 21.3993 16.5847 20.1979L17.2708 19.7915C19.2995 18.5901 20.3139 17.9894 20.8708 17C21.4277 16.0106 21.4277 14.8092 21.4277 12.4063V11.5937C21.4277 9.19084 21.4277 7.98943 20.8708 7C20.3139 6.01057 19.2995 5.40987 17.2708 4.20846L16.5847 3.80211C14.5559 2.6007 13.5416 2 12.4277 2Z" clip-rule="evenodd" opacity=".5"/><path d="M12.4277 8.25C10.3567 8.25 8.67773 9.92893 8.67773 12C8.67773 14.0711 10.3567 15.75 12.4277 15.75C14.4988 15.75 16.1777 14.0711 16.1777 12C16.1777 9.92893 14.4988 8.25 12.4277 8.25Z"/></g></svg></span>
+  </span>
+  <span class="settings-widget__name ui-collection__title">设置</span>
+</a>
+</div></div>
+      <button type="button" class="leftbar-state-toggle ui-collection__item ui-interactive card-hover card-hover--spotlight is-icon-only" aria-label="Collapse leftbar" aria-expanded="true" data-shell-action="toggle-leftbar"><span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M3.172 4.172C2 5.343 2 7.229 2 11v2c0 3.771 0 5.657 1.172 6.828S6.229 21 10 21h5V3h-5C6.229 3 4.343 3 3.172 4.172" clip-rule="evenodd" opacity=".5"/><path fill="currentColor" d="M5.5 9.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zm1 4a.75.75 0 0 0 0 1.5h4a.75.75 0 0 0 0-1.5zM22 13v-2c0-3.771 0-5.657-1.172-6.828c-.974-.975-3.192-1.139-5.828-1.166v17.988c2.636-.027 4.854-.191 5.828-1.166C22 18.657 22 16.771 22 13"/></svg></span></button>
+    </div>
+  </footer></div></div></aside>
+<main data-stellar-runtime-region class="site-main" id="main">
 
-</header>
+
+<div class="article-banner-wrap"><div class="article banner top">
+  <div class="content">
+    
+    <div class="top bread-nav footnote"><div class="top-row"><div class="left" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/blog/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a>
+</div><div class="right"><span class="cap reading">4203 字 · 预计阅读 15 分钟</span></div></div><div class="meta-row">
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-09-03T12:10:00.000Z">2026-09-03</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-11-07T08:57:02.000Z">2026-11-07</time></span></div>
+</div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>文献调研：面向冗余机械臂规划控制的神经动力学模型</span></h1>
         
-  
-  <aside class="sidebar">
-
-    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
-      <ul class="sidebar-nav">
-        <li class="sidebar-nav-toc">
-          文章目录
-        </li>
-        <li class="sidebar-nav-overview">
-          站点概览
-        </li>
-      </ul>
-
-      <div class="sidebar-panel-container">
-        <!--noindex-->
-        <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">2.</span> <span class="nav-text">概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">2.1.</span> <span class="nav-text">冗余机械臂为什么会有多解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">2.2.</span> <span class="nav-text">“神经网络”不一定需要训练</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text">15 篇文献分别解决了什么</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">3.1.</span> <span class="nav-text">一、从逆运动学到带约束 QP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">3.2.</span> <span class="nav-text">二、在线求解器如何变得更可靠</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">3.3.</span> <span class="nav-text">三、预测控制与模型未知</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">3.4.</span> <span class="nav-text">四、从单任务扩展到多任务</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">4.</span> <span class="nav-text">文献对照表</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">5.</span> <span class="nav-text">横向比较：几条路线分别适合什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">6.</span> <span class="nav-text">我的几点判断</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">6.1.</span> <span class="nav-text">1. 神经动力学的主要优势是在线优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">6.2.</span> <span class="nav-text">2. 约束完整性比单一误差数字更重要</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">6.3.</span> <span class="nav-text">3. 连续时间证明与数字实现之间还有距离</span></a></li><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">6.4.</span> <span class="nav-text">4. 当前方向正在从已知模型走向混合方法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">7.</span> <span class="nav-text">这次调研的局限</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link"><span class="nav-number">9.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
-        </div>
-        <!--/noindex-->
-
-        <div class="site-overview-wrap sidebar-panel">
-          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <p class="site-author-name" itemprop="name">DarkYellowCat</p>
-  <div class="site-description" itemprop="description">记录学习与成长</div>
-</div>
-<div class="site-state-wrap animated">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-        <a href="/archives/">
-          <span class="site-state-item-count">46</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
       </div>
-      <div class="site-state-item site-state-categories">
-          <a href="/categories/">
-        <span class="site-state-item-count">8</span>
-        <span class="site-state-item-name">分类</span></a>
-      </div>
-      <div class="site-state-item site-state-tags">
-          <a href="/tags/">
-        <span class="site-state-item-count">60</span>
-        <span class="site-state-item-name">标签</span></a>
-      </div>
-  </nav>
-</div>
-  <div class="cc-license animated" itemprop="license">
-    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+    </div>
+    
   </div>
-
-        </div>
-      </div>
-    </div>
-
-    
-  </aside>
-
-
-    </div>
-
-    <div class="main-inner post posts-expand">
-
-
-  
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/09/03/%E6%96%87%E7%8C%AE%E8%B0%83%E7%A0%94-%E9%9D%A2%E5%90%91%E5%86%97%E4%BD%99%E6%9C%BA%E6%A2%B0%E8%87%82%E8%A7%84%E5%88%92%E6%8E%A7%E5%88%B6%E7%9A%84%E7%A5%9E%E7%BB%8F%E5%8A%A8%E5%8A%9B%E5%AD%A6%E6%A8%A1%E5%9E%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="DarkYellowCat">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="DarkYellowCat's Blog">
-      <meta itemprop="description" content="记录学习与成长">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="文献调研：面向冗余机械臂规划控制的神经动力学模型 | DarkYellowCat's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          文献调研：面向冗余机械臂规划控制的神经动力学模型
-        </h1>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-09-03 12:10:00" itemprop="dateCreated datePublished" datetime="2026-09-03T12:10:00+00:00">2026-09-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-11-07 07:43:31" itemprop="dateModified" datetime="2026-11-07T07:43:31+00:00">2026-11-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
-      <span class="post-meta-item-icon">
-        <i class="far fa-eye"></i>
-      </span>
-      <span class="post-meta-item-text">阅读次数：</span>
-      <span id="busuanzi_value_page_pv"></span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody"><h1><span id="前言">前言</span></h1><p>这篇文章是我围绕“面向冗余机械臂规划控制的神经动力学模型”完成的一次课程文献调研。我选取了 15 篇中英文论文，时间跨度从 2008 年到 2026 年，内容覆盖逆运动学、二次规划、递归神经网络、归零神经网络、物理约束、滚动时域控制、数据驱动和任务优先级控制。</p>
+  </div></div>
+<article class="md-text content"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这篇文章是我围绕“面向冗余机械臂规划控制的神经动力学模型”完成的一次课程文献调研。我选取了 15 篇中英文论文，时间跨度从 2008 年到 2026 年，内容覆盖逆运动学、二次规划、递归神经网络、归零神经网络、物理约束、滚动时域控制、数据驱动和任务优先级控制。</p>
 <p>读完这些论文后，我大致得出的理解为：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">把冗余机械臂的多解问题写成带约束的时变优化，</span><br><span class="line">再把“求最优解”变成一个能够在线演化并收敛的神经动力系统。</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">把冗余机械臂的多解问题写成带约束的时变优化，</span><br><span class="line">再把“求最优解”变成一个能够在线演化并收敛的神经动力系统。</span><br></pre></td></tr></tbody></table></figure>
 
 <p>技术演进大致是：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">伪逆求解</span><br><span class="line">  → QP 统一主任务、次级目标和关节边界</span><br><span class="line">  → RNN/GNN 作为并行在线求解器</span><br><span class="line">  → ZNN 利用时间导数信息减小动态滞后</span><br><span class="line">  → 投影、对偶和变参数模型处理复杂约束与收敛</span><br><span class="line">  → RHC、Koopman、数据驱动和分层控制扩展应用边界</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">伪逆求解</span><br><span class="line">  → QP 统一主任务、次级目标和关节边界</span><br><span class="line">  → RNN/GNN 作为并行在线求解器</span><br><span class="line">  → ZNN 利用时间导数信息减小动态滞后</span><br><span class="line">  → 投影、对偶和变参数模型处理复杂约束与收敛</span><br><span class="line">  → RHC、Koopman、数据驱动和分层控制扩展应用边界</span><br></pre></td></tr></tbody></table></figure>
 
 <p>这批工作共同说明神经动力学适合实时优化，但也暴露出一个明显矛盾：模型越能处理复杂约束，推导、参数和离散实现就越复杂。论文中的连续时间收敛结论，也不能自动替代实物系统上的时延、噪声和算力验证。</p>
-<h1><span id="概念">概念</span></h1><h2><span id="冗余机械臂为什么会有多解">冗余机械臂为什么会有多解</span></h2><p>若机械臂关节自由度 <code>n</code> 大于末端任务空间维度 <code>m</code>，即 <code>n &gt; m</code>，其速度级运动学通常写成：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ṙ = J(θ)θ̇</span><br></pre></td></tr></table></figure>
+<h1 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h1><h2 id="冗余机械臂为什么会有多解"><a href="#冗余机械臂为什么会有多解" class="headerlink" title="冗余机械臂为什么会有多解"></a>冗余机械臂为什么会有多解</h2><p>若机械臂关节自由度 <code>n</code> 大于末端任务空间维度 <code>m</code>，即 <code>n &gt; m</code>，其速度级运动学通常写成：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ṙ = J(θ)θ̇</span><br></pre></td></tr></tbody></table></figure>
 
 <p>这是一个欠定方程。同一末端速度 <code>ṙ</code> 可能对应多组关节速度 <code>θ̇</code>。伪逆可以给出最小二范数解，但难以自然表达关节限位、避障、周期回零和任务优先级等要求。[1]</p>
 <p>二次规划（QP）提供了更灵活的表达：用目标函数选择一组更合适的关节运动，用等式保证末端任务，用不等式表示物理边界。[2]</p>
-<h2><span id="神经网络不一定需要训练">“神经网络”不一定需要训练</span></h2><p>这 15 篇论文中的 RNN、GNN、ZNN 和 DNN，很多并不是依靠数据集训练权重的深度学习模型，而是由常微分方程构造的优化求解器。网络状态随时间演化，平衡点对应方程或优化问题的解。</p>
+<h2 id="“神经网络”不一定需要训练"><a href="#“神经网络”不一定需要训练" class="headerlink" title="“神经网络”不一定需要训练"></a>“神经网络”不一定需要训练</h2><p>这 15 篇论文中的 RNN、GNN、ZNN 和 DNN，很多并不是依靠数据集训练权重的深度学习模型，而是由常微分方程构造的优化求解器。网络状态随时间演化，平衡点对应方程或优化问题的解。</p>
 <p>到了数据驱动和 Koopman 路线，学习模型才真正成为核心部分：前者在线估计雅可比矩阵，后者从输入输出数据学习机械臂动力学，再把学习结果交给控制器。[11-13]</p>
-<h1><span id="15-篇文献分别解决了什么">15 篇文献分别解决了什么</span></h1><p>为了避免把文章写成摘要堆叠，我按“问题如何被建模、优化如何被求解、未知模型如何处理、多个任务如何协调”分成四组。</p>
-<h2><span id="一-从逆运动学到带约束-qp">一、从逆运动学到带约束 QP</span></h2><p>张泽玺等教授的综述把冗余机械臂逆运动学方法分为解析法、数值法和人工智能方法，为后续论文提供了问题地图。[1] 解析法精确但依赖具体结构；数值法通用，却需要处理奇异性和初值；人工智能方法适应性强，但通常引入训练或稳定性验证问题。</p>
+<h1 id="15-篇文献分别解决了什么"><a href="#15-篇文献分别解决了什么" class="headerlink" title="15 篇文献分别解决了什么"></a>15 篇文献分别解决了什么</h1><p>为了避免把文章写成摘要堆叠，我按“问题如何被建模、优化如何被求解、未知模型如何处理、多个任务如何协调”分成四组。</p>
+<h2 id="一、从逆运动学到带约束-QP"><a href="#一、从逆运动学到带约束-QP" class="headerlink" title="一、从逆运动学到带约束 QP"></a>一、从逆运动学到带约束 QP</h2><p>张泽玺等教授的综述把冗余机械臂逆运动学方法分为解析法、数值法和人工智能方法，为后续论文提供了问题地图。[1] 解析法精确但依赖具体结构；数值法通用，却需要处理奇异性和初值；人工智能方法适应性强，但通常引入训练或稳定性验证问题。</p>
 <p>张雨浓等教授较早把平面冗余机械臂自运动写成带等式和双端约束的 QP，并用基于线性变分不等式的原对偶神经网络实时求解。[2] 这类工作确立了一个后来反复出现的套路：先决定优化什么，再讨论用哪种神经动力学模型求解。</p>
 <p>关节漂移是周期任务中的典型问题。吕宣姣等教授在八连杆和九连杆平面机械臂上验证二次型性能指标对无偏差运动规划的作用；张智军和张雨浓则从理论和 PUMA560 仿真说明速度层与加速度层重复运动规划方案可以建立等效关系。[3-4] 这两篇论文点出，末端闭合轨迹不等于关节状态自动回到起点。</p>
-<h2><span id="二-在线求解器如何变得更可靠">二、在线求解器如何变得更可靠</span></h2><p>张智军等教授比较三种递归神经网络和三种离散数值方法来求解重复运动规划。[5] 论文的结果不是简单宣称 RNN 全面更好，而是给出了实际取舍：多数正常仿真条件下，神经网络更快、更准确；离散数值方法则更容易直接部署到数字计算机。</p>
+<h2 id="二、在线求解器如何变得更可靠"><a href="#二、在线求解器如何变得更可靠" class="headerlink" title="二、在线求解器如何变得更可靠"></a>二、在线求解器如何变得更可靠</h2><p>张智军等教授比较三种递归神经网络和三种离散数值方法来求解重复运动规划。[5] 论文的结果不是简单宣称 RNN 全面更好，而是给出了实际取舍：多数正常仿真条件下，神经网络更快、更准确；离散数值方法则更容易直接部署到数字计算机。</p>
 <p>固定参数难以同时照顾初期收敛和稳态表现。VP-CDNN 使用时变参数求解带反馈的关节无漂移 QP，并在 Kinova Jaco2 上进行了物理实验。[6] 这项工作把“误差是否归零”与“关节是否回到合理构型”放进同一框架。</p>
 <p>约束进一步复杂后，求解器出现了不同分支：</p>
 <ul>
@@ -310,7 +287,7 @@
 <li>Dini-ZNN 使用连续但不可微的投影算子，并用上右 Dini 导数处理模式切换，避免为平滑近似额外调参。[9]</li>
 </ul>
 <p>这组论文展示了神经动力学研究的核心变化：关注点从“能不能解 QP”逐渐转向“面对时变、多类型约束、初始误差和噪声时还能不能稳定求解”。</p>
-<h2><span id="三-预测控制与模型未知">三、预测控制与模型未知</span></h2><p>Yan 等把滚动时域控制（RHC）写成凸 QP，目标同时包含跟踪误差、速度范数和加速度范数，并直接考虑角度、速度、加速度三层边界和终端等式约束，再设计 RNN 在线求解。[10] 它的价值在于引入预测窗口，但计算量和控制效果会受到窗口与离散实现影响。</p>
+<h2 id="三、预测控制与模型未知"><a href="#三、预测控制与模型未知" class="headerlink" title="三、预测控制与模型未知"></a>三、预测控制与模型未知</h2><p>Yan 等把滚动时域控制（RHC）写成凸 QP，目标同时包含跟踪误差、速度范数和加速度范数，并直接考虑角度、速度、加速度三层边界和终端等式约束，再设计 RNN 在线求解。[10] 它的价值在于引入预测窗口，但计算量和控制效果会受到窗口与离散实现影响。</p>
 <p>Sah 等提出 Koopman-ZNN 框架：用自编码器学习低维双线性 Koopman 模型，再配合 ZNN 处理输入约束。[11] 论文报告的控制频率最高可达 <code>800 Hz</code>，并进行了仿真和实验。它比纯运动学 ZNN 更接近“学习模型 + 在线控制”的组合，但效果仍依赖训练数据能否覆盖真实工作区。</p>
 <p>两篇中文论文从雅可比矩阵未知出发：</p>
 <ul>
@@ -318,10 +295,10 @@
 <li>金龙等进一步同时控制末端位置与姿态，用四元数表示姿态，并设计神经动力学求解器。[13]</li>
 </ul>
 <p>这类数据驱动方案缓解了精确 DH 参数不可得的问题，但把风险从“模型参数误差”转移到了“在线估计误差”。因此，除了跟踪精度，还需要关注激励是否充分、估计是否收敛以及闭环稳定性是否对学习误差敏感。</p>
-<h2><span id="四-从单任务扩展到多任务">四、从单任务扩展到多任务</span></h2><p>谢正泰等的综述从神经动力学、前馈神经网络、递归神经网络和强化学习四个方向回顾机器人学习与控制。[14] 它帮助我区分了两类经常混在一起的研究：一类用神经网络逼近未知函数或策略，另一类把动态网络当作优化计算过程。</p>
+<h2 id="四、从单任务扩展到多任务"><a href="#四、从单任务扩展到多任务" class="headerlink" title="四、从单任务扩展到多任务"></a>四、从单任务扩展到多任务</h2><p>谢正泰等的综述从神经动力学、前馈神经网络、递归神经网络和强化学习四个方向回顾机器人学习与控制。[14] 它帮助我区分了两类经常混在一起的研究：一类用神经网络逼近未知函数或策略，另一类把动态网络当作优化计算过程。</p>
 <p>在多任务控制中，谢正泰等又提出 PBRNN，通过零空间投影给末端跟踪、姿态或关节任务安排优先级；当任务总维度超过机械臂自由度时，低优先级任务会被放弃。针对优先级切换引起的控制突变，论文进一步提出带补偿项的 PSRNN，并通过仿真和物理实验验证。[15]</p>
 <p>这项工作说明，冗余自由度并不意味着所有任务都能同时完成。任务冲突时，控制器必须明确“谁先完成、谁可以退让”，而不是把所有约束平铺后期待求解器自行化解冲突。</p>
-<h1><span id="文献对照表">文献对照表</span></h1><table>
+<h1 id="文献对照表"><a href="#文献对照表" class="headerlink" title="文献对照表"></a>文献对照表</h1><div class="md-table-scroll"><table>
 <thead>
 <tr>
 <th>#</th>
@@ -348,14 +325,14 @@
 <tr>
 <td>3</td>
 <td>2012</td>
-<td>八&#x2F;九连杆无漂移</td>
+<td>八/九连杆无漂移</td>
 <td>高冗余机械臂关节漂移</td>
 <td>二次型指标，平面模型仿真</td>
 </tr>
 <tr>
 <td>4</td>
 <td>2013</td>
-<td>速度&#x2F;加速度层等效</td>
+<td>速度/加速度层等效</td>
 <td>不同规划层级是否等效</td>
 <td>神经动力学分析 + PUMA560 仿真</td>
 </tr>
@@ -377,7 +354,7 @@
 <td>7</td>
 <td>2019</td>
 <td>CCNC-QP-DNN</td>
-<td>凸&#x2F;非凸约束与初始误差</td>
+<td>凸/非凸约束与初始误差</td>
 <td>对偶网络，五类末端任务仿真</td>
 </tr>
 <tr>
@@ -385,7 +362,7 @@
 <td>2023</td>
 <td>Robust VPZND</td>
 <td>物理约束与有界噪声</td>
-<td>固定时间分析 + 数值&#x2F;仿真验证</td>
+<td>固定时间分析 + 数值/仿真验证</td>
 </tr>
 <tr>
 <td>9</td>
@@ -432,12 +409,12 @@
 <tr>
 <td>15</td>
 <td>2026</td>
-<td>PBRNN&#x2F;PSRNN</td>
+<td>PBRNN/PSRNN</td>
 <td>多任务冲突与优先级切换</td>
 <td>零空间投影 + 补偿，仿真 + 物理实验</td>
 </tr>
-</tbody></table>
-<h1><span id="横向比较几条路线分别适合什么">横向比较：几条路线分别适合什么</span></h1><table>
+</tbody></table></div>
+<h1 id="横向比较：几条路线分别适合什么"><a href="#横向比较：几条路线分别适合什么" class="headerlink" title="横向比较：几条路线分别适合什么"></a>横向比较：几条路线分别适合什么</h1><div class="md-table-scroll"><table>
 <thead>
 <tr>
 <th>路线</th>
@@ -447,19 +424,19 @@
 </tr>
 </thead>
 <tbody><tr>
-<td>伪逆&#x2F;数值逆解</td>
+<td>伪逆/数值逆解</td>
 <td>直接求欠定运动学方程</td>
 <td>形式直接、基线清楚</td>
 <td>复杂边界和次级目标不易统一</td>
 </tr>
 <tr>
-<td>QP + 原对偶&#x2F;投影网络</td>
+<td>QP + 原对偶/投影网络</td>
 <td>把目标与约束统一为优化问题</td>
 <td>约束表达灵活、适合并行求解</td>
 <td>可行域、参数和离散化影响实现</td>
 </tr>
 <tr>
-<td>ZNN&#x2F;变参数网络</td>
+<td>ZNN/变参数网络</td>
 <td>让时变误差按设计动态归零</td>
 <td>利用导数信息，动态跟踪能力强</td>
 <td>需要系数导数，噪声下更敏感</td>
@@ -471,7 +448,7 @@
 <td>预测窗口增加计算量</td>
 </tr>
 <tr>
-<td>数据驱动&#x2F;Koopman</td>
+<td>数据驱动/Koopman</td>
 <td>从数据估计雅可比或动力学</td>
 <td>减少对精确模型的依赖</td>
 <td>训练覆盖、在线估计误差和泛化</td>
@@ -482,9 +459,9 @@
 <td>主次任务关系明确</td>
 <td>优先级切换可能引起不连续</td>
 </tr>
-</tbody></table>
-<h1><span id="我的几点判断">我的几点判断</span></h1><h2><span id="1-神经动力学的主要优势是在线优化">1. 神经动力学的主要优势是在线优化</span></h2><p>这批论文中最稳定的主线不是“网络能拟合复杂函数”，而是“动态系统能实时逼近时变优化问题的解”。因此，评价它们时应优先看收敛、约束、计算周期和硬件验证，而不是套用深度学习中的训练集准确率。</p>
-<h2><span id="2-约束完整性比单一误差数字更重要">2. 约束完整性比单一误差数字更重要</span></h2><p>只报告末端误差很小，并不能说明关节速度、加速度或输入始终安全。比较方案时至少要同时检查：</p>
+</tbody></table></div>
+<h1 id="我的几点判断"><a href="#我的几点判断" class="headerlink" title="我的几点判断"></a>我的几点判断</h1><h2 id="1-神经动力学的主要优势是在线优化"><a href="#1-神经动力学的主要优势是在线优化" class="headerlink" title="1. 神经动力学的主要优势是在线优化"></a>1. 神经动力学的主要优势是在线优化</h2><p>这批论文中最稳定的主线不是“网络能拟合复杂函数”，而是“动态系统能实时逼近时变优化问题的解”。因此，评价它们时应优先看收敛、约束、计算周期和硬件验证，而不是套用深度学习中的训练集准确率。</p>
+<h2 id="2-约束完整性比单一误差数字更重要"><a href="#2-约束完整性比单一误差数字更重要" class="headerlink" title="2. 约束完整性比单一误差数字更重要"></a>2. 约束完整性比单一误差数字更重要</h2><p>只报告末端误差很小，并不能说明关节速度、加速度或输入始终安全。比较方案时至少要同时检查：</p>
 <ul>
 <li>末端跟踪误差；</li>
 <li>关节状态和控制输入是否越界；</li>
@@ -492,141 +469,137 @@
 <li>遇到初始误差、噪声或外部干扰时是否稳定；</li>
 <li>是否有实物实验，以及控制周期是否满足实时要求。</li>
 </ul>
-<h2><span id="3-连续时间证明与数字实现之间还有距离">3. 连续时间证明与数字实现之间还有距离</span></h2><p>多数模型先在连续时间下证明收敛，再用数值积分部署。步长过大、测量噪声、高阶导数估计和通信延迟都可能改变实际表现。论文中的“全局收敛”需要连同假设一起阅读，不能脱离可行性和离散实现单独引用。</p>
-<h2><span id="4-当前方向正在从已知模型走向混合方法">4. 当前方向正在从已知模型走向混合方法</span></h2><p>较早工作通常假设雅可比矩阵和运动学模型准确已知；后续研究开始在线估计雅可比、学习 Koopman 模型，或者在任务层引入优先级。未来更可能出现的是模型、数据和优化的混合，而不是单一方法完全替代其他路线。</p>
-<h1><span id="这次调研的局限">这次调研的局限</span></h1><p>15 篇文献集中在冗余机械臂、QP 与神经动力学这条研究线上，其中多篇来自相近研究团队。它们适合呈现技术演进，但不足以代表整个机器人规划控制领域。本文也没有覆盖基于采样的路径规划、完整动力学控制、碰撞检测和大规模强化学习等路线。</p>
-<h1><span id="总结">总结</span></h1><p>从这 15 篇文献可以看到，冗余机械臂规划控制的核心一直没有变：在完成末端任务的同时，合理使用多出来的自由度。变化的是问题表达和求解方式——从伪逆到 QP，从固定参数动态网络到 ZNN、投影与变参数模型，再到预测控制、数据驱动和任务分层。</p>
+<h2 id="3-连续时间证明与数字实现之间还有距离"><a href="#3-连续时间证明与数字实现之间还有距离" class="headerlink" title="3. 连续时间证明与数字实现之间还有距离"></a>3. 连续时间证明与数字实现之间还有距离</h2><p>多数模型先在连续时间下证明收敛，再用数值积分部署。步长过大、测量噪声、高阶导数估计和通信延迟都可能改变实际表现。论文中的“全局收敛”需要连同假设一起阅读，不能脱离可行性和离散实现单独引用。</p>
+<h2 id="4-当前方向正在从已知模型走向混合方法"><a href="#4-当前方向正在从已知模型走向混合方法" class="headerlink" title="4. 当前方向正在从已知模型走向混合方法"></a>4. 当前方向正在从已知模型走向混合方法</h2><p>较早工作通常假设雅可比矩阵和运动学模型准确已知；后续研究开始在线估计雅可比、学习 Koopman 模型，或者在任务层引入优先级。未来更可能出现的是模型、数据和优化的混合，而不是单一方法完全替代其他路线。</p>
+<h1 id="这次调研的局限"><a href="#这次调研的局限" class="headerlink" title="这次调研的局限"></a>这次调研的局限</h1><p>15 篇文献集中在冗余机械臂、QP 与神经动力学这条研究线上，其中多篇来自相近研究团队。它们适合呈现技术演进，但不足以代表整个机器人规划控制领域。本文也没有覆盖基于采样的路径规划、完整动力学控制、碰撞检测和大规模强化学习等路线。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>从这 15 篇文献可以看到，冗余机械臂规划控制的核心一直没有变：在完成末端任务的同时，合理使用多出来的自由度。变化的是问题表达和求解方式——从伪逆到 QP，从固定参数动态网络到 ZNN、投影与变参数模型，再到预测控制、数据驱动和任务分层。</p>
 <p>对我来说，这次调研最大的收获是建立了一个判断框架：看到新的神经动力学模型时，不只看它的名字和收敛速度，而是继续追问它解决了哪类约束、依赖哪些模型信息、在什么硬件上验证，以及连续时间结论能否落到实际控制周期中。</p>
-<h1><span id="参考文献">参考文献</span></h1><p>[1] 张泽玺, 熊根良, 高延峰, 张华. 冗余机械臂逆运动学求解方法综述[J]. 机械设计与制造, 2026(1): 222-230.</p>
-<p>[2] 张雨浓, 谭志国, 杨智, 蔡炳煌. 基于二次型规划的平面冗余机械臂的自运动[J]. 机器人, 2008, 30(6). DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.13973/j.cnki.robot.2008.06.017">10.13973&#x2F;j.cnki.robot.2008.06.017</a>.</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1] 张泽玺, 熊根良, 高延峰, 张华. 冗余机械臂逆运动学求解方法综述[J]. 机械设计与制造, 2026(1): 222-230.</p>
+<p>[2] 张雨浓, 谭志国, 杨智, 蔡炳煌. 基于二次型规划的平面冗余机械臂的自运动[J]. 机器人, 2008, 30(6). DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.13973/j.cnki.robot.2008.06.017" data-md-link=""><span class="md-link-icon ui-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="currentColor"><g opacity=".5"><path d="M19.7388 4.26118C17.0572 1.57961 12.7095 1.57961 10.0279 4.26118L9.30707 4.98203C9.01418 5.27492 9.01418 5.7498 9.30707 6.04269C9.59997 6.33558 10.0748 6.33558 10.3677 6.04269L11.0886 5.32184C13.1844 3.22605 16.5823 3.22605 18.6781 5.32184C20.7739 7.41763 20.7739 10.8156 18.6781 12.9114L17.9573 13.6322C17.6644 13.9251 17.6644 14.4 17.9573 14.6929C18.2502 14.9858 18.725 14.9858 19.0179 14.6929L19.7388 13.972C22.4203 11.2905 22.4203 6.94276 19.7388 4.26118Z"></path><path d="M6.04269 9.30707C6.33558 9.59997 6.33558 10.0748 6.04269 10.3677L5.32184 11.0886C3.22605 13.1844 3.22605 16.5823 5.32184 18.6781C7.41763 20.7739 10.8156 20.7739 12.9114 18.6781L13.6322 17.9573C13.9251 17.6644 14.4 17.6644 14.6929 17.9573C14.9858 18.2501 14.9858 18.725 14.6929 19.0179L13.972 19.7388C11.2905 22.4203 6.94276 22.4203 4.26118 19.7388C1.57961 17.0572 1.57961 12.7095 4.26118 10.0279L4.98203 9.30707C5.27492 9.01418 5.7498 9.01418 6.04269 9.30707Z"></path></g><path d="M14.6933 9.30707C14.9862 9.59997 14.9862 10.0748 14.6933 10.3677L10.3682 14.6928C10.0753 14.9857 9.60045 14.9857 9.30756 14.6928C9.01467 14.3999 9.01467 13.9251 9.30756 13.6322L13.6327 9.30707C13.9255 9.01418 14.4004 9.01418 14.6933 9.30707Z"></path></g></svg></span>10.13973/j.cnki.robot.2008.06.017</a>.</p>
 <p>[3] 吕宣姣, 张雨浓, 杨智. 平面八连杆和九连杆机械臂关节角无偏差运动规划验证[J]. 中国科技信息, 2012(23).</p>
-<p>[4] 张智军, 张雨浓. 重复运动速度层和加速度层方案的等效性[J]. 自动化学报, 2013, 39(1): 88-91. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.3724/SP.J.1004.2013.00088">10.3724&#x2F;SP.J.1004.2013.00088</a>.</p>
-<p>[5] Z. Zhang, L. Zheng, J. Yu, Y. Li, and Z. Yu, “Three Recurrent Neural Networks and Three Numerical Methods for Solving a Repetitive Motion Planning Scheme of Redundant Robot Manipulators,” <em>IEEE&#x2F;ASME Transactions on Mechatronics</em>, vol. 22, no. 3, pp. 1423-1434, 2017. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TMECH.2017.2683561">10.1109&#x2F;TMECH.2017.2683561</a>.</p>
-<p>[6] Z. Zhang, T. Fu, Z. Yan, L. Jin, L. Xiao, Y. Sun, Z. Yu, and Y. Li, “A Varying-Parameter Convergent-Differential Neural Network for Solving Joint-Angular-Drift Problems of Redundant Robot Manipulators,” <em>IEEE&#x2F;ASME Transactions on Mechatronics</em>, vol. 23, no. 2, pp. 679-689, 2018. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TMECH.2018.2799724">10.1109&#x2F;TMECH.2018.2799724</a>.</p>
-<p>[7] Z. Zhang, S. Chen, and S. Li, “Compatible Convex-Nonconvex Constrained QP-Based Dual Neural Networks for Motion Planning of Redundant Robot Manipulators,” <em>IEEE Transactions on Control Systems Technology</em>, vol. 27, no. 3, pp. 1250-1258, 2019. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TCST.2018.2799990">10.1109&#x2F;TCST.2018.2799990</a>.</p>
-<p>[8] M. Zhang, W. Tong, P. Li, Y. Hou, X. Xu, L. Zhu, and E. Q. Wu, “Robust Neural Dynamics Method for Redundant Robot Manipulator Control With Physical Constraints,” <em>IEEE Transactions on Industrial Informatics</em>, vol. 19, no. 12, pp. 11721-11731, 2023. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TII.2023.3249768">10.1109&#x2F;TII.2023.3249768</a>.</p>
-<p>[9] W. Li and Y. Pan, “A Dini-Derivative-Aided Zeroing Neural Network for Time-Variant Quadratic Programming Involving Multi-Type Constraints With Robotic Applications,” <em>IEEE Transactions on Neural Networks and Learning Systems</em>, vol. 35, no. 9, pp. 12482-12493, 2024. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TNNLS.2023.3263263">10.1109&#x2F;TNNLS.2023.3263263</a>.</p>
-<p>[10] J. Yan, L. Jin, Z. Yuan, and Z. Liu, “RNN for Receding Horizon Control of Redundant Robot Manipulators,” <em>IEEE Transactions on Industrial Electronics</em>, vol. 69, no. 2, pp. 1608-1618, 2022. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TIE.2021.3062257">10.1109&#x2F;TIE.2021.3062257</a>.</p>
-<p>[11] C. K. Sah, R. Singh, and J. Keshavan, “Real-Time Constrained Tracking Control of Redundant Manipulators Using a Koopman-Zeroing Neural Network Framework,” <em>IEEE Robotics and Automation Letters</em>, vol. 9, no. 2, pp. 1732-1739, 2024. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/LRA.2024.3349966">10.1109&#x2F;LRA.2024.3349966</a>.</p>
-<p>[12] 刘佰阳, 郑宇, 魏琳, 刘梅, 金龙. 面向模型未知的冗余机器人运动规划方案[J]. 兰州大学学报(自然科学版), 2023, 59(4): 506-511. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.13885/j.issn.0455-2059.2023.04.011">10.13885&#x2F;j.issn.0455-2059.2023.04.011</a>.</p>
-<p>[13] 金龙, 张凡, 刘佰阳, 郑宇. 基于数据驱动的冗余机器人末端执行器位姿控制方案[J]. 自动化学报, 2024, 50(3): 518-526. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.16383/j.aas.c230273">10.16383&#x2F;j.aas.c230273</a>.</p>
-<p>[14] 谢正泰, 樊佳亮, 刘梅, 金龙. 基于神经网络的机器人学习与控制：回顾与展望[J]. 信息与控制, 2023, 52(1): 37-58. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.13976/j.cnki.xk.2023.2428">10.13976&#x2F;j.cnki.xk.2023.2428</a>.</p>
-<p>[15] 谢正泰, 吴新博, 金龙. 基于任务优先级的冗余机械臂分层控制[J]. 中国科学: 信息科学, 2026, 56(6). DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1360/SSI-2025-0383">10.1360&#x2F;SSI-2025-0383</a>.</p>
+<p>[4] 张智军, 张雨浓. 重复运动速度层和加速度层方案的等效性[J]. 自动化学报, 2013, 39(1): 88-91. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.3724/SP.J.1004.2013.00088" data-md-link=""><span class="md-link-icon ui-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="currentColor"><g opacity=".5"><path d="M19.7388 4.26118C17.0572 1.57961 12.7095 1.57961 10.0279 4.26118L9.30707 4.98203C9.01418 5.27492 9.01418 5.7498 9.30707 6.04269C9.59997 6.33558 10.0748 6.33558 10.3677 6.04269L11.0886 5.32184C13.1844 3.22605 16.5823 3.22605 18.6781 5.32184C20.7739 7.41763 20.7739 10.8156 18.6781 12.9114L17.9573 13.6322C17.6644 13.9251 17.6644 14.4 17.9573 14.6929C18.2502 14.9858 18.725 14.9858 19.0179 14.6929L19.7388 13.972C22.4203 11.2905 22.4203 6.94276 19.7388 4.26118Z"></path><path d="M6.04269 9.30707C6.33558 9.59997 6.33558 10.0748 6.04269 10.3677L5.32184 11.0886C3.22605 13.1844 3.22605 16.5823 5.32184 18.6781C7.41763 20.7739 10.8156 20.7739 12.9114 18.6781L13.6322 17.9573C13.9251 17.6644 14.4 17.6644 14.6929 17.9573C14.9858 18.2501 14.9858 18.725 14.6929 19.0179L13.972 19.7388C11.2905 22.4203 6.94276 22.4203 4.26118 19.7388C1.57961 17.0572 1.57961 12.7095 4.26118 10.0279L4.98203 9.30707C5.27492 9.01418 5.7498 9.01418 6.04269 9.30707Z"></path></g><path d="M14.6933 9.30707C14.9862 9.59997 14.9862 10.0748 14.6933 10.3677L10.3682 14.6928C10.0753 14.9857 9.60045 14.9857 9.30756 14.6928C9.01467 14.3999 9.01467 13.9251 9.30756 13.6322L13.6327 9.30707C13.9255 9.01418 14.4004 9.01418 14.6933 9.30707Z"></path></g></svg></span>10.3724/SP.J.1004.2013.00088</a>.</p>
+<p>[5] Z. Zhang, L. Zheng, J. Yu, Y. Li, and Z. Yu, “Three Recurrent Neural Networks and Three Numerical Methods for Solving a Repetitive Motion Planning Scheme of Redundant Robot Manipulators,” <em>IEEE/ASME Transactions on Mechatronics</em>, vol. 22, no. 3, pp. 1423-1434, 2017. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TMECH.2017.2683561" data-md-link=""><span class="md-link-icon ui-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="currentColor"><g opacity=".5"><path d="M19.7388 4.26118C17.0572 1.57961 12.7095 1.57961 10.0279 4.26118L9.30707 4.98203C9.01418 5.27492 9.01418 5.7498 9.30707 6.04269C9.59997 6.33558 10.0748 6.33558 10.3677 6.04269L11.0886 5.32184C13.1844 3.22605 16.5823 3.22605 18.6781 5.32184C20.7739 7.41763 20.7739 10.8156 18.6781 12.9114L17.9573 13.6322C17.6644 13.9251 17.6644 14.4 17.9573 14.6929C18.2502 14.9858 18.725 14.9858 19.0179 14.6929L19.7388 13.972C22.4203 11.2905 22.4203 6.94276 19.7388 4.26118Z"></path><path d="M6.04269 9.30707C6.33558 9.59997 6.33558 10.0748 6.04269 10.3677L5.32184 11.0886C3.22605 13.1844 3.22605 16.5823 5.32184 18.6781C7.41763 20.7739 10.8156 20.7739 12.9114 18.6781L13.6322 17.9573C13.9251 17.6644 14.4 17.6644 14.6929 17.9573C14.9858 18.2501 14.9858 18.725 14.6929 19.0179L13.972 19.7388C11.2905 22.4203 6.94276 22.4203 4.26118 19.7388C1.57961 17.0572 1.57961 12.7095 4.26118 10.0279L4.98203 9.30707C5.27492 9.01418 5.7498 9.01418 6.04269 9.30707Z"></path></g><path d="M14.6933 9.30707C14.9862 9.59997 14.9862 10.0748 14.6933 10.3677L10.3682 14.6928C10.0753 14.9857 9.60045 14.9857 9.30756 14.6928C9.01467 14.3999 9.01467 13.9251 9.30756 13.6322L13.6327 9.30707C13.9255 9.01418 14.4004 9.01418 14.6933 9.30707Z"></path></g></svg></span>10.1109/TMECH.2017.2683561</a>.</p>
+<p>[6] Z. Zhang, T. Fu, Z. Yan, L. Jin, L. Xiao, Y. Sun, Z. Yu, and Y. Li, “A Varying-Parameter Convergent-Differential Neural Network for Solving Joint-Angular-Drift Problems of Redundant Robot Manipulators,” <em>IEEE/ASME Transactions on Mechatronics</em>, vol. 23, no. 2, pp. 679-689, 2018. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TMECH.2018.2799724" data-md-link=""><span class="md-link-icon ui-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="currentColor"><g opacity=".5"><path d="M19.7388 4.26118C17.0572 1.57961 12.7095 1.57961 10.0279 4.26118L9.30707 4.98203C9.01418 5.27492 9.01418 5.7498 9.30707 6.04269C9.59997 6.33558 10.0748 6.33558 10.3677 6.04269L11.0886 5.32184C13.1844 3.22605 16.5823 3.22605 18.6781 5.32184C20.7739 7.41763 20.7739 10.8156 18.6781 12.9114L17.9573 13.6322C17.6644 13.9251 17.6644 14.4 17.9573 14.6929C18.2502 14.9858 18.725 14.9858 19.0179 14.6929L19.7388 13.972C22.4203 11.2905 22.4203 6.94276 19.7388 4.26118Z"></path><path d="M6.04269 9.30707C6.33558 9.59997 6.33558 10.0748 6.04269 10.3677L5.32184 11.0886C3.22605 13.1844 3.22605 16.5823 5.32184 18.6781C7.41763 20.7739 10.8156 20.7739 12.9114 18.6781L13.6322 17.9573C13.9251 17.6644 14.4 17.6644 14.6929 17.9573C14.9858 18.2501 14.9858 18.725 14.6929 19.0179L13.972 19.7388C11.2905 22.4203 6.94276 22.4203 4.26118 19.7388C1.57961 17.0572 1.57961 12.7095 4.26118 10.0279L4.98203 9.30707C5.27492 9.01418 5.7498 9.01418 6.04269 9.30707Z"></path></g><path d="M14.6933 9.30707C14.9862 9.59997 14.9862 10.0748 14.6933 10.3677L10.3682 14.6928C10.0753 14.9857 9.60045 14.9857 9.30756 14.6928C9.01467 14.3999 9.01467 13.9251 9.30756 13.6322L13.6327 9.30707C13.9255 9.01418 14.4004 9.01418 14.6933 9.30707Z"></path></g></svg></span>10.1109/TMECH.2018.2799724</a>.</p>
+<p>[7] Z. Zhang, S. Chen, and S. Li, “Compatible Convex-Nonconvex Constrained QP-Based Dual Neural Networks for Motion Planning of Redundant Robot Manipulators,” <em>IEEE Transactions on Control Systems Technology</em>, vol. 27, no. 3, pp. 1250-1258, 2019. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TCST.2018.2799990" data-md-link=""><span class="md-link-icon ui-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="currentColor"><g opacity=".5"><path d="M19.7388 4.26118C17.0572 1.57961 12.7095 1.57961 10.0279 4.26118L9.30707 4.98203C9.01418 5.27492 9.01418 5.7498 9.30707 6.04269C9.59997 6.33558 10.0748 6.33558 10.3677 6.04269L11.0886 5.32184C13.1844 3.22605 16.5823 3.22605 18.6781 5.32184C20.7739 7.41763 20.7739 10.8156 18.6781 12.9114L17.9573 13.6322C17.6644 13.9251 17.6644 14.4 17.9573 14.6929C18.2502 14.9858 18.725 14.9858 19.0179 14.6929L19.7388 13.972C22.4203 11.2905 22.4203 6.94276 19.7388 4.26118Z"></path><path d="M6.04269 9.30707C6.33558 9.59997 6.33558 10.0748 6.04269 10.3677L5.32184 11.0886C3.22605 13.1844 3.22605 16.5823 5.32184 18.6781C7.41763 20.7739 10.8156 20.7739 12.9114 18.6781L13.6322 17.9573C13.9251 17.6644 14.4 17.6644 14.6929 17.9573C14.9858 18.2501 14.9858 18.725 14.6929 19.0179L13.972 19.7388C11.2905 22.4203 6.94276 22.4203 4.26118 19.7388C1.57961 17.0572 1.57961 12.7095 4.26118 10.0279L4.98203 9.30707C5.27492 9.01418 5.7498 9.01418 6.04269 9.30707Z"></path></g><path d="M14.6933 9.30707C14.9862 9.59997 14.9862 10.0748 14.6933 10.3677L10.3682 14.6928C10.0753 14.9857 9.60045 14.9857 9.30756 14.6928C9.01467 14.3999 9.01467 13.9251 9.30756 13.6322L13.6327 9.30707C13.9255 9.01418 14.4004 9.01418 14.6933 9.30707Z"></path></g></svg></span>10.1109/TCST.2018.2799990</a>.</p>
+<p>[8] M. Zhang, W. Tong, P. Li, Y. Hou, X. Xu, L. Zhu, and E. Q. Wu, “Robust Neural Dynamics Method for Redundant Robot Manipulator Control With Physical Constraints,” <em>IEEE Transactions on Industrial Informatics</em>, vol. 19, no. 12, pp. 11721-11731, 2023. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TII.2023.3249768" data-md-link=""><span class="md-link-icon ui-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="currentColor"><g opacity=".5"><path d="M19.7388 4.26118C17.0572 1.57961 12.7095 1.57961 10.0279 4.26118L9.30707 4.98203C9.01418 5.27492 9.01418 5.7498 9.30707 6.04269C9.59997 6.33558 10.0748 6.33558 10.3677 6.04269L11.0886 5.32184C13.1844 3.22605 16.5823 3.22605 18.6781 5.32184C20.7739 7.41763 20.7739 10.8156 18.6781 12.9114L17.9573 13.6322C17.6644 13.9251 17.6644 14.4 17.9573 14.6929C18.2502 14.9858 18.725 14.9858 19.0179 14.6929L19.7388 13.972C22.4203 11.2905 22.4203 6.94276 19.7388 4.26118Z"></path><path d="M6.04269 9.30707C6.33558 9.59997 6.33558 10.0748 6.04269 10.3677L5.32184 11.0886C3.22605 13.1844 3.22605 16.5823 5.32184 18.6781C7.41763 20.7739 10.8156 20.7739 12.9114 18.6781L13.6322 17.9573C13.9251 17.6644 14.4 17.6644 14.6929 17.9573C14.9858 18.2501 14.9858 18.725 14.6929 19.0179L13.972 19.7388C11.2905 22.4203 6.94276 22.4203 4.26118 19.7388C1.57961 17.0572 1.57961 12.7095 4.26118 10.0279L4.98203 9.30707C5.27492 9.01418 5.7498 9.01418 6.04269 9.30707Z"></path></g><path d="M14.6933 9.30707C14.9862 9.59997 14.9862 10.0748 14.6933 10.3677L10.3682 14.6928C10.0753 14.9857 9.60045 14.9857 9.30756 14.6928C9.01467 14.3999 9.01467 13.9251 9.30756 13.6322L13.6327 9.30707C13.9255 9.01418 14.4004 9.01418 14.6933 9.30707Z"></path></g></svg></span>10.1109/TII.2023.3249768</a>.</p>
+<p>[9] W. Li and Y. Pan, “A Dini-Derivative-Aided Zeroing Neural Network for Time-Variant Quadratic Programming Involving Multi-Type Constraints With Robotic Applications,” <em>IEEE Transactions on Neural Networks and Learning Systems</em>, vol. 35, no. 9, pp. 12482-12493, 2024. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TNNLS.2023.3263263" data-md-link=""><span class="md-link-icon ui-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="currentColor"><g opacity=".5"><path d="M19.7388 4.26118C17.0572 1.57961 12.7095 1.57961 10.0279 4.26118L9.30707 4.98203C9.01418 5.27492 9.01418 5.7498 9.30707 6.04269C9.59997 6.33558 10.0748 6.33558 10.3677 6.04269L11.0886 5.32184C13.1844 3.22605 16.5823 3.22605 18.6781 5.32184C20.7739 7.41763 20.7739 10.8156 18.6781 12.9114L17.9573 13.6322C17.6644 13.9251 17.6644 14.4 17.9573 14.6929C18.2502 14.9858 18.725 14.9858 19.0179 14.6929L19.7388 13.972C22.4203 11.2905 22.4203 6.94276 19.7388 4.26118Z"></path><path d="M6.04269 9.30707C6.33558 9.59997 6.33558 10.0748 6.04269 10.3677L5.32184 11.0886C3.22605 13.1844 3.22605 16.5823 5.32184 18.6781C7.41763 20.7739 10.8156 20.7739 12.9114 18.6781L13.6322 17.9573C13.9251 17.6644 14.4 17.6644 14.6929 17.9573C14.9858 18.2501 14.9858 18.725 14.6929 19.0179L13.972 19.7388C11.2905 22.4203 6.94276 22.4203 4.26118 19.7388C1.57961 17.0572 1.57961 12.7095 4.26118 10.0279L4.98203 9.30707C5.27492 9.01418 5.7498 9.01418 6.04269 9.30707Z"></path></g><path d="M14.6933 9.30707C14.9862 9.59997 14.9862 10.0748 14.6933 10.3677L10.3682 14.6928C10.0753 14.9857 9.60045 14.9857 9.30756 14.6928C9.01467 14.3999 9.01467 13.9251 9.30756 13.6322L13.6327 9.30707C13.9255 9.01418 14.4004 9.01418 14.6933 9.30707Z"></path></g></svg></span>10.1109/TNNLS.2023.3263263</a>.</p>
+<p>[10] J. Yan, L. Jin, Z. Yuan, and Z. Liu, “RNN for Receding Horizon Control of Redundant Robot Manipulators,” <em>IEEE Transactions on Industrial Electronics</em>, vol. 69, no. 2, pp. 1608-1618, 2022. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/TIE.2021.3062257" data-md-link=""><span class="md-link-icon ui-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="currentColor"><g opacity=".5"><path d="M19.7388 4.26118C17.0572 1.57961 12.7095 1.57961 10.0279 4.26118L9.30707 4.98203C9.01418 5.27492 9.01418 5.7498 9.30707 6.04269C9.59997 6.33558 10.0748 6.33558 10.3677 6.04269L11.0886 5.32184C13.1844 3.22605 16.5823 3.22605 18.6781 5.32184C20.7739 7.41763 20.7739 10.8156 18.6781 12.9114L17.9573 13.6322C17.6644 13.9251 17.6644 14.4 17.9573 14.6929C18.2502 14.9858 18.725 14.9858 19.0179 14.6929L19.7388 13.972C22.4203 11.2905 22.4203 6.94276 19.7388 4.26118Z"></path><path d="M6.04269 9.30707C6.33558 9.59997 6.33558 10.0748 6.04269 10.3677L5.32184 11.0886C3.22605 13.1844 3.22605 16.5823 5.32184 18.6781C7.41763 20.7739 10.8156 20.7739 12.9114 18.6781L13.6322 17.9573C13.9251 17.6644 14.4 17.6644 14.6929 17.9573C14.9858 18.2501 14.9858 18.725 14.6929 19.0179L13.972 19.7388C11.2905 22.4203 6.94276 22.4203 4.26118 19.7388C1.57961 17.0572 1.57961 12.7095 4.26118 10.0279L4.98203 9.30707C5.27492 9.01418 5.7498 9.01418 6.04269 9.30707Z"></path></g><path d="M14.6933 9.30707C14.9862 9.59997 14.9862 10.0748 14.6933 10.3677L10.3682 14.6928C10.0753 14.9857 9.60045 14.9857 9.30756 14.6928C9.01467 14.3999 9.01467 13.9251 9.30756 13.6322L13.6327 9.30707C13.9255 9.01418 14.4004 9.01418 14.6933 9.30707Z"></path></g></svg></span>10.1109/TIE.2021.3062257</a>.</p>
+<p>[11] C. K. Sah, R. Singh, and J. Keshavan, “Real-Time Constrained Tracking Control of Redundant Manipulators Using a Koopman-Zeroing Neural Network Framework,” <em>IEEE Robotics and Automation Letters</em>, vol. 9, no. 2, pp. 1732-1739, 2024. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1109/LRA.2024.3349966" data-md-link=""><span class="md-link-icon ui-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="currentColor"><g opacity=".5"><path d="M19.7388 4.26118C17.0572 1.57961 12.7095 1.57961 10.0279 4.26118L9.30707 4.98203C9.01418 5.27492 9.01418 5.7498 9.30707 6.04269C9.59997 6.33558 10.0748 6.33558 10.3677 6.04269L11.0886 5.32184C13.1844 3.22605 16.5823 3.22605 18.6781 5.32184C20.7739 7.41763 20.7739 10.8156 18.6781 12.9114L17.9573 13.6322C17.6644 13.9251 17.6644 14.4 17.9573 14.6929C18.2502 14.9858 18.725 14.9858 19.0179 14.6929L19.7388 13.972C22.4203 11.2905 22.4203 6.94276 19.7388 4.26118Z"></path><path d="M6.04269 9.30707C6.33558 9.59997 6.33558 10.0748 6.04269 10.3677L5.32184 11.0886C3.22605 13.1844 3.22605 16.5823 5.32184 18.6781C7.41763 20.7739 10.8156 20.7739 12.9114 18.6781L13.6322 17.9573C13.9251 17.6644 14.4 17.6644 14.6929 17.9573C14.9858 18.2501 14.9858 18.725 14.6929 19.0179L13.972 19.7388C11.2905 22.4203 6.94276 22.4203 4.26118 19.7388C1.57961 17.0572 1.57961 12.7095 4.26118 10.0279L4.98203 9.30707C5.27492 9.01418 5.7498 9.01418 6.04269 9.30707Z"></path></g><path d="M14.6933 9.30707C14.9862 9.59997 14.9862 10.0748 14.6933 10.3677L10.3682 14.6928C10.0753 14.9857 9.60045 14.9857 9.30756 14.6928C9.01467 14.3999 9.01467 13.9251 9.30756 13.6322L13.6327 9.30707C13.9255 9.01418 14.4004 9.01418 14.6933 9.30707Z"></path></g></svg></span>10.1109/LRA.2024.3349966</a>.</p>
+<p>[12] 刘佰阳, 郑宇, 魏琳, 刘梅, 金龙. 面向模型未知的冗余机器人运动规划方案[J]. 兰州大学学报(自然科学版), 2023, 59(4): 506-511. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.13885/j.issn.0455-2059.2023.04.011" data-md-link=""><span class="md-link-icon ui-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="currentColor"><g opacity=".5"><path d="M19.7388 4.26118C17.0572 1.57961 12.7095 1.57961 10.0279 4.26118L9.30707 4.98203C9.01418 5.27492 9.01418 5.7498 9.30707 6.04269C9.59997 6.33558 10.0748 6.33558 10.3677 6.04269L11.0886 5.32184C13.1844 3.22605 16.5823 3.22605 18.6781 5.32184C20.7739 7.41763 20.7739 10.8156 18.6781 12.9114L17.9573 13.6322C17.6644 13.9251 17.6644 14.4 17.9573 14.6929C18.2502 14.9858 18.725 14.9858 19.0179 14.6929L19.7388 13.972C22.4203 11.2905 22.4203 6.94276 19.7388 4.26118Z"></path><path d="M6.04269 9.30707C6.33558 9.59997 6.33558 10.0748 6.04269 10.3677L5.32184 11.0886C3.22605 13.1844 3.22605 16.5823 5.32184 18.6781C7.41763 20.7739 10.8156 20.7739 12.9114 18.6781L13.6322 17.9573C13.9251 17.6644 14.4 17.6644 14.6929 17.9573C14.9858 18.2501 14.9858 18.725 14.6929 19.0179L13.972 19.7388C11.2905 22.4203 6.94276 22.4203 4.26118 19.7388C1.57961 17.0572 1.57961 12.7095 4.26118 10.0279L4.98203 9.30707C5.27492 9.01418 5.7498 9.01418 6.04269 9.30707Z"></path></g><path d="M14.6933 9.30707C14.9862 9.59997 14.9862 10.0748 14.6933 10.3677L10.3682 14.6928C10.0753 14.9857 9.60045 14.9857 9.30756 14.6928C9.01467 14.3999 9.01467 13.9251 9.30756 13.6322L13.6327 9.30707C13.9255 9.01418 14.4004 9.01418 14.6933 9.30707Z"></path></g></svg></span>10.13885/j.issn.0455-2059.2023.04.011</a>.</p>
+<p>[13] 金龙, 张凡, 刘佰阳, 郑宇. 基于数据驱动的冗余机器人末端执行器位姿控制方案[J]. 自动化学报, 2024, 50(3): 518-526. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.16383/j.aas.c230273" data-md-link=""><span class="md-link-icon ui-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="currentColor"><g opacity=".5"><path d="M19.7388 4.26118C17.0572 1.57961 12.7095 1.57961 10.0279 4.26118L9.30707 4.98203C9.01418 5.27492 9.01418 5.7498 9.30707 6.04269C9.59997 6.33558 10.0748 6.33558 10.3677 6.04269L11.0886 5.32184C13.1844 3.22605 16.5823 3.22605 18.6781 5.32184C20.7739 7.41763 20.7739 10.8156 18.6781 12.9114L17.9573 13.6322C17.6644 13.9251 17.6644 14.4 17.9573 14.6929C18.2502 14.9858 18.725 14.9858 19.0179 14.6929L19.7388 13.972C22.4203 11.2905 22.4203 6.94276 19.7388 4.26118Z"></path><path d="M6.04269 9.30707C6.33558 9.59997 6.33558 10.0748 6.04269 10.3677L5.32184 11.0886C3.22605 13.1844 3.22605 16.5823 5.32184 18.6781C7.41763 20.7739 10.8156 20.7739 12.9114 18.6781L13.6322 17.9573C13.9251 17.6644 14.4 17.6644 14.6929 17.9573C14.9858 18.2501 14.9858 18.725 14.6929 19.0179L13.972 19.7388C11.2905 22.4203 6.94276 22.4203 4.26118 19.7388C1.57961 17.0572 1.57961 12.7095 4.26118 10.0279L4.98203 9.30707C5.27492 9.01418 5.7498 9.01418 6.04269 9.30707Z"></path></g><path d="M14.6933 9.30707C14.9862 9.59997 14.9862 10.0748 14.6933 10.3677L10.3682 14.6928C10.0753 14.9857 9.60045 14.9857 9.30756 14.6928C9.01467 14.3999 9.01467 13.9251 9.30756 13.6322L13.6327 9.30707C13.9255 9.01418 14.4004 9.01418 14.6933 9.30707Z"></path></g></svg></span>10.16383/j.aas.c230273</a>.</p>
+<p>[14] 谢正泰, 樊佳亮, 刘梅, 金龙. 基于神经网络的机器人学习与控制：回顾与展望[J]. 信息与控制, 2023, 52(1): 37-58. DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.13976/j.cnki.xk.2023.2428" data-md-link=""><span class="md-link-icon ui-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="currentColor"><g opacity=".5"><path d="M19.7388 4.26118C17.0572 1.57961 12.7095 1.57961 10.0279 4.26118L9.30707 4.98203C9.01418 5.27492 9.01418 5.7498 9.30707 6.04269C9.59997 6.33558 10.0748 6.33558 10.3677 6.04269L11.0886 5.32184C13.1844 3.22605 16.5823 3.22605 18.6781 5.32184C20.7739 7.41763 20.7739 10.8156 18.6781 12.9114L17.9573 13.6322C17.6644 13.9251 17.6644 14.4 17.9573 14.6929C18.2502 14.9858 18.725 14.9858 19.0179 14.6929L19.7388 13.972C22.4203 11.2905 22.4203 6.94276 19.7388 4.26118Z"></path><path d="M6.04269 9.30707C6.33558 9.59997 6.33558 10.0748 6.04269 10.3677L5.32184 11.0886C3.22605 13.1844 3.22605 16.5823 5.32184 18.6781C7.41763 20.7739 10.8156 20.7739 12.9114 18.6781L13.6322 17.9573C13.9251 17.6644 14.4 17.6644 14.6929 17.9573C14.9858 18.2501 14.9858 18.725 14.6929 19.0179L13.972 19.7388C11.2905 22.4203 6.94276 22.4203 4.26118 19.7388C1.57961 17.0572 1.57961 12.7095 4.26118 10.0279L4.98203 9.30707C5.27492 9.01418 5.7498 9.01418 6.04269 9.30707Z"></path></g><path d="M14.6933 9.30707C14.9862 9.59997 14.9862 10.0748 14.6933 10.3677L10.3682 14.6928C10.0753 14.9857 9.60045 14.9857 9.30756 14.6928C9.01467 14.3999 9.01467 13.9251 9.30756 13.6322L13.6327 9.30707C13.9255 9.01418 14.4004 9.01418 14.6933 9.30707Z"></path></g></svg></span>10.13976/j.cnki.xk.2023.2428</a>.</p>
+<p>[15] 谢正泰, 吴新博, 金龙. 基于任务优先级的冗余机械臂分层控制[J]. 中国科学: 信息科学, 2026, 56(6). DOI: <a target="_blank" rel="noopener" href="https://doi.org/10.1360/SSI-2025-0383" data-md-link=""><span class="md-link-icon ui-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="currentColor"><g opacity=".5"><path d="M19.7388 4.26118C17.0572 1.57961 12.7095 1.57961 10.0279 4.26118L9.30707 4.98203C9.01418 5.27492 9.01418 5.7498 9.30707 6.04269C9.59997 6.33558 10.0748 6.33558 10.3677 6.04269L11.0886 5.32184C13.1844 3.22605 16.5823 3.22605 18.6781 5.32184C20.7739 7.41763 20.7739 10.8156 18.6781 12.9114L17.9573 13.6322C17.6644 13.9251 17.6644 14.4 17.9573 14.6929C18.2502 14.9858 18.725 14.9858 19.0179 14.6929L19.7388 13.972C22.4203 11.2905 22.4203 6.94276 19.7388 4.26118Z"></path><path d="M6.04269 9.30707C6.33558 9.59997 6.33558 10.0748 6.04269 10.3677L5.32184 11.0886C3.22605 13.1844 3.22605 16.5823 5.32184 18.6781C7.41763 20.7739 10.8156 20.7739 12.9114 18.6781L13.6322 17.9573C13.9251 17.6644 14.4 17.6644 14.6929 17.9573C14.9858 18.2501 14.9858 18.725 14.6929 19.0179L13.972 19.7388C11.2905 22.4203 6.94276 22.4203 4.26118 19.7388C1.57961 17.0572 1.57961 12.7095 4.26118 10.0279L4.98203 9.30707C5.27492 9.01418 5.7498 9.01418 6.04269 9.30707Z"></path></g><path d="M14.6933 9.30707C14.9862 9.59997 14.9862 10.0748 14.6933 10.3677L10.3682 14.6928C10.0753 14.9857 9.60045 14.9857 9.30756 14.6928C9.01467 14.3999 9.01467 13.9251 9.30756 13.6322L13.6327 9.30707C13.9255 9.01418 14.4004 9.01418 14.6933 9.30707Z"></path></g></svg></span>10.1360/SSI-2025-0383</a>.</p>
+</article>
+<div class="article-tags"><a class="tag" href="/tags/%E6%9C%BA%E5%99%A8%E4%BA%BA/"><svg class="icon" viewBox="0 0 1 1" data-icon="default:hashtag" aria-hidden="true"></svg>机器人</a><a class="tag" href="/tags/%E7%A5%9E%E7%BB%8F%E5%8A%A8%E5%8A%9B%E5%AD%A6/"><svg class="icon" viewBox="0 0 1 1" data-icon="default:hashtag" aria-hidden="true"></svg>神经动力学</a><a class="tag" href="/tags/%E8%AE%BA%E6%96%87/"><svg class="icon" viewBox="0 0 1 1" data-icon="default:hashtag" aria-hidden="true"></svg>论文</a></div>
 
-    </div>
 
-    
-    
-    
 
-    <footer class="post-footer">
-          
-
-<div class="post-copyright">
-<ul>
-  <li class="post-copyright-author">
-      <strong>本文作者： </strong>DarkYellowCat
-  </li>
-  <li class="post-copyright-link">
-      <strong>本文链接：</strong>
-      <a href="https://darkyellowcat.github.io/2026/09/03/%E6%96%87%E7%8C%AE%E8%B0%83%E7%A0%94-%E9%9D%A2%E5%90%91%E5%86%97%E4%BD%99%E6%9C%BA%E6%A2%B0%E8%87%82%E8%A7%84%E5%88%92%E6%8E%A7%E5%88%B6%E7%9A%84%E7%A5%9E%E7%BB%8F%E5%8A%A8%E5%8A%9B%E5%AD%A6%E6%A8%A1%E5%9E%8B/" title="文献调研：面向冗余机械臂规划控制的神经动力学模型">https://darkyellowcat.github.io/2026/09/03/文献调研-面向冗余机械臂规划控制的神经动力学模型/</a>
-  </li>
-  <li class="post-copyright-license">
-      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
-  </li>
-</ul>
+<div class="article-footer">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
 </div>
+    </section></div>
 
-          <div class="post-tags">
-              <a href="/tags/%E6%9C%BA%E5%99%A8%E4%BA%BA/" rel="tag"># 机器人</a>
-              <a href="/tags/%E7%A5%9E%E7%BB%8F%E5%8A%A8%E5%8A%9B%E5%AD%A6/" rel="tag"># 神经动力学</a>
-              <a href="/tags/%E8%AE%BA%E6%96%87/" rel="tag"># 论文</a>
-          </div>
-
-        
-
-          <div class="post-nav">
-            <div class="post-nav-item">
-                <a href="/2026/09/03/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB-%E4%BB%8E%E4%BA%94%E5%B1%82%E7%BA%A6%E6%9D%9F%E7%9C%8BSnap-Layer-MMPC/" rel="prev" title="论文精读：从五层约束看 Snap-Layer MMPC">
-                  <i class="fa fa-angle-left"></i> 论文精读：从五层约束看 Snap-Layer MMPC
-                </a>
-            </div>
-            <div class="post-nav-item">
-                <a href="/2026/09/07/%E3%80%8A%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-AI-Agent%E3%80%8B%E7%AC%94%E8%AE%B0-1-AI-Agent-%E5%85%A5%E9%97%A8/" rel="next" title="《深入理解 AI Agent》笔记 - 1 AI Agent 入门">
-                  《深入理解 AI Agent》笔记 - 1 AI Agent 入门 <i class="fa fa-angle-right"></i>
-                </a>
-            </div>
-          </div>
-    </footer>
-  </article>
-</div>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note"><svg class="icon" viewBox="0 0 1 1" data-icon="default:arrow-left" aria-hidden="true"></svg> 较新文章</div><a href="/2026/09/07/%E3%80%8A%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-AI-Agent%E3%80%8B%E7%AC%94%E8%AE%B0-1-AI-Agent-%E5%85%A5%E9%97%A8/">《深入理解 AI Agent》笔记 - 1 AI Agent 入门</a></div><div class="item" id="next"><div class="note">较早文章 <svg class="icon" viewBox="0 0 1 1" data-icon="default:arrow-right" aria-hidden="true"></svg></div><a href="/2026/09/03/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB-%E4%BB%8E%E4%BA%94%E5%B1%82%E7%BA%A6%E6%9D%9F%E7%9C%8BSnap-Layer-MMPC/">论文精读：从五层约束看 Snap-Layer MMPC</a></div></section></div>
 
 
 
 
 
 
-</div>
-  </main>
+<footer class="page-footer footnote"><hr><div class="text"><p>© DarkYellowCat · 记录学习，也记录过程。
+使用 <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> 与 <a target="_blank" rel="noopener" href="https://xaoxuu.com/wiki/stellar/">Stellar</a> 构建 · <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
+</div></footer>
+</main>
+<aside data-stellar-runtime-region id="rightbar-region" class="site-region site-region--rightbar" data-region="rightbar" aria-label="Rightbar"><div class="site-region__surface ui-drawer-surface"><div class="site-region__viewport"><div class="widgets widget-stack widget-stack--rightbar widget-stack--rightbar"><div class="widget-instance widget-instance--toc" data-widget-id="rightbar:0:toc" data-presentation="rightbar">
 
-  <footer class="footer">
-    <div class="footer-inner">
 
-  <div class="copyright">
-    &copy; 
-    <span itemprop="copyrightYear">2026</span>
-    <span class="with-love">
-      <i class="fa fa-heart"></i>
-    </span>
-    <span class="author" itemprop="copyrightHolder">DarkYellowCat</span>
-  </div>
-<div class="busuanzi-count">
-    <span class="post-meta-item" id="busuanzi_container_site_uv">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-user"></i>
-      </span>
-      <span class="site-uv" title="总访客量">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-eye"></i>
-      </span>
-      <span class="site-pv" title="总访问量">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
-  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
-  </div>
-
-    </div>
-  </footer>
-
+<widget class="widget-wrapper toc" id="data-toc" collapse="false">
   
-  <div class="toggle sidebar-toggle" role="button">
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
+    <div class="widget-header dis-select">
+      <span class="name">本文目录</span>
+      <button type="button" class="cap-action ui-interactive card-hover card-hover--spotlight" data-shell-action="toggle-toc" aria-label="Toggle table of contents" aria-pressed="false"><span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></span></button>
+    </div>
+  
+  <div class="widget-body"><ol class="toc ui-collection-adapter"><li class="toc-item toc-level-1"><a class="toc-link ui-interactive" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link ui-interactive" href="#%E6%A6%82%E5%BF%B5"><span class="toc-text">概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link ui-interactive" href="#%E5%86%97%E4%BD%99%E6%9C%BA%E6%A2%B0%E8%87%82%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%9C%89%E5%A4%9A%E8%A7%A3"><span class="toc-text">冗余机械臂为什么会有多解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link ui-interactive" href="#%E2%80%9C%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E2%80%9D%E4%B8%8D%E4%B8%80%E5%AE%9A%E9%9C%80%E8%A6%81%E8%AE%AD%E7%BB%83"><span class="toc-text">“神经网络”不一定需要训练</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link ui-interactive" href="#15-%E7%AF%87%E6%96%87%E7%8C%AE%E5%88%86%E5%88%AB%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88"><span class="toc-text">15 篇文献分别解决了什么</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link ui-interactive" href="#%E4%B8%80%E3%80%81%E4%BB%8E%E9%80%86%E8%BF%90%E5%8A%A8%E5%AD%A6%E5%88%B0%E5%B8%A6%E7%BA%A6%E6%9D%9F-QP"><span class="toc-text">一、从逆运动学到带约束 QP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link ui-interactive" href="#%E4%BA%8C%E3%80%81%E5%9C%A8%E7%BA%BF%E6%B1%82%E8%A7%A3%E5%99%A8%E5%A6%82%E4%BD%95%E5%8F%98%E5%BE%97%E6%9B%B4%E5%8F%AF%E9%9D%A0"><span class="toc-text">二、在线求解器如何变得更可靠</span></a></li><li class="toc-item toc-level-2"><a class="toc-link ui-interactive" href="#%E4%B8%89%E3%80%81%E9%A2%84%E6%B5%8B%E6%8E%A7%E5%88%B6%E4%B8%8E%E6%A8%A1%E5%9E%8B%E6%9C%AA%E7%9F%A5"><span class="toc-text">三、预测控制与模型未知</span></a></li><li class="toc-item toc-level-2"><a class="toc-link ui-interactive" href="#%E5%9B%9B%E3%80%81%E4%BB%8E%E5%8D%95%E4%BB%BB%E5%8A%A1%E6%89%A9%E5%B1%95%E5%88%B0%E5%A4%9A%E4%BB%BB%E5%8A%A1"><span class="toc-text">四、从单任务扩展到多任务</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link ui-interactive" href="#%E6%96%87%E7%8C%AE%E5%AF%B9%E7%85%A7%E8%A1%A8"><span class="toc-text">文献对照表</span></a></li><li class="toc-item toc-level-1"><a class="toc-link ui-interactive" href="#%E6%A8%AA%E5%90%91%E6%AF%94%E8%BE%83%EF%BC%9A%E5%87%A0%E6%9D%A1%E8%B7%AF%E7%BA%BF%E5%88%86%E5%88%AB%E9%80%82%E5%90%88%E4%BB%80%E4%B9%88"><span class="toc-text">横向比较：几条路线分别适合什么</span></a></li><li class="toc-item toc-level-1"><a class="toc-link ui-interactive" href="#%E6%88%91%E7%9A%84%E5%87%A0%E7%82%B9%E5%88%A4%E6%96%AD"><span class="toc-text">我的几点判断</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link ui-interactive" href="#1-%E7%A5%9E%E7%BB%8F%E5%8A%A8%E5%8A%9B%E5%AD%A6%E7%9A%84%E4%B8%BB%E8%A6%81%E4%BC%98%E5%8A%BF%E6%98%AF%E5%9C%A8%E7%BA%BF%E4%BC%98%E5%8C%96"><span class="toc-text">1. 神经动力学的主要优势是在线优化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link ui-interactive" href="#2-%E7%BA%A6%E6%9D%9F%E5%AE%8C%E6%95%B4%E6%80%A7%E6%AF%94%E5%8D%95%E4%B8%80%E8%AF%AF%E5%B7%AE%E6%95%B0%E5%AD%97%E6%9B%B4%E9%87%8D%E8%A6%81"><span class="toc-text">2. 约束完整性比单一误差数字更重要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link ui-interactive" href="#3-%E8%BF%9E%E7%BB%AD%E6%97%B6%E9%97%B4%E8%AF%81%E6%98%8E%E4%B8%8E%E6%95%B0%E5%AD%97%E5%AE%9E%E7%8E%B0%E4%B9%8B%E9%97%B4%E8%BF%98%E6%9C%89%E8%B7%9D%E7%A6%BB"><span class="toc-text">3. 连续时间证明与数字实现之间还有距离</span></a></li><li class="toc-item toc-level-2"><a class="toc-link ui-interactive" href="#4-%E5%BD%93%E5%89%8D%E6%96%B9%E5%90%91%E6%AD%A3%E5%9C%A8%E4%BB%8E%E5%B7%B2%E7%9F%A5%E6%A8%A1%E5%9E%8B%E8%B5%B0%E5%90%91%E6%B7%B7%E5%90%88%E6%96%B9%E6%B3%95"><span class="toc-text">4. 当前方向正在从已知模型走向混合方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link ui-interactive" href="#%E8%BF%99%E6%AC%A1%E8%B0%83%E7%A0%94%E7%9A%84%E5%B1%80%E9%99%90"><span class="toc-text">这次调研的局限</span></a></li><li class="toc-item toc-level-1"><a class="toc-link ui-interactive" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link ui-interactive" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="toc-text">参考文献</span></a></li></ol></div>
+  <div class="widget-footer"><a class="top ui-interactive" onclick="util.scrollTop()"><span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="M20.536 3.464C22 4.93 22 7.286 22 12s0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12s0-7.071 1.464-8.536C4.93 2 7.286 2 12 2s7.071 0 8.535 1.464" opacity=".5"/><path fill="currentColor" d="M9.53 12.03a.75.75 0 0 1-1.06-1.06l3-3a.75.75 0 0 1 1.06 0l3 3a.75.75 0 1 1-1.06 1.06L12 9.56z"/><path fill="currentColor" d="M9.53 16.03a.75.75 0 0 1-1.06-1.06l3-3a.75.75 0 0 1 1.06 0l3 3a.75.75 0 1 1-1.06 1.06L12 13.56z"/></svg></span><span>回到顶部</span></a></div>
+</widget>
+
+
+</div></div></div></div></aside>
+</div><button type="button" class="site-scrim" data-shell-action="dismiss-drawer" aria-label="Close navigation" tabindex="-1"></button><div data-stellar-runtime-region class="site-dock" role="group" aria-label="Layout panels">
+  <button type="button" class="site-dock__button site-dock__button--rightbar ui-interactive" aria-label="Open rightbar" aria-controls="rightbar-region" aria-expanded="false" data-shell-action="toggle-rightbar-drawer">
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type="button" class="site-dock__button site-dock__button--leftbar ui-interactive" aria-label="Open leftbar" aria-controls="leftbar-region" aria-expanded="false" data-shell-action="toggle-leftbar-drawer">
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+
+<dialog data-stellar-runtime-region class="search-dialog" id="site-search-dialog" aria-labelledby="site-search-title">
+  <div class="search-dialog__panel search-wrapper" id="site-search-wrapper" searching="false">
+    <div class="search-dialog__header">
+      <div class="search-form" role="search">
+        <span class="search-button" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Adapted from Google Material Icons by Material Design Authors - https://github.com/material-icons/material-icons/blob/master/LICENSE --><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h3M3 13h3M3 18h8M16.83 13.83l3.76 3.76"/><circle cx="14" cy="11" r="4"/></g></svg></span>
+        <input type="search" class="search-input" id="site-search-input" aria-labelledby="site-search-title" placeholder="搜索">
+      </div>
+      <button type="button" class="search-dialog__close" data-shell-action="close-search" aria-label="关闭搜索">×</button>
+    </div>
+    
+      <div class="search-dialog__scope" role="radiogroup" aria-labelledby="site-search-title" hidden>
+        <label class="search-dialog__scope-option" data-search-scope-option="all">
+          <input class="ui-radio" type="radio" name="site-search-scope" value="all">
+          <span>全站</span>
+        </label>
+        <label class="search-dialog__scope-option" data-search-scope-option="blog" hidden>
+          <input class="ui-radio" type="radio" name="site-search-scope" value="blog">
+          <span>博客</span>
+        </label>
+        <label class="search-dialog__scope-option" data-search-scope-option="current" hidden>
+          <input class="ui-radio" type="radio" name="site-search-scope" value="current">
+          <span data-search-scope-current-label></span>
+        </label>
+      </div>
+    
+    <h2 class="search-dialog__title" id="site-search-title">站内搜索</h2>
+    <div class="search-result" id="site-search-result"></div>
+    <div class="search-no-result">没有找到内容！</div>
   </div>
-  <div class="sidebar-dimmer"></div>
-  <div class="back-to-top" role="button" aria-label="返回顶部">
-    <i class="fa fa-arrow-up fa-lg"></i>
-    <span>0%</span>
-  </div>
-  <div class="reading-progress-bar"></div>
+</dialog>
+</div><div class="site-scripts">
+<script data-stellar-script="core" src="/js/stellar-icons.js?v=39c6ac17e854ffe2"></script>
 
-  <a href="https://github.com/darkyellowcat" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
-
-<noscript>
-  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
-</noscript>
-
-<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
-<script>
-  LA.init({ id: '3OnjqyPOaoYCHllV', ck: '3OnjqyPOaoYCHllV', autoTrack: true });
+<script data-stellar-script="defines">
+  window.canonical = window.stellarClientData.canonical;
+  const ctx = window.stellarClientData.ctx;
+  window.canonical.param = {permalink: "https://darkyellowcat.github.io/2026/09/03/%E6%96%87%E7%8C%AE%E8%B0%83%E7%A0%94-%E9%9D%A2%E5%90%91%E5%86%97%E4%BD%99%E6%9C%BA%E6%A2%B0%E8%87%82%E8%A7%84%E5%88%92%E6%8E%A7%E5%88%B6%E7%9A%84%E7%A5%9E%E7%BB%8F%E5%8A%A8%E5%8A%9B%E5%AD%A6%E6%A8%A1%E5%9E%8B/", checklink: ctx.services.video.js};
+  ctx.date_suffix = {"just":"刚刚","min":"分钟前","hour":"小时前","day":"天前"};
+  if (ctx.search) Object.assign(ctx.search, {"more":"更多","no_more":"没有更多了"});
+  const def = window.stellarClientData.def;
+  window.ctx = ctx;
+  window.def = def;
 </script>
 
-</body>
-</html>
+
+<!-- core: 迁移期 DOM/资源兼容工具；Extension 注册与生命周期由 ESM runtime 所有 -->
+<script data-stellar-script="core" src="/js/utils.js?v=2.0.0"></script>
+<script data-stellar-script="core" src="/js/main.js?v=2.0.0" defer></script>
+<script data-stellar-script="core" defer src="/js/profile.js?v=2.0.0"></script>
+
+
+
+
+
+<script data-stellar-script="core" type="application/json" id="stellar-runtime-config">{"version":1,"root":"/","policy":{"cache":{"enabled":true,"defaultTtl":3600,"ttl":{"giscus":600,"waline":600,"artalk":600,"memos":600,"memos-user":86400,"sites":86400,"friends":86400,"friends_and_posts":86400,"siteinfo":86400},"maxEntries":200},"request":{"retries":2,"timeoutMs":5000,"idleTimeoutMs":3000,"maxCacheEntryBytes":204800},"features":{"codeCopyToastMs":2500},"providers":{"linkPrefetch":"flying_pages","lightbox":"fancybox","diagrams":"mermaid"}},"extensions":[{"id":"pin-slider","module":"/js/runtime/extensions/pin-slider.js","scope":"region","when":{"selector":".pin-slider"},"config":{}},{"id":"page-controls","module":"/js/runtime/extensions/page-controls.js","scope":"region","when":{"always":true},"config":{"highlight":"/js/search/highlight.js","tagtree":"/js/tagtree.js"}},{"id":"search","module":"/js/runtime/extensions/search.js","scope":"document","when":{"selector":".search-input"},"config":{"provider":"local","options":{"scope":"all","includeContent":true,"cacheTtlSeconds":86400},"assets":{"client":null,"provider":"/js/search/local-search.js","shortcut":"/js/search/shortcut.js"}}},{"id":"hero-parallax","module":"/js/runtime/extensions/hero-parallax.js","scope":"region","when":{"selector":".wiki-hero"},"config":{}},{"id":"hero-effect","module":"/js/runtime/extensions/hero-effect.js","scope":"region","when":{"selector":"canvas[data-hero-effect]"},"config":{}},{"id":"lazy-loading","module":"/js/runtime/extensions/lazy-loading.js","scope":"document","when":{"always":true},"config":{"asset":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"}},{"id":"deferred-icons","module":"/js/runtime/extensions/deferred-icons.js","scope":"region","when":{"selector":"svg.icon[data-icon]"},"config":{}},{"id":"dropdown","module":"/js/runtime/extensions/dropdown.js","scope":"region","when":{"selector":"details.dropdown"},"config":{}},{"id":"services","module":"/js/runtime/extensions/services.js","scope":"region","when":{"selector":"#artalk_container, #twikoo_container, #waline_container, .data-service, [class*='ds-'], a[cardlink], a[data-md-link][data-siteinfo-api], .site-card [data-siteinfo-api], .voice\u003eaudio, .video\u003evideo, .chat-file"},"config":{"marked":"https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js"}},{"id":"settings","module":"/js/runtime/extensions/settings.js","scope":"region","when":{"selector":".settings-page"},"config":{}},{"id":"lightbox","module":"/js/runtime/extensions/lightbox.js","scope":"region","when":{"selector":"[data-fancybox]:not(.error), .with-fancybox, .ds-memos, .md-text p\u003eimg"},"config":{"enabled":true,"selector":".md-text p\u003eimg","assets":{"localCss":"/css/plugins/fancybox.css","js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css"}}},{"id":"code-copy","module":"/js/runtime/extensions/code-copy.js","scope":"region","when":{"selector":".code"},"config":{"assets":{"js":"/js/plugins/copycode.js"},"messages":{"label":"复制","copied":"复制成功","denied":"未获得剪贴板权限","unsupported":"当前浏览器不支持剪贴板或页面不是 HTTPS"}}},{"id":"adaptive-text","module":"/js/runtime/extensions/adaptive-text.js","scope":"region","when":{"selector":"[data-text-adaptive]"},"config":{"assets":{"colorJs":"/js/color.js","js":"/js/plugins/adaptive-text.js"}}},{"id":"swiper","module":"/js/runtime/extensions/swiper.js","scope":"region","when":{"selector":"#swiper-api"},"config":{"assets":{"localCss":"/css/plugins/swiper.css","js":"https://unpkg.com/swiper@10.3/swiper-bundle.min.js","css":"https://unpkg.com/swiper@10.3/swiper-bundle.min.css"}}}]}</script>
+<script data-stellar-script="core" type="module" src="/js/runtime/index.js?v=2.0.0&runtime=1"></script>
+
+
+<!-- inject -->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>if (window.LA) LA.init({ id: '3OnjqyPOaoYCHllV', ck: '3OnjqyPOaoYCHllV', autoTrack: true });</script>
+
+
+<script data-stellar-script="core" defer src="/js/navigation-init.js?v=2.0.0"></script>
+</div></body></html>
+

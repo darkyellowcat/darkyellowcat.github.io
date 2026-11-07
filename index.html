@@ -1,1779 +1,321 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
+
+
+<!DOCTYPE html><html lang="zh-CN" data-theme="light">
+
 <head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.2">
+  
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/2.0.0" theme-name="Stellar" theme-version="2.0.0">
+  
+  
+  <meta name="generator" content="Hexo 8.1.2">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  <title data-stellar-page-meta>首页 - DarkYellowCat's Blog</title>
+  <script data-stellar-script="core">
+    (function () {
+      var key = 'stellar:v2:leftbar-state';
+      var fallback = "expanded";
+      try {
+        var value = localStorage.getItem(key);
+        document.documentElement.dataset.leftbarState = value === 'collapsed' || value === 'expanded' ? value : fallback;
+      } catch (error) {
+        document.documentElement.dataset.leftbarState = fallback;
+      }
+    })();
+  </script>
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="description" content="计科学生，记录 Java 后端学习、AI 工具与开源实践。" data-stellar-page-meta="">
+<meta property="og:type" content="website" data-stellar-page-meta="">
+<meta property="og:title" content="首页" data-stellar-page-meta="">
+<meta property="og:url" content="https://darkyellowcat.github.io/" data-stellar-page-meta="">
+<meta property="og:site_name" content="DarkYellowCat's Blog" data-stellar-page-meta="">
+<meta property="og:description" content="计科学生，记录 Java 后端学习、AI 工具与开源实践。" data-stellar-page-meta="">
+<meta property="og:locale" content="zh_CN" data-stellar-page-meta="">
+<meta property="og:image" content="https://darkyellowcat.github.io/assets/brand/cat.svg" data-stellar-page-meta="">
+<meta property="article:author" content="DarkYellowCat" data-stellar-page-meta="">
+<meta property="article:tag" content="计科, Java, Maven, Spring, MyBatis, Linux, 后端" data-stellar-page-meta="">
+<meta name="twitter:card" content="summary" data-stellar-page-meta="">
+<meta name="twitter:image" content="https://darkyellowcat.github.io/assets/brand/cat.svg" data-stellar-page-meta=""><meta name="twitter:title" content="首页" data-stellar-page-meta="">
+  
+  
+  <meta name="keywords" content="计科, Java, Maven, Spring, MyBatis, Linux, 后端" data-stellar-page-meta="">
 
-<link rel="stylesheet" href="/css/main.css">
+  <!-- feed -->
+  
+    
 
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
-
-<script class="next-config" data-name="main" type="application/json">{"hostname":"darkyellowcat.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.29.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"default","show_result":true},"fold":{"enable":false,"height":500},"language":false,"highlight_theme":"night eighties"},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":true,"lazyload":true,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
-
-    <meta name="description" content="记录学习与成长">
-<meta property="og:type" content="website">
-<meta property="og:title" content="DarkYellowCat&#39;s Blog">
-<meta property="og:url" content="https://darkyellowcat.github.io/index.html">
-<meta property="og:site_name" content="DarkYellowCat&#39;s Blog">
-<meta property="og:description" content="记录学习与成长">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:author" content="DarkYellowCat">
-<meta property="article:tag" content="计科, Java, Maven, Spring, MyBatis, Linux, 后端">
-<meta name="twitter:card" content="summary">
-
-
-<link rel="canonical" href="https://darkyellowcat.github.io/">
-
-
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"index.html","title":""}</script>
-
-<script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>DarkYellowCat's Blog</title>
+    
+      
+        <link rel="alternate" href="/atom.xml" title="DarkYellowCat's Blog" type="application/atom+xml">
+      
+    
   
 
-
-
-
-
-
-
-
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/medium-zoom/1.1.0/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pangu/7.2.1/pangu.umd.js" integrity="sha256-kRsxecBnwG6mULFPe2E6UKnNm8XfDOuDwCOprjLZuX8=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.5.0/search.js" integrity="sha256-xFC6PJ82SL9b3WkGjFavNiA9gm5z6UBxWPiu4CYjptg=" crossorigin="anonymous" defer></script>
-<script src="/js/third-party/search/local-search.js" defer></script>
-
-
-
-
-
+  <link rel="preload" href="/css/main.css?v=2.0.0" as="style">
+  <link rel="stylesheet" href="/css/main.css?v=2.0.0">
+  <style>:root{--text-loading:"正在加载";--text-loading-error:"加载失败，请稍后重试。"}</style>
 
 
   
-  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <link rel="shortcut icon" href="/assets/brand/cat.svg">
+  
+
+  
+
+  <script type="application/ld+json" data-stellar-page-meta="">{"@context":"https://schema.org","@type":"Website","@id":"https://darkyellowcat.github.io","author":{"@type":"Person","name":"DarkYellowCat","sameAs":[]},"name":"DarkYellowCat's Blog","description":"计科学生，记录 Java 后端学习、AI 工具与开源实践。","url":"https://darkyellowcat.github.io"}</script>
+  <link rel="stylesheet" href="/assets/site.css">
+<meta name="theme-color" content="#f7f6f2">
 
 
-
-
-
-  <noscript>
-    <link rel="stylesheet" href="/css/noscript.css">
-  </noscript>
+  <link rel="stylesheet" href="/css/stellar-icons.css?v=7c185ad1a9a79674">
+  <link rel="preload" as="script" href="/js/stellar-icons.js?v=39c6ac17e854ffe2">
+  
+  
 </head>
+<body data-page-type="index" data-page-layout="directory"><div data-stellar-runtime-region id="site-cover" class="site-cover"></div><div class="site-shell" id="start" data-regions="leftbar"><div class="site-workspace">
+<aside data-stellar-runtime-region id="leftbar-region" class="site-region site-region--leftbar" data-region="leftbar" aria-label="Leftbar"><div class="site-region__surface ui-surface"><div class="site-region__decoration" aria-hidden="true"></div><div class="site-region__viewport"><header class="site-region__header site-region__zone site-region__zone--top">
+    <div class="widget-instance widget-instance--brand" data-widget-id="leftbar:fixed:brand" data-presentation="leftbar" data-leftbar-rail>
+<header class="brand-header brand-header--regular brand-header--site"><div class="brand-wrap"><a class="brand-image brand-image--icon" href="&#x2F;"><img no-lazy src="&#x2F;assets&#x2F;brand&#x2F;cat.svg" alt="" onerror="this.onerror&#x3D;null;this.src&#x3D;&quot;&#x2F;images&#x2F;stellar-error.491ee870f4940739.svg&quot;"></a><a class="brand-title" href="&#x2F;"><div class="brand-name">DarkYellowCat</div><div class="brand-tagline cap">技术笔记与开源实践</div></a></div><div class="brand-search">
 
-<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
-  <div class="headband"></div>
+<div class="ui-collection" data-layout="list" data-variant="nav" data-density="auto">
+  
+    
+<button class="ui-collection__item ui-interactive card-hover card-hover--spotlight search-trigger has-hover-surface" type="button" title="搜索" aria-label="搜索" data-shell-action="open-search" data-search-instance="leftbar-brand-search">
+  
+  <span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Adapted from Google Material Icons by Material Design Authors - https://github.com/material-icons/material-icons/blob/master/LICENSE --><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h3M3 13h3M3 18h8M16.83 13.83l3.76 3.76"/><circle cx="14" cy="11" r="4"/></g></svg></span>
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">搜索</span>
+      
+      
+    </span>
+  
+  <kbd class="search-shortcut" aria-hidden="true">⌘K</kbd>
 
-  <main class="main">
-    <div class="column">
-      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏" role="button">
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-    </div>
-  </div>
+  
+</button>
 
-  <div class="site-meta">
-
-    <a href="/" class="brand" rel="start">
-      <i class="logo-line"></i>
-      <h1 class="site-title">DarkYellowCat's Blog</h1>
-      <i class="logo-line"></i>
-    </a>
-      <p class="site-subtitle" itemprop="description">分享技术与思考</p>
-  </div>
-
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger" aria-label="搜索" role="button">
-        <i class="fa fa-search fa-fw fa-lg"></i>
-    </div>
-  </div>
+  
 </div>
 
 
+</div></header>
+</div>
+  </header>
+  <div class="site-region__body site-region__zone site-region__zone--body">
+    <div class="widget-instance widget-instance--menu" data-widget-id="leftbar:fixed:menu" data-presentation="leftbar" data-leftbar-rail>
 
-<nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
-        </a>
-      </li>
-  </ul>
+
+<nav class="menu dis-select">
+<div class="ui-collection" data-layout="list" data-variant="nav" data-density="auto">
+  
+    
+<a class="ui-collection__item ui-interactive card-hover card-hover--spotlight is-active" href="&#x2F;" title="首页" aria-current="page">
+  
+  <span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7M5 9v12h5v-7h4v7h5V9"/></svg></span>
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">首页</span>
+      
+      
+    </span>
+  
+  
+  <span class="ui-collection__indicator"></span>
+</a>
+
+  
+    
+<a class="ui-collection__item ui-interactive card-hover card-hover--spotlight" href="&#x2F;blog&#x2F;" title="文章">
+  
+  <span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></span>
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">文章</span>
+      
+      
+    </span>
+  
+  
+  
+</a>
+
+  
+    
+<a class="ui-collection__item ui-interactive card-hover card-hover--spotlight" href="&#x2F;topic&#x2F;" title="专题">
+  
+  <span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m12 16.068l-3.771 3.905c-.54.559-.81.839-1.04.935c-.52.22-1.099.032-1.373-.448c-.12-.21-.158-.59-.232-1.35c-.043-.43-.064-.644-.128-.824a1.43 1.43 0 0 0-.835-.864c-.173-.067-.38-.089-.795-.133c-.734-.077-1.101-.116-1.305-.24c-.463-.284-.646-.883-.433-1.422c.094-.237.364-.517.904-1.076L5.456 12l1.238-1.238zl5.306-5.306L18.544 12l2.464 2.55c.54.56.81.84.904 1.076c.213.54.03 1.139-.433 1.423c-.204.124-.57.163-1.305.24c-.414.044-.622.066-.795.133c-.389.149-.69.462-.835.864c-.064.18-.085.394-.128.823c-.075.76-.112 1.14-.232 1.351c-.274.48-.853.669-1.374.448c-.228-.096-.498-.376-1.038-.935z" opacity=".5"/><path fill="currentColor" fill-rule="evenodd" d="M12 16a7 7 0 1 0 0-14a7 7 0 0 0 0 14m0-10c-.284 0-.474.34-.854 1.023l-.098.176c-.108.194-.162.29-.246.354c-.085.064-.19.088-.4.135l-.19.044c-.738.167-1.107.25-1.195.532s.164.577.667 1.165l.13.152c.143.167.215.25.247.354s.021.215 0 .438l-.02.203c-.076.785-.114 1.178.115 1.352c.23.174.576.015 1.267-.303l.178-.082c.197-.09.295-.135.399-.135s.202.045.399.135l.178.082c.691.319 1.037.477 1.267.303s.191-.567.115-1.352l-.02-.203c-.021-.223-.032-.334 0-.438s.104-.187.247-.354l.13-.152c.503-.588.755-.882.667-1.165c-.088-.282-.457-.365-1.195-.532l-.19-.044c-.21-.047-.315-.07-.4-.135c-.084-.064-.138-.16-.246-.354l-.098-.176C12.474 6.34 12.284 6 12 6" clip-rule="evenodd"/></svg></span>
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">专题</span>
+      
+      
+    </span>
+  
+  
+  
+</a>
+
+  
+    
+<a class="ui-collection__item ui-interactive card-hover card-hover--spotlight" href="&#x2F;archives&#x2F;" title="归档">
+  
+  <span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="currentColor"><path d="M6.94028 2C7.35614 2 7.69326 2.32421 7.69326 2.72414V4.18487C8.36117 4.17241 9.10983 4.17241 9.95219 4.17241H13.9681C14.8104 4.17241 15.5591 4.17241 16.227 4.18487V2.72414C16.227 2.32421 16.5641 2 16.98 2C17.3958 2 17.733 2.32421 17.733 2.72414V4.24894C19.178 4.36022 20.1267 4.63333 20.8236 5.30359C21.5206 5.97385 21.8046 6.88616 21.9203 8.27586L22 9H2.92456H2V8.27586C2.11571 6.88616 2.3997 5.97385 3.09665 5.30359C3.79361 4.63333 4.74226 4.36022 6.1873 4.24894V2.72414C6.1873 2.32421 6.52442 2 6.94028 2Z"/><path d="M21.9995 14.0001V12.0001C21.9995 11.161 21.9963 9.66527 21.9834 9H2.00917C1.99626 9.66527 1.99953 11.161 1.99953 12.0001V14.0001C1.99953 17.7713 1.99953 19.6569 3.1711 20.8285C4.34267 22.0001 6.22829 22.0001 9.99953 22.0001H13.9995C17.7708 22.0001 19.6564 22.0001 20.828 20.8285C21.9995 19.6569 21.9995 17.7713 21.9995 14.0001Z" opacity=".5"/><path d="M18 17C18 17.5523 17.5523 18 17 18C16.4477 18 16 17.5523 16 17C16 16.4477 16.4477 16 17 16C17.5523 16 18 16.4477 18 17Z"/><path d="M18 13C18 13.5523 17.5523 14 17 14C16.4477 14 16 13.5523 16 13C16 12.4477 16.4477 12 17 12C17.5523 12 18 12.4477 18 13Z"/><path d="M13 17C13 17.5523 12.5523 18 12 18C11.4477 18 11 17.5523 11 17C11 16.4477 11.4477 16 12 16C12.5523 16 13 16.4477 13 17Z"/><path d="M13 13C13 13.5523 12.5523 14 12 14C11.4477 14 11 13.5523 11 13C11 12.4477 11.4477 12 12 12C12.5523 12 13 12.4477 13 13Z"/><path d="M8 17C8 17.5523 7.55228 18 7 18C6.44772 18 6 17.5523 6 17C6 16.4477 6.44772 16 7 16C7.55228 16 8 16.4477 8 17Z"/><path d="M8 13C8 13.5523 7.55228 14 7 14C6.44772 14 6 13.5523 6 13C6 12.4477 6.44772 12 7 12C7.55228 12 8 12.4477 8 13Z"/></g></svg></span>
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">归档</span>
+      
+      
+    </span>
+  
+  
+  
+</a>
+
+  
+    
+<a class="ui-collection__item ui-interactive card-hover card-hover--spotlight" href="&#x2F;about&#x2F;" title="关于">
+  
+  <span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20a10 10 0 0 0 0-20" opacity=".5"/><path d="M12 6a3 3 0 1 0 0 6a3 3 0 0 0 0-6m0 7.5c-3.04 0-5.5 1.57-5.5 3.5c0 .65.28 1.26.77 1.77A7.96 7.96 0 0 0 12 20.5a7.96 7.96 0 0 0 4.73-1.73c.49-.51.77-1.12.77-1.77c0-1.93-2.46-3.5-5.5-3.5"/></g></svg></span>
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">关于</span>
+      
+      
+    </span>
+  
+  
+  
+</a>
+
+  
+</div>
+
 </nav>
 
-
-
-  <div class="search-pop-overlay">
-    <div class="popup search-popup">
-      <div class="search-header">
-        <span class="search-icon">
-          <i class="fa fa-search"></i>
-        </span>
-        <div class="search-input-container">
-          <input autocomplete="off" autocapitalize="off" maxlength="80"
-                placeholder="搜索..." spellcheck="false"
-                type="search" class="search-input">
-        </div>
-        <span class="popup-btn-close" role="button">
-          <i class="fa fa-times-circle"></i>
-        </span>
-      </div>
-      <div class="search-result-container">
-        <div class="search-result-icon">
-          <i class="fa fa-spinner fa-pulse fa-5x"></i>
-        </div>
-      </div>
-    </div>
+</div>
+    <div class="widgets widget-stack widget-stack--leftbar widget-stack--body"><div class="widget-instance widget-instance--markdown" data-widget-id="leftbar:0:explore" data-presentation="leftbar">
+<widget class="widget-wrapper markdown"><div class="widget-header dis-select"><span class="name">继续探索</span></div><div class="widget-body fs14"><p><a href="/categories/">分类</a> · <a href="/tags/">标签</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/darkyellowcat">GitHub ↗</a></p>
+</div></widget>
+</div></div>
   </div>
-
-</header>
-        
-  
-  <aside class="sidebar">
-
-    <div class="sidebar-inner sidebar-overview-active">
-      <ul class="sidebar-nav">
-        <li class="sidebar-nav-toc">
-          文章目录
-        </li>
-        <li class="sidebar-nav-overview">
-          站点概览
-        </li>
-      </ul>
-
-      <div class="sidebar-panel-container">
-        <!--noindex-->
-        <div class="post-toc-wrap sidebar-panel">
-        </div>
-        <!--/noindex-->
-
-        <div class="site-overview-wrap sidebar-panel">
-          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <p class="site-author-name" itemprop="name">DarkYellowCat</p>
-  <div class="site-description" itemprop="description">记录学习与成长</div>
+  <footer class="site-region__footer">
+    
+    <div class="site-region__system ui-collection" data-layout="inline" data-variant="nav" data-density="compact">
+      <div class="site-region__settings"><div class="widget-instance widget-instance--settings" data-widget-id="leftbar:fixed:settings" data-presentation="leftbar" data-leftbar-rail>
+<a class="settings-widget ui-collection__item ui-interactive card-hover card-hover--spotlight" href="&#x2F;settings&#x2F;" data-profile-provider="" data-profile-identity-enabled="false" data-profile-fallback-avatar="https:&#x2F;&#x2F;gcore.jsdelivr.net&#x2F;gh&#x2F;cdn-x&#x2F;placeholder@1.0.12&#x2F;avatar&#x2F;round&#x2F;3442075.svg" data-settings-placement="leftbar" data-settings-label="设置" aria-label="设置" title="设置">
+  <span class="settings-widget__avatar" aria-hidden="true">
+    <span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="currentColor"><path fill-rule="evenodd" d="M12.4277 2C11.3139 2 10.2995 2.6007 8.27081 3.80211L7.58466 4.20846C5.55594 5.40987 4.54158 6.01057 3.98466 7C3.42773 7.98943 3.42773 9.19084 3.42773 11.5937V12.4063C3.42773 14.8092 3.42773 16.0106 3.98466 17C4.54158 17.9894 5.55594 18.5901 7.58466 19.7915L8.27081 20.1979C10.2995 21.3993 11.3139 22 12.4277 22C13.5416 22 14.5559 21.3993 16.5847 20.1979L17.2708 19.7915C19.2995 18.5901 20.3139 17.9894 20.8708 17C21.4277 16.0106 21.4277 14.8092 21.4277 12.4063V11.5937C21.4277 9.19084 21.4277 7.98943 20.8708 7C20.3139 6.01057 19.2995 5.40987 17.2708 4.20846L16.5847 3.80211C14.5559 2.6007 13.5416 2 12.4277 2Z" clip-rule="evenodd" opacity=".5"/><path d="M12.4277 8.25C10.3567 8.25 8.67773 9.92893 8.67773 12C8.67773 14.0711 10.3567 15.75 12.4277 15.75C14.4988 15.75 16.1777 14.0711 16.1777 12C16.1777 9.92893 14.4988 8.25 12.4277 8.25Z"/></g></svg></span>
+  </span>
+  <span class="settings-widget__name ui-collection__title">设置</span>
+</a>
+</div></div>
+      <button type="button" class="leftbar-state-toggle ui-collection__item ui-interactive card-hover card-hover--spotlight is-icon-only" aria-label="Collapse leftbar" aria-expanded="true" data-shell-action="toggle-leftbar"><span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M3.172 4.172C2 5.343 2 7.229 2 11v2c0 3.771 0 5.657 1.172 6.828S6.229 21 10 21h5V3h-5C6.229 3 4.343 3 3.172 4.172" clip-rule="evenodd" opacity=".5"/><path fill="currentColor" d="M5.5 9.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zm1 4a.75.75 0 0 0 0 1.5h4a.75.75 0 0 0 0-1.5zM22 13v-2c0-3.771 0-5.657-1.172-6.828c-.974-.975-3.192-1.139-5.828-1.166v17.988c2.636-.027 4.854-.191 5.828-1.166C22 18.657 22 16.771 22 13"/></svg></span></button>
+    </div>
+  </footer></div></div></aside>
+<main data-stellar-runtime-region class="site-main" id="main"><div class="dyc-home">
+    <header class="dyc-intro"><div><h1>你好，我是<br><span>DarkYellowCat<span class="dyc-dot">.</span></span></h1><p>计科学生，记录 Java 后端学习、<br class="dyc-mobile-break">AI 工具与开源实践。</p><div class="dyc-intro-links"><a href="/about/">关于我<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a href="https://github.com/darkyellowcat" target="_blank" rel="noopener noreferrer">GitHub<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div></div><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/assets/brand/cat.svg" width="112" height="112" alt="DarkYellowCat 的琥珀色猫标识" onerror="this.onerror&#x3D;null;this.src&#x3D;&quot;&#x2F;images&#x2F;stellar-error.491ee870f4940739.svg&quot;"></header>
+    <section class="dyc-section" aria-labelledby="featured-title"><div class="dyc-section-head"><h2 id="featured-title">从这几篇开始</h2><span>项目、贡献与经历</span></div><div class="dyc-featured"><a class="dyc-feature" href="&#x2F;2026&#x2F;09&#x2F;24&#x2F;Kestra-PR-分享-224-如何修正-MySQL-serverId-的缺省策略&#x2F;"><h3>从一次评审，改好一个默认值</h3><p>Kestra PR #224：MySQL serverId 的实现、测试与评审。</p><span class="dyc-feature-footer">开源贡献<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a><a class="dyc-feature" href="&#x2F;2025&#x2F;10&#x2F;20&#x2F;weconnected项目&#x2F;"><h3>weconnected 交友匹配系统</h3><p>从校园社交需求出发，记录一个 Spring Boot 项目的设计。</p><span class="dyc-feature-footer">后端项目<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a><a class="dyc-feature" href="&#x2F;2026&#x2F;08&#x2F;24&#x2F;Java后端实习经历分享&#x2F;"><h3>第一次走进实际开发</h3><p>一个半月的后端实习，关于系统设计、协作和 AI 使用。</p><span class="dyc-feature-footer">开发经历<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></div></section>
+    <section class="dyc-section" aria-labelledby="topics-title"><div class="dyc-section-head"><h2 id="topics-title">沿着专题读下去</h2><a href="/topic/">全部专题<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="dyc-topics"><a class="dyc-topic" href="/topic/java/"><span><strong>Java 后端</strong><small>Java、数据库与框架的学习笔记，以及实际开发中遇到的问题。</small></span><span class="dyc-topic-count">20 篇<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a><a class="dyc-topic" href="/topic/algorithms/"><span><strong>算法基础</strong><small>数据结构、算法模板与 Java 题解，记录推导过程和容易忽略的细节。</small></span><span class="dyc-topic-count">8 篇<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a><a class="dyc-topic" href="/topic/tools/"><span><strong>AI 与开发工具</strong><small>Agent 学习、模型工具与开发环境配置，分享尝试、取舍和踩坑。</small></span><span class="dyc-topic-count">11 篇<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a><a class="dyc-topic" href="/topic/opensource/"><span><strong>开源实践</strong><small>Kestra PR 的实现、测试与评审记录，看看代码进入开源项目的过程。</small></span><span class="dyc-topic-count">2 篇<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a></div></section>
+    <section class="dyc-section" aria-labelledby="latest-title"><div class="dyc-section-head"><h2 id="latest-title">最近写的</h2><a href="/blog/">全部文章<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div><div class="dyc-latest"><article class="dyc-post"><div class="dyc-post-meta"><time datetime="2026-11-06T21:52:35.000Z">2026.11.06</time><span>工具推荐</span></div><h3><a href="&#x2F;2026&#x2F;11&#x2F;06&#x2F;magpie-替换ccswitch的选择&#x2F;">magpie：替换 cc-switch 的一个选择</a></h3><p>从 cc-switch 转向 magpie，记录路由、用量查询、隐私脱敏与跨 Agent 使用模型的选择理由。</p><a class="dyc-read" href="&#x2F;2026&#x2F;11&#x2F;06&#x2F;magpie-替换ccswitch的选择&#x2F;">阅读全文<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></article><article class="dyc-post"><div class="dyc-post-meta"><time datetime="2026-10-14T08:48:16.000Z">2026.10.14</time><span>学习笔记</span></div><h3><a href="&#x2F;2026&#x2F;10&#x2F;14&#x2F;omp连接gpt-plus-pro报错-403-unsupported-country-region-territory&#x2F;">omp连接gpt-plus&#x2F;pro报错:403 unsupported_country_region_territory</a></h3><p>前言我在通过 omp 使用 gpt plus 订阅时出现了两种报错，分别是 403 unsupported_country_region_territory 和 交换 Token 时网络超时， 最终成功解决问题，这里提供排查思路。 排查思路</p><a class="dyc-read" href="&#x2F;2026&#x2F;10&#x2F;14&#x2F;omp连接gpt-plus-pro报错-403-unsupported-country-region-territory&#x2F;">阅读全文<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></article><article class="dyc-post"><div class="dyc-post-meta"><time datetime="2026-09-29T10:40:00.000Z">2026.09.29</time><span>学习笔记</span></div><h3><a href="&#x2F;2026&#x2F;09&#x2F;29&#x2F;Java-equals与hashCode为什么要一起重写&#x2F;">Java 的 equals() 与 hashCode() 为什么要一起重写</a></h3><p>两个对象字段看起来一样，放进 HashSet 后却查不到；或者重写了 equals()，编辑器又提示要重写 hashCode()。这些现象都指向同一个问题：我们给对象定义了新的“相等”含义，却没有同步定义它在哈希集合中的散列码。 默认比较与</p><a class="dyc-read" href="&#x2F;2026&#x2F;09&#x2F;29&#x2F;Java-equals与hashCode为什么要一起重写&#x2F;">阅读全文<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></article><article class="dyc-post"><div class="dyc-post-meta"><time datetime="2026-09-29T10:30:00.000Z">2026.09.29</time><span>学习笔记</span></div><h3><a href="&#x2F;2026&#x2F;09&#x2F;29&#x2F;Java接口与抽象类怎么选&#x2F;">Java 接口与抽象类怎么选</a></h3><p>通过消息发送的例子，理解接口与抽象类如何配合，以及什么时候使用组合。</p><a class="dyc-read" href="&#x2F;2026&#x2F;09&#x2F;29&#x2F;Java接口与抽象类怎么选&#x2F;">阅读全文<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></article><article class="dyc-post"><div class="dyc-post-meta"><time datetime="2026-09-29T10:20:00.000Z">2026.09.29</time><span>学习笔记</span></div><h3><a href="&#x2F;2026&#x2F;09&#x2F;29&#x2F;Java二维数组复制-共享行与复制元素&#x2F;">Java 二维数组复制：共享行与复制元素</a></h3><p>从二维数组的引用关系出发，用示例区分共享行与逐行复制元素，以及两种写法对原数组的影响。</p><a class="dyc-read" href="&#x2F;2026&#x2F;09&#x2F;29&#x2F;Java二维数组复制-共享行与复制元素&#x2F;">阅读全文<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></article><article class="dyc-post"><div class="dyc-post-meta"><time datetime="2026-09-29T10:10:00.000Z">2026.09.29</time><span>学习笔记</span></div><h3><a href="&#x2F;2026&#x2F;09&#x2F;29&#x2F;Java文件与字节流入门&#x2F;">Java 文件与字节流入门</a></h3><p>从 Path、File 和 Files 入手，整理字节流读写、资源关闭与文件复制的基本用法。</p><a class="dyc-read" href="&#x2F;2026&#x2F;09&#x2F;29&#x2F;Java文件与字节流入门&#x2F;">阅读全文<svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></article></div></section>
+  </div>
+<footer class="page-footer footnote"><hr><div class="text"><p>© DarkYellowCat · 记录学习，也记录过程。
+使用 <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> 与 <a target="_blank" rel="noopener" href="https://xaoxuu.com/wiki/stellar/">Stellar</a> 构建 · <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
+</div></footer>
+</main></div><button type="button" class="site-scrim" data-shell-action="dismiss-drawer" aria-label="Close navigation" tabindex="-1"></button><div data-stellar-runtime-region class="site-dock" role="group" aria-label="Layout panels">
+  <button type="button" class="site-dock__button site-dock__button--rightbar ui-interactive" aria-label="Open rightbar" aria-controls="rightbar-region" aria-expanded="false" data-shell-action="toggle-rightbar-drawer">
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type="button" class="site-dock__button site-dock__button--leftbar ui-interactive" aria-label="Open leftbar" aria-controls="leftbar-region" aria-expanded="false" data-shell-action="toggle-leftbar-drawer">
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
 </div>
-<div class="site-state-wrap animated">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-        <a href="/archives/">
-          <span class="site-state-item-count">46</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
+
+<dialog data-stellar-runtime-region class="search-dialog" id="site-search-dialog" aria-labelledby="site-search-title">
+  <div class="search-dialog__panel search-wrapper" id="site-search-wrapper" searching="false">
+    <div class="search-dialog__header">
+      <div class="search-form" role="search">
+        <span class="search-button" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Adapted from Google Material Icons by Material Design Authors - https://github.com/material-icons/material-icons/blob/master/LICENSE --><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h3M3 13h3M3 18h8M16.83 13.83l3.76 3.76"/><circle cx="14" cy="11" r="4"/></g></svg></span>
+        <input type="search" class="search-input" id="site-search-input" aria-labelledby="site-search-title" placeholder="搜索">
       </div>
-      <div class="site-state-item site-state-categories">
-          <a href="/categories/">
-        <span class="site-state-item-count">8</span>
-        <span class="site-state-item-name">分类</span></a>
+      <button type="button" class="search-dialog__close" data-shell-action="close-search" aria-label="关闭搜索">×</button>
+    </div>
+    
+      <div class="search-dialog__scope" role="radiogroup" aria-labelledby="site-search-title" hidden>
+        <label class="search-dialog__scope-option" data-search-scope-option="all">
+          <input class="ui-radio" type="radio" name="site-search-scope" value="all">
+          <span>全站</span>
+        </label>
+        <label class="search-dialog__scope-option" data-search-scope-option="blog" hidden>
+          <input class="ui-radio" type="radio" name="site-search-scope" value="blog">
+          <span>博客</span>
+        </label>
+        <label class="search-dialog__scope-option" data-search-scope-option="current" hidden>
+          <input class="ui-radio" type="radio" name="site-search-scope" value="current">
+          <span data-search-scope-current-label></span>
+        </label>
       </div>
-      <div class="site-state-item site-state-tags">
-          <a href="/tags/">
-        <span class="site-state-item-count">60</span>
-        <span class="site-state-item-name">标签</span></a>
-      </div>
-  </nav>
-</div>
-  <div class="cc-license animated" itemprop="license">
-    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+    
+    <h2 class="search-dialog__title" id="site-search-title">站内搜索</h2>
+    <div class="search-result" id="site-search-result"></div>
+    <div class="search-no-result">没有找到内容！</div>
   </div>
-
-        </div>
-      </div>
-    </div>
-
-    
-  </aside>
-
-
-    </div>
-
-    <div class="main-inner index posts-expand">
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/11/06/magpie-%E6%9B%BF%E6%8D%A2ccswitch%E7%9A%84%E9%80%89%E6%8B%A9/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="DarkYellowCat">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="DarkYellowCat's Blog">
-      <meta itemprop="description" content="记录学习与成长">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | DarkYellowCat's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/11/06/magpie-%E6%9B%BF%E6%8D%A2ccswitch%E7%9A%84%E9%80%89%E6%8B%A9/" class="post-title-link" itemprop="url">magpie：替换 cc-switch 的一个选择</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-11-06 21:52:35" itemprop="dateCreated datePublished" datetime="2026-11-06T21:52:35+00:00">2026-11-06</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-11-07 07:43:31" itemprop="dateModified" datetime="2026-11-07T07:43:31+00:00">2026-11-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%B7%A5%E5%85%B7%E6%8E%A8%E8%8D%90/" itemprop="url" rel="index"><span itemprop="name">工具推荐</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2><span id="为什么放弃-cc-switch">为什么放弃 cc-switch</span></h2><p>在使用外模时，因为网络问题，我们常常要等待 <code>Reconnecting ... 5/5</code> 后才能开始工作。任务还没开始，先和重连提示对视一会儿。</p>
-<p>之前我尝试调整连接方式，希望能减少这种等待。但在更新 cc-switch 后，又出现了重连的情况。</p>
-<p>搜索时，我看到 GitHub 上也有人提交过相关 PR，于是开始排查 cc-switch 这一层。不过，单靠我遇到的现象，还不能把所有重连都归因于它。</p>
-<p>经过一系列配置仍无效后，我又尝试备份并降级到 3.x。这里也遇到了版本间数据结构变化的问题，不能直接拿新版数据给旧版用；而降级之后，又缺少对一些后来出现的工具的兼容。</p>
-<p>折腾一圈后，我最终选择了 <a target="_blank" rel="noopener" href="https://usemagpie.ai/zh/">magpie</a>。这里分享一下它吸引我的几个地方。</p>
-<h2><span id="magpie-是什么">magpie 是什么</span></h2><p>magpie 是在本地运行的模型网关：Agent 先把请求交给 magpie，再由它转给对应的模型供应商。</p>
-<p>供应商添加一次后，就可以给不同的 Agent 选择模型，支持 Windows、macOS 和 Linux，也提供命令行和 TUI。</p>
-<h2><span id="更灵活的路由模式">更灵活的路由模式</span></h2><p>当手里有多个供应商或账号时，只能手动切换就比较麻烦了。尤其是任务跑到一半，一个账号额度耗尽，还得停下来改配置。</p>
-<p>magpie 可以把多个模型或账号组成一个路由组，再让 Agent 使用这个组。</p>
-<p><img data-src="/2026/11/06/magpie-%E6%9B%BF%E6%8D%A2ccswitch%E7%9A%84%E9%80%89%E6%8B%A9/routing.png" alt="magpie 路由页面：请求记录、自动路由组与路由模板"></p>
-<p>根据官方介绍，它提供按顺序、轮流、用量少的优先等模式，智能模式还会考虑账号额度的重置时间。某个账号遇到限流或故障时，也可以尝试切到其他可用账号。</p>
-<p>另一个有意思的功能是<strong>按意图路由</strong>：给模型写明用途，例如“简单提问”“编写或修复测试”，由分类模型在每轮对话开始时判断交给谁处理。这一轮后续的工具调用也会留在选中的模型上，不是每调用一次工具就重新抽签。</p>
-<p>对同时使用多个模型的人来说，这比反复手动选择更方便。但前提仍然是组里有可用的备用账号或模型，不能指望网关解决所有网络问题。</p>
-<h2><span id="更详细的用量查询">更详细的用量查询</span></h2><p>我比较喜欢 magpie 的用量页面。除了总 Token，还能看到缓存读取、请求失败、输出速度和首字耗时，也可以按 Agent、模型、供应商等维度筛选。</p>
-<p><img data-src="/2026/11/06/magpie-%E6%9B%BF%E6%8D%A2ccswitch%E7%9A%84%E9%80%89%E6%8B%A9/usage.png" alt="magpie 用量页面：Token、费用估算、缓存命中率和请求明细"></p>
-<h2><span id="隐私脱敏">隐私脱敏</span></h2><p>这是查阅文档时发现的另一个值得关注的功能，不过我目前用不到，只做介绍。</p>
-<p>magpie 提供本地脱敏：在请求离开电脑前，把识别到的敏感值换成占位符，模型回复里的占位符再恢复成原值。这样模型可以引用这个值，但不需要知道它具体是什么。</p>
-<p>它可以按规则识别常见密钥、Token 等内容，也能按需开启个人信息脱敏、添加自定义词，或借助本地模型查找人名和地址。脱敏记录里还可以查看哪些内容被替换。</p>
-<p><strong>这个功能默认关闭，需要在“设置 → 隐私”中开启。</strong> 可以先用页面里的“试一试”检查自己的配置片段，确认规则是否生效。</p>
-<p>不过它只处理经过 magpie 的请求，也不能保证识别所有敏感信息，图片和文件数据仍会原样发送，截图里的文字不会被遮盖。任务如果需要分析某个值本身，遮掉之后也会影响判断，要按需要设置例外。</p>
-<h2><span id="模型和-agent-可以分开选">模型和 Agent 可以分开选</span></h2><p>有时我喜欢一个 Agent 的交互方式，但又想用另一个厂商的模型。这里就涉及不同接口协议的兼容。</p>
-<p>magpie 支持 OpenAI、Anthropic 和 Gemini 等接口之间的转换，让 Agent 和模型不必固定绑定。例如，官方文档给出了 Claude Code 使用 ChatGPT 订阅模型、Codex 使用 DeepSeek 等用法。</p>
-<p>它也支持把已有登录的订阅作为供应商，或者直接在 magpie 中添加支持的订阅账号，减少在不同工具之间重复配置的麻烦。</p>
-<h2><span id="保存方案减少重复改配置">保存方案，减少重复改配置</span></h2><p>官方还提供了“方案”功能，可以保存一组 Agent 的模型设置，之后一起切换。</p>
-<p>平时学习用一套成本较低的模型，处理复杂任务时再换一套，不必逐个 Agent 调整。选回原生模型时，也支持恢复相关配置。</p>
-<p>它在文档中强调只修改需要的配置项，并保留注释、顺序和缩进。</p>
-<h2><span id="简单上手">简单上手</span></h2><p>具体步骤可以看官方<a target="_blank" rel="noopener" href="https://usemagpie.ai/docs/zh/start">快速上手</a>，基本流程不复杂：</p>
-<ol>
-<li>从官网下载对应系统的版本。</li>
-<li>在“供应商”里添加 API 供应商或支持的订阅账号，也可以导入已有配置。</li>
-<li>在“Agent”里选择要使用的模型，或者先建路由组再选择。</li>
-<li>开一个新会话，在路由和用量页面确认请求是否正常经过 magpie。</li>
-</ol>
-<p>如果需要隐私保护，记得额外开启脱敏。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/10/14/omp%E8%BF%9E%E6%8E%A5gpt-plus-pro%E6%8A%A5%E9%94%99-403-unsupported-country-region-territory/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="DarkYellowCat">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="DarkYellowCat's Blog">
-      <meta itemprop="description" content="记录学习与成长">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | DarkYellowCat's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/10/14/omp%E8%BF%9E%E6%8E%A5gpt-plus-pro%E6%8A%A5%E9%94%99-403-unsupported-country-region-territory/" class="post-title-link" itemprop="url">omp连接gpt-plus/pro报错:403 unsupported_country_region_territory</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-10-14 08:48:16" itemprop="dateCreated datePublished" datetime="2026-10-14T08:48:16+00:00">2026-10-14</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-11-07 07:43:31" itemprop="dateModified" datetime="2026-11-07T07:43:31+00:00">2026-11-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1><span id="前言">前言</span></h1><p>我在通过 omp 使用 gpt plus 订阅时出现了两种报错，分别是 <code>403 unsupported_country_region_territory </code>和 <code>交换 Token 时网络超时</code>，
-最终成功解决问题，这里提供排查思路。</p>
-<h1><span id="排查思路">排查思路</span></h1><h2><span id="虚拟网卡">虚拟网卡</span></h2><p><strong>修改后成功</strong></p>
-<p>确保非浏览器应用的所有网络流量都被强制代理。</p>
-<h2><span id="关闭-ipv6">关闭 ipv6</span></h2><p>若环境不支持或未接管 IPv6，导致请求绕过代理直连超时。</p>
-<ol>
-<li><p>按 <code>Win + R</code>键，输入 ncpa.cpl 并回车打开“网络连接”。</p>
-</li>
-<li><p>右键当前正在使用的网卡（Wi-Fi 或以太网），选择 属性。</p>
-</li>
-<li><p>在列表中找到 Internet 协议版本 6 (TCP&#x2F;IPv6)，取消勾选，点击 确定。</p>
-</li>
-<li><p>验证方法：在命令行输入 <code>ping xxx.com</code>，确认解析出的 IP 不再是 IPv6 地址，然后重试登录。</p>
-</li>
-</ol>
-<h2><span id="注入环境变量">注入环境变量</span></h2><p>在“用户变量”中新建以下两项（端口为实际本地端口）：</p>
-<p>变量名：HTTP_PROXY，变量值：<a target="_blank" rel="noopener" href="http://127.0.0.1:7890/">http://127.0.0.1:7890</a></p>
-<p>变量名：HTTPS_PROXY，变量值：<a target="_blank" rel="noopener" href="http://127.0.0.1:7890/">http://127.0.0.1:7890</a></p>
-<h1><span id="申明">申明</span></h1><ol>
-<li><strong>用途限制</strong>：本文内容仅为个人在技术研究、网络调试与故障排除过程中的经验记录，仅供学习与学术交流使用。</li>
-<li><strong>合规提示</strong>：请严格遵守所在国家&#x2F;地区的相关法律法规，并自觉遵守相关产品与服务提供商的用户协议及服务条款。</li>
-<li><strong>免责条款</strong>：文中所述排查步骤基于特定软硬件及网络环境，作者不对方案的通用性、时效性及操作结果作任何明示或暗示的保证。因参考本文操作而引起的系统异常、网络故障、账号封禁或其他连带损失，作者概不承担任何法律与连带责任。</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/09/29/Java-equals%E4%B8%8EhashCode%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%B8%80%E8%B5%B7%E9%87%8D%E5%86%99/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="DarkYellowCat">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="DarkYellowCat's Blog">
-      <meta itemprop="description" content="记录学习与成长">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | DarkYellowCat's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/09/29/Java-equals%E4%B8%8EhashCode%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%B8%80%E8%B5%B7%E9%87%8D%E5%86%99/" class="post-title-link" itemprop="url">Java 的 equals() 与 hashCode() 为什么要一起重写</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-09-29 10:40:00" itemprop="dateCreated datePublished" datetime="2026-09-29T10:40:00+00:00">2026-09-29</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-11-07 07:43:31" itemprop="dateModified" datetime="2026-11-07T07:43:31+00:00">2026-11-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>两个对象字段看起来一样，放进 <code>HashSet</code> 后却查不到；或者重写了 <code>equals()</code>，编辑器又提示要重写 <code>hashCode()</code>。这些现象都指向同一个问题：我们给对象定义了新的“相等”含义，却没有同步定义它在哈希集合中的散列码。</p>
-<h2><span id="默认比较与业务相等">默认比较与业务相等</span></h2><p><code>Object.equals()</code> 的默认实现比较的是两个引用是否指向同一个对象。若业务上认为两个不同实例只要具有相同的标识就相等，就需要在类里重写 <code>equals()</code>。</p>
-<p>下面用不可变的用户标识作为集合键。两个 <code>UserKey(&quot;u-1&quot;)</code> 是不同实例，但按标识比较相等：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.HashSet;</span><br><span class="line"><span class="keyword">import</span> java.util.Objects;</span><br><span class="line"><span class="keyword">import</span> java.util.Set;</span><br><span class="line"></span><br><span class="line"><span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">UserKey</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String id;</span><br><span class="line"></span><br><span class="line">    UserKey(String id) &#123;</span><br><span class="line">        <span class="built_in">this</span>.id = id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">equals</span><span class="params">(Object other)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span> == other) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (!(other <span class="keyword">instanceof</span> UserKey)) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="type">UserKey</span> <span class="variable">that</span> <span class="operator">=</span> (UserKey) other;</span><br><span class="line">        <span class="keyword">return</span> Objects.equals(id, that.id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">hashCode</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Objects.hashCode(id);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HashCodeExample</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        Set&lt;UserKey&gt; users = <span class="keyword">new</span> <span class="title class_">HashSet</span>&lt;&gt;();</span><br><span class="line">        users.add(<span class="keyword">new</span> <span class="title class_">UserKey</span>(<span class="string">&quot;u-1&quot;</span>));</span><br><span class="line">        System.out.println(users.contains(<span class="keyword">new</span> <span class="title class_">UserKey</span>(<span class="string">&quot;u-1&quot;</span>))); <span class="comment">// true</span></span><br><span class="line">        System.out.println(<span class="string">&quot;Aa&quot;</span>.hashCode() == <span class="string">&quot;BB&quot;</span>.hashCode()); <span class="comment">// true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>HashSet</code> 先利用散列码定位候选位置，再结合相等比较判断元素是否匹配。若只按 <code>id</code> 重写 <code>equals()</code>，却保留 <code>Object.hashCode()</code>，两个业务上相等的实例可能得到不同散列码，集合查找就会出问题。示例让两个方法都依据同一个 <code>id</code> 字段，因此保持一致。</p>
-<h2><span id="必须遵守的关系">必须遵守的关系</span></h2><table>
-<thead>
-<tr>
-<th>条件</th>
-<th>能推出什么</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>a.equals(b)</code> 为 <code>true</code></td>
-<td><code>a.hashCode() == b.hashCode()</code> 必须成立</td>
-</tr>
-<tr>
-<td>两个散列码相同</td>
-<td><strong>不能</strong>推出两个对象相等，可能发生碰撞</td>
-</tr>
-<tr>
-<td>两个散列码不同</td>
-<td>若实现遵守契约，则两个对象不可能相等</td>
-</tr>
-</tbody></table>
-<p><code>&quot;Aa&quot;</code> 和 <code>&quot;BB&quot;</code> 在 Java 中就是散列码相同、内容却不同的例子。普通 <code>hashCode()</code> 是供哈希表使用的整数值，不要求抗碰撞，也不适合当作密码摘要或安全校验值。</p>
-<p>同一对象在一次程序运行中，只要参与相等比较的信息没有变化，反复调用 <code>hashCode()</code> 就应得到相同结果；规范不要求不同运行之间的结果一致。因此，不要把一般对象的散列码当作持久身份或数据库主键。</p>
-<p><code>Object.hashCode()</code> 的规范也<strong>没有保证返回对象的内存地址</strong>。它只要求尽可能让不同对象得到不同整数。旧笔记里“默认散列码就是存储地址”的说法不能作为 Java 的通用规则。</p>
-<h2><span id="当对象用作集合键时">当对象用作集合键时</span></h2><p>上例把 <code>id</code> 声明为 <code>final</code>，避免对象进入 <code>HashSet</code> 后再改变用于相等比较和散列计算的值。如果这类值在入集合后发生变化，查找可能落到与插入时不同的位置。编写值对象时，让相等比较涉及的字段保持不变，是最容易维护的做法。</p>
-<p>实际重写时还要检查 <code>equals()</code> 本身的规则，例如自反、对称、传递，以及与 <code>null</code> 比较返回 <code>false</code>。不要只看两个示例对象能否比较成功，就认为实现已经满足契约。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/09/29/Java%E6%8E%A5%E5%8F%A3%E4%B8%8E%E6%8A%BD%E8%B1%A1%E7%B1%BB%E6%80%8E%E4%B9%88%E9%80%89/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="DarkYellowCat">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="DarkYellowCat's Blog">
-      <meta itemprop="description" content="记录学习与成长">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | DarkYellowCat's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/09/29/Java%E6%8E%A5%E5%8F%A3%E4%B8%8E%E6%8A%BD%E8%B1%A1%E7%B1%BB%E6%80%8E%E4%B9%88%E9%80%89/" class="post-title-link" itemprop="url">Java 接口与抽象类怎么选</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-09-29 10:30:00" itemprop="dateCreated datePublished" datetime="2026-09-29T10:30:00+00:00">2026-09-29</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-11-07 07:43:31" itemprop="dateModified" datetime="2026-11-07T07:43:31+00:00">2026-11-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p><strong>接口描述对象对外提供什么能力；抽象类可以为一组相关的子类保存共同状态和实现</strong>。</p>
-<h2><span id="用一个例子看两者如何配合">用一个例子看两者如何配合</span></h2><p>以下代码用控制台模拟消息发送。调用方只依赖 <code>MessageSender</code>，不需要知道发送器内部如何组织代码。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">MessageSender</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">send</span><span class="params">(String message)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">default</span> <span class="keyword">void</span> <span class="title function_">sendIfPresent</span><span class="params">(String message)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (message != <span class="literal">null</span> &amp;&amp; !message.isEmpty()) &#123;</span><br><span class="line">            send(message);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">NamedSender</span> <span class="keyword">implements</span> <span class="title class_">MessageSender</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="title function_">NamedSender</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> String <span class="title function_">label</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;[&quot;</span> + name + <span class="string">&quot;] &quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ConsoleSender</span> <span class="keyword">extends</span> <span class="title class_">NamedSender</span> &#123;</span><br><span class="line">    ConsoleSender(String name) &#123;</span><br><span class="line">        <span class="built_in">super</span>(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">send</span><span class="params">(String message)</span> &#123;</span><br><span class="line">        System.out.println(label() + message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">InterfaceExample</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">MessageSender</span> <span class="variable">sender</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ConsoleSender</span>(<span class="string">&quot;notice&quot;</span>);</span><br><span class="line">        sender.sendIfPresent(<span class="string">&quot;Hello&quot;</span>); <span class="comment">// [notice] Hello</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>send()</code> 是接口规定的能力，具体类必须提供实现，除非该类仍是抽象类。<code>sendIfPresent()</code> 是接口的默认方法，调用它时会继续调用具体实现的 <code>send()</code>。<code>NamedSender</code> 则保存名字，并把构造和标签拼接逻辑留给同一类发送器的子类复用。</p>
-<p>这个例子把两种机制放在一起展示；如果实际项目只有一个发送器、也没有共享实现的需要，直接让 <code>ConsoleSender implements MessageSender</code> 会更简单，不必专门引入抽象类。</p>
-<h2><span id="接口不只是抽象方法">接口不只是抽象方法</span></h2><p>接口中的普通方法声明默认是 <code>public abstract</code>，实现时需要使用 <code>public</code>。接口也可以声明 <code>default</code> 方法和 <code>static</code> 方法；Java 9 起还可以使用私有方法辅助复用接口内部逻辑。接口字段始终是 <code>public static final</code>，不能用来存储每个对象各自会变化的状态。</p>
-<p>默认方法适合在接口上增加一个对现有实现类也有合理含义的操作，但它不是“随手放公共代码”的地方。两个互不相关的接口若提供了相同签名的默认方法，实现类通常需要自己明确覆盖，不能指望编译器猜选哪一个。</p>
-<h2><span id="抽象类能做什么">抽象类能做什么</span></h2><p>抽象类不能直接实例化，但可以有构造器、实例字段、普通方法和抽象方法。它适合一组关系紧密的类共享状态或部分实现。Java 类只能继承一个类，却可以实现多个接口；因此接口也适合描述不同类都具备的同一种能力。</p>
-<table>
-<thead>
-<tr>
-<th>遇到的问题</th>
-<th>优先考虑</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>调用方只需约定“能做什么”，实现类可能来自不同类层次</td>
-<td>接口</td>
-</tr>
-<tr>
-<td>一组相关子类要共享实例状态、构造过程或受保护的实现</td>
-<td>抽象类</td>
-</tr>
-<tr>
-<td>两种需求同时存在</td>
-<td>对外暴露接口，再按需要用抽象类复用实现</td>
-</tr>
-</tbody></table>
-<p>这只是选择依据，不是必须搭配使用的模板。先定义调用方真正需要的方法，再决定有没有足够的共性值得提取到抽象类。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/09/29/Java%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E5%A4%8D%E5%88%B6-%E5%85%B1%E4%BA%AB%E8%A1%8C%E4%B8%8E%E5%A4%8D%E5%88%B6%E5%85%83%E7%B4%A0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="DarkYellowCat">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="DarkYellowCat's Blog">
-      <meta itemprop="description" content="记录学习与成长">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | DarkYellowCat's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/09/29/Java%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E5%A4%8D%E5%88%B6-%E5%85%B1%E4%BA%AB%E8%A1%8C%E4%B8%8E%E5%A4%8D%E5%88%B6%E5%85%83%E7%B4%A0/" class="post-title-link" itemprop="url">Java 二维数组复制：共享行与复制元素</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-09-29 10:20:00" itemprop="dateCreated datePublished" datetime="2026-09-29T10:20:00+00:00">2026-09-29</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-11-07 07:43:31" itemprop="dateModified" datetime="2026-11-07T07:43:31+00:00">2026-11-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2><span id="举例">举例</span></h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ArrayCopyExample</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span>[][] original = &#123;&#123;<span class="number">2</span>, <span class="number">4</span>&#125;, &#123;<span class="number">6</span>, <span class="number">8</span>&#125;&#125;;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span>[][] sharedRows = original.clone();</span><br><span class="line">        sharedRows[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">20</span>;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span>[][] copiedRows = <span class="keyword">new</span> <span class="title class_">int</span>[original.length][];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; original.length; i++) &#123;</span><br><span class="line">            copiedRows[i] = <span class="keyword">new</span> <span class="title class_">int</span>[original[i].length];</span><br><span class="line">            System.arraycopy(original[i], <span class="number">0</span>, copiedRows[i], <span class="number">0</span>, original[i].length);</span><br><span class="line">        &#125;</span><br><span class="line">        copiedRows[<span class="number">0</span>][<span class="number">0</span>] = <span class="number">99</span>;</span><br><span class="line"></span><br><span class="line">        System.out.println(original[<span class="number">0</span>][<span class="number">0</span>]);              <span class="comment">// 20</span></span><br><span class="line">        System.out.println(sharedRows[<span class="number">0</span>][<span class="number">0</span>]);            <span class="comment">// 20</span></span><br><span class="line">        System.out.println(copiedRows[<span class="number">0</span>][<span class="number">0</span>]);            <span class="comment">// 99</span></span><br><span class="line">        System.out.println(original == sharedRows);      <span class="comment">// false</span></span><br><span class="line">        System.out.println(original[<span class="number">0</span>] == sharedRows[<span class="number">0</span>]); <span class="comment">// true</span></span><br><span class="line">        System.out.println(original[<span class="number">0</span>] == copiedRows[<span class="number">0</span>]); <span class="comment">// false</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Java 的 <code>int[][]</code> 实际上是“元素为 <code>int[]</code> 引用的数组”。可以分两层看：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">original ──&gt; 外层数组 ──&gt; 第一行 int[] &#123;2, 4&#125;</span><br><span class="line">                       └─&gt; 第二行 int[] &#123;6, 8&#125;</span><br></pre></td></tr></table></figure>
-
-<h2><span id="复制外层数组行仍然共享">复制外层数组：行仍然共享</span></h2><p><code>original.clone()</code> 创建了新的外层数组，但复制到新外层数组中的元素是<strong>行数组的引用</strong>。因此 <code>original != sharedRows</code>，而 <code>original[0] == sharedRows[0]</code>。改动 <code>sharedRows[0][0]</code>，相当于改动两者共同指向的第一行，所以 <code>original[0][0]</code> 也变成 <code>20</code>。</p>
-<p>只调用一次 <code>System.arraycopy(original, ..., another, ...)</code> 复制整个外层数组，效果也是复制行引用；它不会自动递归地复制每一行。</p>
-<h2><span id="逐行复制整数元素不再共享">逐行复制：整数元素不再共享</span></h2><p>示例中的循环为每一行新建 <code>int[]</code>，再把该行的整数复制过去。此时 <code>copiedRows[0]</code> 与 <code>original[0]</code> 是两个数组。给 <code>copiedRows[0][0]</code> 赋值 <code>99</code>，不会改变 <code>original[0][0]</code>。</p>
-<p>顺序也重要：程序先通过 <code>sharedRows</code> 把原数组的 <code>2</code> 改成 <code>20</code>，随后才创建 <code>copiedRows</code>。因此复制进去的是 <code>20</code>，最后又被改成 <code>99</code>。分析原练习的结果时，也要按代码执行顺序跟踪每一步，而不能只看最初的初始化值。</p>
-<p>这里复制的是 <code>int</code> 这样的基本类型值。若行内存放的是对象引用，逐行复制只会复制这些引用，对象本身仍可能被共享；“复制行”不等于“递归复制了所有对象”。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/09/29/Java%E6%96%87%E4%BB%B6%E4%B8%8E%E5%AD%97%E8%8A%82%E6%B5%81%E5%85%A5%E9%97%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="DarkYellowCat">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="DarkYellowCat's Blog">
-      <meta itemprop="description" content="记录学习与成长">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | DarkYellowCat's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/09/29/Java%E6%96%87%E4%BB%B6%E4%B8%8E%E5%AD%97%E8%8A%82%E6%B5%81%E5%85%A5%E9%97%A8/" class="post-title-link" itemprop="url">Java 文件与字节流入门</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-09-29 10:10:00" itemprop="dateCreated datePublished" datetime="2026-09-29T10:10:00+00:00">2026-09-29</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-11-07 07:43:31" itemprop="dateModified" datetime="2026-11-07T07:43:31+00:00">2026-11-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2><span id="文件位置path-与-file">文件位置：<code>Path</code> 与 <code>File</code></span></h2><p><code>Path</code> 表示一个文件系统路径，<code>File</code> 是较早的路径抽象。它们表示路径，不等于已经打开了文件，也不要求先创建一个 <code>File</code> 对象才能读写。新代码可以先从 <code>Path</code> 和 <code>Files</code> 入手：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.nio.file.Files;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Path;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"></span><br><span class="line"><span class="type">Path</span> <span class="variable">path</span> <span class="operator">=</span> Paths.get(<span class="string">&quot;data&quot;</span>, <span class="string">&quot;notes.txt&quot;</span>);</span><br><span class="line">System.out.println(path.toAbsolutePath().normalize());</span><br><span class="line">System.out.println(Files.exists(path));</span><br></pre></td></tr></table></figure>
-
-<p>相对路径按程序运行时的工作目录解释，不是按 <code>.java</code> 文件所在目录解释。<code>normalize()</code> 会整理路径中的 <code>.</code> 和 <code>..</code>，但不会因此创建文件。旧代码如果已经使用 <code>File</code>，可以调用 <code>file.toPath()</code> 与 <code>Files</code> API 配合。</p>
-<h2><span id="输入与输出方向以程序为准">输入与输出：方向以程序为准</span></h2><p><code>InputStream</code> 从外部读取字节到程序；<code>OutputStream</code> 把程序中的字节写出去。<code>Files.newInputStream(path)</code> 和 <code>Files.newOutputStream(path)</code> 可以打开文件流。</p>
-<p>单字节读取时，<code>read()</code> 返回 <code>0</code> 到 <code>255</code>，到达末尾返回 <code>-1</code>。批量读取时，<code>read(byte[])</code> 返回本次实际读到的字节数；写出时要传入这个数量，不能每次都把整个缓冲区写出去，否则最后一块可能混入旧数据。</p>
-<p>下面是一段完整的文件复制程序。运行前准备好输入文件，执行 <code>java FileCopyExample input.txt copy.txt</code>：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.InputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.OutputStream;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Files;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Path;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FileCopyExample</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">Path</span> <span class="variable">source</span> <span class="operator">=</span> Paths.get(args[<span class="number">0</span>]);</span><br><span class="line">        <span class="type">Path</span> <span class="variable">target</span> <span class="operator">=</span> Paths.get(args[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> (<span class="type">InputStream</span> <span class="variable">in</span> <span class="operator">=</span> Files.newInputStream(source);</span><br><span class="line">             <span class="type">OutputStream</span> <span class="variable">out</span> <span class="operator">=</span> Files.newOutputStream(target)) &#123;</span><br><span class="line">            <span class="type">byte</span>[] buffer = <span class="keyword">new</span> <span class="title class_">byte</span>[<span class="number">8192</span>];</span><br><span class="line">            <span class="type">int</span> count;</span><br><span class="line">            <span class="keyword">while</span> ((count = in.read(buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">                out.write(buffer, <span class="number">0</span>, count);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>Files.newOutputStream(target)</code> 默认会创建不存在的目标文件；目标文件已存在时会截断原内容。因此不要把唯一一份重要文件作为测试目标。若只想复制文件，直接用 <code>Files.copy(source, target)</code> 更简洁；这里手写循环是为了看清字节流的工作过程。</p>
-<h2><span id="为什么使用-try-管理资源">为什么使用 <code>try</code> 管理资源</span></h2><p>文件流占用系统资源。即使读取或写入途中抛出异常，<code>try</code> 后括号中的流也会在离开代码块时关闭。示例中的输入、输出流会按声明的相反顺序关闭，不需要再手写 <code>finally</code>。</p>
-<p><code>flush()</code> 用于要求输出流将已缓冲的数据继续交给下一层。并非每个输出流都有自己的缓冲区，也不能把 <code>flush()</code> 理解成“数据一定已经安全落盘”。在普通文件复制中，正确关闭流是必需的；只有需要在流保持打开时及时交出缓冲数据，才考虑显式调用 <code>flush()</code>。</p>
-<h2><span id="字节不是文字">字节不是文字</span></h2><p>上述程序复制的是原始字节，所以图片、压缩包和文本都能按相同方式处理。但要把文字变成字节或还原成文字时，必须明确字符编码。例如：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.nio.charset.StandardCharsets;</span><br><span class="line"></span><br><span class="line"><span class="type">byte</span>[] data = <span class="string">&quot;学习 Java&quot;</span>.getBytes(StandardCharsets.UTF_8);</span><br><span class="line"><span class="type">String</span> <span class="variable">text</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">String</span>(data, StandardCharsets.UTF_8);</span><br></pre></td></tr></table></figure>
-
-<p>把字节长度、字符数和文件大小混为一谈，容易在中文文本上出错。如果任务本来就是整段文本的读写，还可以直接使用 <code>Files</code> 提供的文本方法，无须为了使用流而手写复制循环。</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/09/29/HTTP%E8%AF%B7%E6%B1%82%E4%B8%8E%E5%93%8D%E5%BA%94%E6%80%8E%E4%B9%88%E7%BB%84%E6%88%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="DarkYellowCat">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="DarkYellowCat's Blog">
-      <meta itemprop="description" content="记录学习与成长">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | DarkYellowCat's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/09/29/HTTP%E8%AF%B7%E6%B1%82%E4%B8%8E%E5%93%8D%E5%BA%94%E6%80%8E%E4%B9%88%E7%BB%84%E6%88%90/" class="post-title-link" itemprop="url">HTTP 请求与响应怎么组成</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-09-29 10:00:00" itemprop="dateCreated datePublished" datetime="2026-09-29T10:00:00+00:00">2026-09-29</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-11-07 07:43:31" itemprop="dateModified" datetime="2026-11-07T07:43:31+00:00">2026-11-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>学习后端接口时，我曾把请求行叫作“状态行”，还以为只有 POST 请求才能带请求体。把一次 HTTP&#x2F;1.1 交互拆开看，这两个概念就容易分清了。</p>
-<h2><span id="从一次请求开始">从一次请求开始</span></h2><p>下面的示例请求 <code>/notes/42</code>，响应是一段 JSON。这里展示的是便于阅读的 <strong>HTTP&#x2F;1.1 报文形式</strong>；HTTP&#x2F;2 和 HTTP&#x2F;3 不使用同样的文本报文格式。</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/notes/42</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>example.com</span><br><span class="line"><span class="attribute">Accept</span><span class="punctuation">: </span>application/json</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">HTTP/1.1</span> <span class="number">200</span> OK</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/json</span><br><span class="line"><span class="attribute">Content-Length</span><span class="punctuation">: </span>9</span><br><span class="line"></span><br><span class="line"><span class="language-json"><span class="punctuation">&#123;</span><span class="attr">&quot;id&quot;</span><span class="punctuation">:</span><span class="number">42</span><span class="punctuation">&#125;</span></span></span><br></pre></td></tr></table></figure>
-
-<p>空行用于分隔头部和消息体。上面的 GET 请求没有消息体；响应体 <code>{&quot;id&quot;:42}</code> 按 ASCII 编码是 9 个字节，因此示例中的 <code>Content-Length</code> 为 9。实际长度要按传输的<strong>字节</strong>计算，不能直接用中文字数代替。</p>
-<h2><span id="请求我想做什么">请求：我想做什么</span></h2><p>HTTP&#x2F;1.1 请求由请求行、头部字段和可选的消息体组成：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">方法 请求目标 HTTP版本</span><br><span class="line">头字段名: 值</span><br><span class="line"></span><br><span class="line">可选的消息体</span><br></pre></td></tr></table></figure>
-
-<p>请求行里的 <code>GET</code> 表示获取目标资源，<code>/notes/42</code> 是请求目标。<code>Host</code> 指明目标主机；<code>Accept</code> 表示客户端希望接收的内容类型。发送 JSON 时，常用 <code>Content-Type: application/json</code> 说明消息体的媒体类型。</p>
-<p>不要用“GET 没有请求体、POST 一定有请求体”判断报文结构：消息体是否存在与方法名称不是一回事。GET 请求通常不发送内容，且请求内容没有通用定义的语义；POST 可以携带需要服务端处理的数据，也可能发送空内容。具体请求还要遵守所调用接口的约定。</p>
-<h2><span id="响应处理结果是什么">响应：处理结果是什么</span></h2><p>HTTP&#x2F;1.1 响应由状态行、头部字段和可选的消息体组成。状态行中的 <code>200</code> 是状态码，<code>OK</code> 是原因短语；程序应依据状态码处理结果，不应依赖原因短语的固定文字。</p>
-<table>
-<thead>
-<tr>
-<th>状态码</th>
-<th>常见含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>200 OK</code></td>
-<td>请求成功，响应内容取决于请求方法</td>
-</tr>
-<tr>
-<td><code>201 Created</code></td>
-<td>已创建资源</td>
-</tr>
-<tr>
-<td><code>204 No Content</code></td>
-<td>请求成功，响应没有内容</td>
-</tr>
-<tr>
-<td><code>301 Moved Permanently</code></td>
-<td>资源被永久重定向</td>
-</tr>
-<tr>
-<td><code>304 Not Modified</code></td>
-<td>条件请求的资源未修改，可继续使用已有副本</td>
-</tr>
-<tr>
-<td><code>400 Bad Request</code></td>
-<td>服务端无法或不愿处理有问题的请求</td>
-</tr>
-<tr>
-<td><code>401 Unauthorized</code></td>
-<td>需要有效的身份凭据</td>
-</tr>
-<tr>
-<td><code>403 Forbidden</code></td>
-<td>服务端理解请求但拒绝处理</td>
-</tr>
-<tr>
-<td><code>404 Not Found</code></td>
-<td>没有找到目标资源</td>
-</tr>
-<tr>
-<td><code>500 Internal Server Error</code></td>
-<td>服务端处理时发生内部错误</td>
-</tr>
-</tbody></table>
-<p>状态码首位还可用于快速判断类别：<code>1xx</code> 表示信息，<code>2xx</code> 表示成功，<code>3xx</code> 表示重定向，<code>4xx</code> 表示客户端错误，<code>5xx</code> 表示服务端错误。响应头中的 <code>Content-Type</code> 描述内容类型，<code>Location</code> 常用于说明新资源或重定向目标，<code>Cache-Control</code> 用于表达缓存要求。</p>
-<h2><span id="为什么不能把-tcp-握手画进每次-http-请求">为什么不能把 TCP 握手画进每次 HTTP 请求</span></h2><p>HTTP 定义请求和响应的语义，连接如何建立属于传输层。HTTP&#x2F;1.1 和 HTTP&#x2F;2 通常运行在 TCP 上；一条连接可以承载多个请求，不必每次请求都重新完成 TCP 握手。HTTP&#x2F;3 则使用基于 UDP 的 QUIC，不能套用“先 TCP 三次握手，再发请求”的流程图。</p>
-<p>不同版本的报文编码和传输方式不同，但方法、目标、头字段和状态码这些核心语义可以放在一起理解。初学时先读懂一组 HTTP&#x2F;1.1 报文，再去了解 HTTP&#x2F;2 的帧和 HTTP&#x2F;3 的 QUIC，会更容易区分“请求的意思”和“消息如何传输”。</p>
-<h2><span id="参考资料">参考资料</span></h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.rfc-editor.org/rfc/rfc9110.html">RFC 9110：HTTP Semantics</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.rfc-editor.org/rfc/rfc9112.html">RFC 9112：HTTP&#x2F;1.1</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.rfc-editor.org/rfc/rfc9113.html">RFC 9113：HTTP&#x2F;2</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.rfc-editor.org/rfc/rfc9114.html">RFC 9114：HTTP&#x2F;3</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/09/24/Kestra-PR-%E5%88%86%E4%BA%AB-224-%E5%A6%82%E4%BD%95%E4%BF%AE%E6%AD%A3-MySQL-serverId-%E7%9A%84%E7%BC%BA%E7%9C%81%E7%AD%96%E7%95%A5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="DarkYellowCat">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="DarkYellowCat's Blog">
-      <meta itemprop="description" content="记录学习与成长">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | DarkYellowCat's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/09/24/Kestra-PR-%E5%88%86%E4%BA%AB-224-%E5%A6%82%E4%BD%95%E4%BF%AE%E6%AD%A3-MySQL-serverId-%E7%9A%84%E7%BC%BA%E7%9C%81%E7%AD%96%E7%95%A5/" class="post-title-link" itemprop="url">Kestra PR 分享: #224 如何修正 MySQL serverId 的缺省策略</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-09-24 00:16:28" itemprop="dateCreated datePublished" datetime="2026-09-24T00:16:28+00:00">2026-09-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-11-07 07:43:31" itemprop="dateModified" datetime="2026-11-07T07:43:31+00:00">2026-11-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%BC%80%E6%BA%90/" itemprop="url" rel="index"><span itemprop="name">开源</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>记录 Kestra plugin-debezium PR #224 的实现与评审过程：复用 connector identity，稳定派生 MySQL serverId，并补齐测试、文档和完整验证。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/09/24/Kestra-PR-%E5%88%86%E4%BA%AB-224-%E5%A6%82%E4%BD%95%E4%BF%AE%E6%AD%A3-MySQL-serverId-%E7%9A%84%E7%BC%BA%E7%9C%81%E7%AD%96%E7%95%A5/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/09/24/Kestra-PR-%E5%88%86%E4%BA%AB%E6%8F%90%E4%BA%A4-fix-MySQL-%E8%AE%A9-Debezium-serverId-%E4%BB%8E%E5%BF%85%E5%A1%AB%E5%8F%98%E4%B8%BA%E5%8F%AF%E9%80%89/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="DarkYellowCat">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="DarkYellowCat's Blog">
-      <meta itemprop="description" content="记录学习与成长">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | DarkYellowCat's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/09/24/Kestra-PR-%E5%88%86%E4%BA%AB%E6%8F%90%E4%BA%A4-fix-MySQL-%E8%AE%A9-Debezium-serverId-%E4%BB%8E%E5%BF%85%E5%A1%AB%E5%8F%98%E4%B8%BA%E5%8F%AF%E9%80%89/" class="post-title-link" itemprop="url">Kestra PR 分享提交 fix(MySQL):让 Debezium serverId 从必填变为可选</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-09-24 00:16:08" itemprop="dateCreated datePublished" datetime="2026-09-24T00:16:08+00:00">2026-09-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-11-07 07:43:31" itemprop="dateModified" datetime="2026-11-07T07:43:31+00:00">2026-11-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%BC%80%E6%BA%90/" itemprop="url" rel="index"><span itemprop="name">开源</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>记录我向 Kestra 的 plugin-debezium 提交 PR #221 的完整过程：从定位 serverId 的使用链路，到实现可选配置、补充测试和文档，再到合并后的评审反馈。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/09/24/Kestra-PR-%E5%88%86%E4%BA%AB%E6%8F%90%E4%BA%A4-fix-MySQL-%E8%AE%A9-Debezium-serverId-%E4%BB%8E%E5%BF%85%E5%A1%AB%E5%8F%98%E4%B8%BA%E5%8F%AF%E9%80%89/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://darkyellowcat.github.io/2026/09/16/MYSQL%E5%AD%97%E6%AE%B5%E7%B1%BB%E5%9E%8B%E4%BC%98%E5%8C%96/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="DarkYellowCat">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="DarkYellowCat's Blog">
-      <meta itemprop="description" content="记录学习与成长">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | DarkYellowCat's Blog">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/09/16/MYSQL%E5%AD%97%E6%AE%B5%E7%B1%BB%E5%9E%8B%E4%BC%98%E5%8C%96/" class="post-title-link" itemprop="url">MYSQL字段类型优化</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2026-09-16 12:55:54" itemprop="dateCreated datePublished" datetime="2026-09-16T12:55:54+00:00">2026-09-16</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-11-07 07:43:31" itemprop="dateModified" datetime="2026-11-07T07:43:31+00:00">2026-11-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1><span id="核心原则">核心原则</span></h1><h2><span id="范围内选择最小的数据类型">范围内选择最小的数据类型</span></h2><p>字段类型越小，意味着单行数据和索引记录更紧凑。在相同页大小下，数据库可以容纳更多记录，从而可能提高缓存命中率并减少磁盘 I&#x2F;O。</p>
-<h3><span id="辨析">辨析</span></h3><p>类型声明的的大小，不代表按最大长度占用空间</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nickname VarChar(20)</span><br></pre></td></tr></table></figure>
-<p>VarChar(20) 中的 20 表示最多保存 20 个字符，并不意味着每行都会固定占用 20 个字符的空间。VarChar 通常按照实际内容长度保存数据，同时额外使用 1 或 2 字节记录长度。</p>
-<p>如果用户昵称只有 5 个字符，数据库主要保存这 5 个字符编码后的字节，而不是预留完整的 20 个字符空间。实际占用还会受到字符集影响， utf8mb4 中一个字符最多可能需要 4 字节。</p>
-<p>不过，字段声明的最大长度仍可能影响：</p>
-<ul>
-<li>是否需要使用 1 字节或 2 字节的长度前缀；</li>
-<li>InnoDB 对最大行长度的检查；</li>
-<li>临时表、排序和某些执行阶段的内存估算；</li>
-<li>索引键允许的最大长度；</li>
-<li>应用驱动和 ORM 对字段的处理方式。</li>
-</ul>
-<p>整数类型则是固定长度的：</p>
-<p>所以，能用 INT 就不用 BIGINT 。</p>
-<p>但也不要取极限值，字段类型先由业务语义和生命周期确定，再讨论字节数。过窄的类型会把正常增长变成高风险 DDL。</p>
-<h2><span id="选择简单的数据类型">选择简单的数据类型</span></h2><p>复杂的数据类型不利于 MySQL 优化器 进行分析和优化。</p>
-<p>优先使用能够直接表达业务语义的原生类型，避免把结构化数据编码成需要额外解析的字符串、二进制对象或 JSON。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">优先级 整型 &gt; date,time &gt; Char,VarChar &gt; blob</span><br></pre></td></tr></table></figure>
-
-<h2><span id="减少-null">减少 NULL</span></h2><ol>
-<li>引入三值逻辑</li>
-</ol>
-<p>SQL 中的布尔判断不仅有 TRUE 和 FALSE，还存在 UNKNOWN。</p>
-<p>下面的查询不能找到空值：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT *</span><br><span class="line">FROM customer</span><br><span class="line">WHERE phone = NULL;</span><br></pre></td></tr></table></figure>
-<p>必须使用：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT *</span><br><span class="line">FROM customer</span><br><span class="line">WHERE phone IS NULL;</span><br></pre></td></tr></table></figure>
-<p>NULL 还会影响 AND、OR、NOT、IN 和 NOT IN 等表达式。如果开发者不了解三值逻辑，容易编写出结果不符合预期的查询。</p>
-<ol start="2">
-<li>影响聚合结果</li>
-</ol>
-<p>大部分聚合函数会忽略 NULL：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SELECT</span><br><span class="line">    COUNT(*) AS total_rows,</span><br><span class="line">    COUNT(phone) AS known_phone_rows</span><br><span class="line">FROM customer;</span><br></pre></td></tr></table></figure>
-<p>COUNT(*) 统计所有行，而 COUNT(phone) 只统计 phone 不为 NULL 的行。两者含义不同，报表和统计代码必须明确区分。</p>
-<ol start="3">
-<li>增加应用判断分支</li>
-</ol>
-<p>允许 NULL 后，应用、ORM、序列化接口和业务代码都需要正确处理可空状态。如果字段实际上不存在“未知”或“不适用”的业务含义，允许 NULL 只会增加无意义的分支。</p>
-<ol start="4">
-<li>影响索引选择性和执行计划</li>
-</ol>
-<p>InnoDB 可以为允许 NULL 的列建立索引，IS NULL 查询也可能使用索引。因此，“可空列不能使用索引”是错误的。</p>
-<p>真正影响执行计划的是数据分布。例如，如果一列 90% 的记录都是 NULL，查询 IS NULL 需要返回大部分数据，优化器就可能认为全表扫描比索引访问更划算。</p>
-<ol start="5">
-<li>产生少量存储开销</li>
-</ol>
-<p>InnoDB 通常使用位图记录哪些可空列是 NULL。若索引记录中包含 (N) 个可空字段，NULL 位图大约需要：</p>
-<p>[
-\operatorname{CEILING}(N &#x2F; 8)
-]
-字节。</p>
-<h3><span id="原因">原因</span></h3><h1><span id="版本差异">版本差异</span></h1><p>同一条设计建议在三个版本中可能有不同前提。</p>
-<table>
-<thead>
-<tr>
-<th><strong>能力或默认行为</strong></th>
-<th><strong>MySQL 5.7</strong></th>
-<th><strong>MySQL 8.0</strong></th>
-<th><strong>MySQL 8.4</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>默认字符集</td>
-<td>latin1</td>
-<td>utf8mb4</td>
-<td>utf8mb4</td>
-</tr>
-<tr>
-<td>默认排序规则</td>
-<td>latin1_swedish_ci</td>
-<td>utf8mb4_0900_ai_ci</td>
-<td>utf8mb4_0900_ai_ci</td>
-</tr>
-<tr>
-<td>原生 JSON</td>
-<td>支持</td>
-<td>支持</td>
-<td>支持</td>
-</tr>
-<tr>
-<td>JSON 路径索引</td>
-<td>生成列</td>
-<td>生成列或函数索引</td>
-<td>生成列或函数索引</td>
-</tr>
-<tr>
-<td>函数索引</td>
-<td>不支持</td>
-<td>8.0.13 起支持</td>
-<td>支持</td>
-</tr>
-<tr>
-<td>JSON 多值索引</td>
-<td>不支持</td>
-<td>8.0.17 起支持</td>
-<td>支持</td>
-</tr>
-<tr>
-<td>JSON 局部更新</td>
-<td>不支持优化</td>
-<td>有条件支持</td>
-<td>有条件支持</td>
-</tr>
-<tr>
-<td>整数显示宽度</td>
-<td>可用</td>
-<td>8.0.17 起弃用</td>
-<td>弃用</td>
-</tr>
-<tr>
-<td>FLOAT DOUBLE AUTO_INCREMENT</td>
-<td>可用但不建议</td>
-<td>弃用</td>
-<td>8.4.0 起不支持</td>
-</tr>
-</tbody></table>
-<h2><span id="默认值变化的实际影响">默认值变化的实际影响</span></h2><p>MySQL 5.7 默认使用 latin1 和 latin1_swedish_ci，而 8.0 与 8.4 默认使用 utf8mb4 和 utf8mb4_0900_ai_ci。若 DDL 没有显式指定字符集和排序规则，同一份建表语句可能得到不同列定义。比较、排序、唯一索引冲突和索引长度都可能随之改变。升级方案应把隐式默认值改成显式定义。</p>
-<h1><span id="innodb-存储基础">InnoDB 存储基础</span></h1><p>字段类型的物理成本不能只看类型表。InnoDB 将表组织为以主键为序的聚簇索引。聚簇索引叶子记录保存完整行，二级索引叶子记录保存二级索引列和对应的主键列。变长列可能保存在索引页内，也可能通过 20 字节指针引用溢出页。</p>
-<h2><span id="主键宽度的放大效应">主键宽度的放大效应</span></h2><p>假设一张表有五个二级索引，把主键从 4 字节 INT 改成 8 字节 BIGINT，会给每条二级索引记录增加最多 4 字节的主键负担。实际空间还受记录头、页填充率、压缩和主键列是否已包含在索引中影响，但方向明确。选择主键类型时应把所有二级索引计入成本。</p>
-<h2><span id="行格式决定长列位置">行格式决定长列位置</span></h2><p>COMPACT 行格式会在记录内保留长变长值的前 768 字节，再把其余部分放到溢出页。DYNAMIC 行格式可以把长值完整放到行外，并在聚簇记录中保留 20 字节指针。是否外置取决于页面能否容纳整行，而不是只由列名是 VarChar 还是 TEXT 决定。DYNAMIC 同时支持更大的索引键前缀。</p>
-<table>
-<thead>
-<tr>
-<th><strong>类型</strong></th>
-<th><strong>基本存储量</strong></th>
-<th><strong>设计提示</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>TINYINT</td>
-<td>1 字节</td>
-<td>适合小范围代码和值域明确的状态</td>
-</tr>
-<tr>
-<td>SMALLINT</td>
-<td>2 字节</td>
-<td>适合中小范围计数或代码</td>
-</tr>
-<tr>
-<td>MEDIUMINT</td>
-<td>3 字节</td>
-<td>节省 1 字节但生态使用较少</td>
-</tr>
-<tr>
-<td>INT</td>
-<td>4 字节</td>
-<td>常用整数和中等规模标识</td>
-</tr>
-<tr>
-<td>BIGINT</td>
-<td>8 字节</td>
-<td>适合大规模标识和大范围累计值</td>
-</tr>
-<tr>
-<td>DATE</td>
-<td>3 字节</td>
-<td>只保存日期</td>
-</tr>
-<tr>
-<td>TIMESTAMP</td>
-<td>4 字节加小数秒</td>
-<td>带时区转换且存在 2038 范围边界</td>
-</tr>
-<tr>
-<td>DATETIME</td>
-<td>5 字节加小数秒</td>
-<td>保存日历日期时间</td>
-</tr>
-<tr>
-<td>VarChar</td>
-<td>实际字节加 1 或 2 字节</td>
-<td>前缀长度由最大可能字节数决定</td>
-</tr>
-<tr>
-<td>DECIMAL</td>
-<td>按 9 位十进制数分组</td>
-<td>精度和小数位分别影响存储</td>
-</tr>
-</tbody></table>
-<h1><span id="整数类型">整数类型</span></h1><h2><span id="按生命周期估算取值域">按生命周期估算取值域</span></h2><p>整数类型应覆盖字段在整个生命周期内的最大和最小值。估算时不能只看当前行数，还要加入数据保留年限、业务增长、历史导入、分库编码、ID 生成策略和计算中间值。对于主键，范围不足后的扩容通常需要修改所有引用列，并可能触发表重建。</p>
-<table>
-<thead>
-<tr>
-<th><strong>类型</strong></th>
-<th><strong>字节</strong></th>
-<th><strong>有符号范围</strong></th>
-<th><strong>无符号范围</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>TINYINT</td>
-<td>1</td>
-<td>-128 到 127</td>
-<td>0 到 255</td>
-</tr>
-<tr>
-<td>SMALLINT</td>
-<td>2</td>
-<td>-32768 到 32767</td>
-<td>0 到 65535</td>
-</tr>
-<tr>
-<td>MEDIUMINT</td>
-<td>3</td>
-<td>-8388608 到 8388607</td>
-<td>0 到 16777215</td>
-</tr>
-<tr>
-<td>INT</td>
-<td>4</td>
-<td>-2147483648 到 2147483647</td>
-<td>0 到 4294967295</td>
-</tr>
-<tr>
-<td>BIGINT</td>
-<td>8</td>
-<td>约负 9.22e18 到正 9.22e18</td>
-<td>0 到约 1.84e19</td>
-</tr>
-</tbody></table>
-<h2><span id="整数显示宽度不是容量">整数显示宽度不是容量</span></h2><p>INT(4) 和 INT(11) 都占 4 字节，也具有相同取值范围。括号中的数字是历史显示宽度，不能限制输入位数。与 ZEROFILL 配合时，它可以影响格式化显示，但该能力从 MySQL 8.0.17 起被弃用。需要前导零的业务编号应作为字符串存储，或者在展示层格式化。</p>
-<h2><span id="unsigned-的取舍">Unsigned 的取舍</span></h2><p>Unsigned 可以把负数区间换成更大的正数区间，但它也扩展了 MySQL 与其他数据库、语言类型和 ORM 之间的差异。主外键及所有关联列应保持整数宽度和符号属性一致。对金额、测量值和 DECIMAL 使用 Unsigned 的做法在 8.0.17 起被弃用，更清晰的业务下界可由 CHECK 或应用验证表达。</p>
-<h2><span id="布尔值和状态值">布尔值和状态值</span></h2><p>MySQL 的 BOOL 和 BOOLEAN 是 TINYINT(1) 的同义形式，并不会自动阻止写入 2 或负数。若字段确实只允许两个状态，应在 8.x 使用 CHECK 约束，或者通过应用和测试保证输入。若业务存在未知、未处理和失败等额外状态，则不应强行压成布尔值。</p>
-<h1><span id="精确数和近似数">精确数和近似数</span></h1><p>DECIMAL 保存十进制定点精确值，FLOAT 和 DOUBLE 保存二进制浮点近似值。两类类型的差异不仅体现在展示小数位，还体现在表达式传播、聚合、相等判断和跨平台结果。</p>
-<h2><span id="金额和精确计算">金额和精确计算</span></h2><p>金额、余额、税额和必须按十进制规则结算的值通常应使用 DECIMAL。DECIMAL(M,D) 中 M 是总有效位数，D 是小数位数。设计时要根据最大金额、币种精度、税率计算和中间结果确定范围，不能习惯性使用 DECIMAL(10,2)。</p>
-<p><strong>存储规则</strong> DECIMAL 把整数部分和小数部分分别分组，每 9 个十进制数字使用 4 字节，剩余数字按组占 0 到 4 字节。符号不单独增加一个完整字节。</p>
-<p><strong>写入规则</strong> 小数位超过 D 时会舍入。整数位超出范围时，严格模式通常报错，非严格模式可能截到合法边界并产生警告。</p>
-<h2><span id="浮点数的适用范围">浮点数的适用范围</span></h2><p>FLOAT 和 DOUBLE 适合测量值、统计模型、图形和科学计算等允许近似误差的场景。不要用浮点列直接保存需要逐分一致的金额，也不要依赖直接等值比较。任何近似值参与表达式后，MySQL 会使用浮点运算；字符串参与数值表达式时也可能转换为 DOUBLE，使原本精确的计算变成近似计算。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="number">0.1</span> <span class="operator">+</span> <span class="number">0.2</span> <span class="operator">=</span> <span class="number">0.3</span> <span class="keyword">AS</span> equal_result;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE TABLE</span> number_test (</span><br><span class="line">    f <span class="type">FLOAT</span>,</span><br><span class="line">    d <span class="keyword">DOUBLE</span>,</span><br><span class="line">    amount <span class="type">DECIMAL</span>(<span class="number">20</span>, <span class="number">6</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<h1><span id="日期和时间类型">日期和时间类型</span></h1><table>
-<thead>
-<tr>
-<th><strong>含义</strong></th>
-<th><strong>常用类型</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>生日和结算日</td>
-<td>DATE</td>
-<td>只有日期，不应受时区转换影响</td>
-</tr>
-<tr>
-<td>门店营业时间和预约日历值</td>
-<td>DATETIME</td>
-<td>按所在地规则解释，可另存时区标识</td>
-</tr>
-<tr>
-<td>创建时间和事件发生时刻</td>
-<td>TIMESTAMP 或 UTC DATETIME</td>
-<td>需要统一时区策略和驱动配置</td>
-</tr>
-<tr>
-<td>耗时和剩余时间</td>
-<td>整数单位或专门建模</td>
-<td>不要把持续时长误当作日期时间</td>
-</tr>
-</tbody></table>
-<h2><span id="timestamp-和-datetime">TIMESTAMP 和 DATETIME</span></h2><p>TIMESTAMP 写入时按会话时区转换为 UTC，读取时再从 UTC 转回会话时区。DATETIME 保存写入的日历字段，不做这种转换。三个目标版本的官方文档都把 TIMESTAMP 上限列为 2038 年 1 月 19 日 03:14:07 UTC，而 DATETIME 支持到 9999 年。因而 TIMESTAMP 不能仅凭空间较小而成为默认选择。</p>
-<h2><span id="小数秒精度">小数秒精度</span></h2><p>TIME、DATETIME 和 TIMESTAMP 的小数秒精度会增加存储。精度为 1 到 2 位增加 1 字节，3 到 4 位增加 2 字节，5 到 6 位增加 3 字节。只有在排序、去重或审计确实需要时才应使用微秒。</p>
-<h2><span id="零日期和-sql-模式">零日期和 SQL 模式</span></h2><p>把 0000-00-00 或 1970-01-01 当作未发生的哨兵值会把状态混入时间字段，并使范围查询和统计产生假数据。允许空值时应使用 NULL；不允许空值时应把业务状态拆成独立列。不同 sql_mode 对无效日期和零日期的处理存在差异，迁移前必须测试。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> time_zone <span class="operator">=</span> <span class="string">&#x27;+08:00&#x27;</span>;</span><br><span class="line"><span class="keyword">INSERT INTO</span> temporal_test(ts_value, dt_value)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="string">&#x27;2026-09-16 10:00:00&#x27;</span>, <span class="string">&#x27;2026-09-16 10:00:00&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">SET</span> time_zone <span class="operator">=</span> <span class="string">&#x27;+00:00&#x27;</span>;</span><br><span class="line"><span class="keyword">SELECT</span> ts_value, dt_value <span class="keyword">FROM</span> temporal_test;</span><br></pre></td></tr></table></figure>
-
-<h1><span id="字符和长文本类型">字符和长文本类型</span></h1><h2><span id="varchar-长度的含义">VarChar 长度的含义</span></h2><p>VarChar(N) 中的 N 是字符数，而不是字节数。实际数据占用取决于字符编码后的字节长度，并额外使用 1 或 2 字节保存长度。是否需要 2 字节长度前缀取决于列的最大可能字节数。VarChar(255) 使用 utf8mb4 时最大可能达到 1020 字节，因此 255 并不是通用的单字节分界或性能甜点。</p>
-<h2><span id="char-的适用场景">Char 的适用场景</span></h2><p>Char 适合真正定长且尾部空格没有业务意义的值，例如某些固定长度代码。对于变长字符集，InnoDB 的实际存储会做专门处理，不能简单按 N 乘以 4 估算所有情况。尾部空格在存储、读取和比较中的行为还会受类型及排序规则的 PAD 属性影响。</p>
-<h2><span id="二进制标识和值">二进制标识和值</span></h2><p>十六进制散列、UUID 和原始字节若不需要语言学比较，应评估 BINARY 或 VARBINARY。将 16 字节 UUID 存成 Char(36) 会增加聚簇和二级索引宽度。若系统依赖按时间有序写入，还需要评估 UUID 版本和字节排列，不能只替换字段类型。</p>
-<h2><span id="text-与-varchar">TEXT 与 VarChar</span></h2><p>TEXT 与 VarChar 的关键差异主要在最大长度、索引方式和某些 SQL 操作限制。TEXT 索引通常必须指定前缀长度，前缀索引可能无法提供完整唯一性和区分度。使用 DYNAMIC 行格式时，长 VarChar 和 TEXT 都可能完整外置；短 TEXT 值仍可能保存在行内。因此二者不能用行内和行外的简单二分法选择。</p>
-<h2><span id="索引长度和-191-字符误区">索引长度和 191 字符误区</span></h2><p>utf8mb4 索引只能建立 191 字符是带条件的旧结论。COMPACT 和 REDUNDANT 行格式的索引键前缀上限为 767 字节，按每字符最多 4 字节计算得到 191。DYNAMIC 和 COMPRESSED 在默认 16KB 页下支持 3072 字节。页大小降低时，上限会按比例降低。</p>
-<h2><span id="字符串字段决策问题">字符串字段决策问题</span></h2><ul>
-<li><p>字段是自然语言文本、机器标识，还是原始二进制值。</p>
-</li>
-<li><p>最大长度来自业务规则，还是为了省事随意填写。</p>
-</li>
-<li><p>字段是否参与等值查询、范围查询、排序、分组或唯一约束。</p>
-</li>
-<li><p>尾部空格、大小写、重音和 Unicode 补充字符是否具有业务意义。</p>
-</li>
-<li><p>查询是否经常只读其他列，还是每次都需要返回大字段。</p>
-</li>
-</ul>
-<h1><span id="json-类型">JSON 类型</span></h1><p>MySQL 原生 JSON 会验证写入内容并转换为便于按路径访问的二进制格式。二进制编码包含元数据和查找结构，因此空间通常接近文本表示并增加一定开销。JSON 的主要价值是验证、路径函数和索引能力，而不是保证压缩。</p>
-<h2><span id="适合和不适合的字段">适合和不适合的字段</span></h2><p>JSON 适合稀疏、变化快并且大部分不参与关系操作的扩展属性，例如第三方原始响应、设备差异化配置和少量可选元数据。以下字段通常应拆成普通列。</p>
-<ul>
-<li><p>高频过滤、排序、分组和关联字段。</p>
-</li>
-<li><p>需要外键、NOT NULL、唯一约束或严格类型约束的核心属性。</p>
-</li>
-<li><p>更新频繁且可以稳定建模的小字段集合。</p>
-</li>
-<li><p>需要由 BI、数据仓库和多个语言客户端稳定消费的公共字段。</p>
-</li>
-</ul>
-<h2><span id="三个版本的索引路径">三个版本的索引路径</span></h2><p>MySQL 5.7 不能直接为整个 JSON 建普通索引，常见方式是创建提取标量值的生成列并对生成列建索引。MySQL 8.0.13 起支持函数索引，可直接为表达式值建索引。MySQL 8.0.17 起支持面向 JSON 数组的多值索引。多值索引不能覆盖所有普通索引能力，并有排序、外键和在线创建限制。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- MySQL 5.7 兼容方案</span></span><br><span class="line"><span class="keyword">ALTER TABLE</span> orders</span><br><span class="line">  <span class="keyword">ADD</span> customer_id <span class="type">BIGINT</span> UNSIGNED</span><br><span class="line">    GENERATED ALWAYS <span class="keyword">AS</span> (</span><br><span class="line">      <span class="built_in">CAST</span>(JSON_UNQUOTE(JSON_EXTRACT(ext, <span class="string">&#x27;$.customer_id&#x27;</span>)) <span class="keyword">AS</span> UNSIGNED)</span><br><span class="line">    ) VIRTUAL,</span><br><span class="line">  <span class="keyword">ADD</span> INDEX idx_customer_id (customer_id);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- MySQL 8.0.13 及以上</span></span><br><span class="line"><span class="keyword">CREATE</span> INDEX idx_customer</span><br><span class="line"><span class="keyword">ON</span> orders ((<span class="built_in">CAST</span>(ext<span class="operator">-</span><span class="operator">&gt;&gt;</span><span class="string">&#x27;$.customer_id&#x27;</span> <span class="keyword">AS</span> UNSIGNED)));</span><br></pre></td></tr></table></figure>
-
-<h2><span id="函数索引中的类型和排序规则">函数索引中的类型和排序规则</span></h2><p>JSON_UNQUOTE 返回的字符串类型和排序规则可能与 CAST 后的表达式不同。若查询表达式与索引表达式在类型、长度或排序规则上不一致，优化器可能无法使用函数索引。设计函数索引时应把查询 SQL、CAST 类型和 COLLATE 一起固定，并用 EXPLAIN 验证。</p>
-<h2><span id="局部更新的边界">局部更新的边界</span></h2><p>MySQL 8.x 可以在满足条件时对 JSON 做局部原地更新，但不能将其概括为修改 JSON 永远不重写文档。被更新列必须是 JSON，语句需要使用 JSON_SET、JSON_REPLACE 或 JSON_REMOVE 等受支持函数，新值和可用空间还必须符合优化条件。直接把整份 JSON 赋给列不属于局部更新。</p>
-<h1><span id="null-设计">NULL 设计</span></h1><h2><span id="null-表达未知">NULL 表达未知</span></h2><p>NULL 与空字符串、零和空 JSON 对象不同。NULL 通常表示未知、不适用或尚未发生。若业务需要区分未知和明确为空，就必须保留这种差异；用空字符串统一替代 NULL 会丢失信息。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> customer <span class="keyword">WHERE</span> phone <span class="keyword">IS</span> <span class="keyword">NULL</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> customer <span class="keyword">WHERE</span> phone <span class="operator">=</span> <span class="string">&#x27;&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">COUNT</span>(<span class="operator">*</span>) <span class="keyword">AS</span> rows_total,</span><br><span class="line">       <span class="built_in">COUNT</span>(phone) <span class="keyword">AS</span> known_phone_count</span><br><span class="line"><span class="keyword">FROM</span> customer;</span><br></pre></td></tr></table></figure>
-
-<h2><span id="三值逻辑">三值逻辑</span></h2><p>任何值与 NULL 使用等号比较都不会得到 TRUE，包括 NULL 自身。搜索空值必须使用 IS NULL 或 IS NOT NULL。聚合函数通常忽略 NULL，而 COUNT(*) 计算行数。复杂条件中的 UNKNOWN 还会影响 AND、OR 和 NOT 的结果，查询编写和测试必须覆盖空值。</p>
-<h2><span id="存储成本">存储成本</span></h2><p>在 InnoDB COMPACT 和 DYNAMIC 记录中，可空列由位图记录。若索引记录中有 N 个可空列，位图使用 CEILING(N&#x2F;8) 字节。可空变长列为 NULL 时不保存数据内容。因而每个 NULL 浪费一个字节并不准确。NOT NULL 的首要理由应是业务约束，而不是未经测量的性能假设。</p>
-<h2><span id="索引和选择性">索引和选择性</span></h2><p>InnoDB 可以为允许 NULL 的列建立索引，IS NULL 也可能使用索引。是否使用取决于 NULL 比例、统计信息、查询返回列和成本模型。若绝大部分行都是 NULL，索引可能很小且有效；若查询需要返回大部分表，优化器也可能选择全表扫描。</p>
-<h1><span id="字符集和排序规则">字符集和排序规则</span></h1><p>字符集决定字段能编码哪些字符以及最大字节数，排序规则决定字符串如何比较和排序。字段长度、索引大小、唯一约束和查询结果都可能同时受二者影响。</p>
-<h2><span id="使用-utf8mb4">使用 utf8mb4</span></h2><p>MySQL 传统的 utf8 最多使用 3 字节，无法保存 Unicode 补充平面字符。utf8 已作为 utf8mb3 的弃用别名。新系统通常应显式使用 utf8mb4，升级旧系统时要同时检查索引长度、连接字符集和实际脏数据。</p>
-<h1><span id="字段选择框架">字段选择框架</span></h1><table>
-<thead>
-<tr>
-<th><strong>业务数据</strong></th>
-<th><strong>首选候选</strong></th>
-<th><strong>需要确认的问题</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>主键</td>
-<td>INT 或 BIGINT</td>
-<td>增长上限 生成策略 二级索引数量</td>
-</tr>
-<tr>
-<td>状态码</td>
-<td>TINYINT SMALLINT 或 VarChar</td>
-<td>可读性 状态扩展 外部协议</td>
-</tr>
-<tr>
-<td>金额</td>
-<td>DECIMAL 或整数最小单位</td>
-<td>最大值 币种精度 舍入规则</td>
-</tr>
-<tr>
-<td>事件时刻</td>
-<td>TIMESTAMP 或 UTC DATETIME</td>
-<td>时区 2038 范围 驱动行为</td>
-</tr>
-<tr>
-<td>日历时间</td>
-<td>DATETIME</td>
-<td>是否需要保存时区标识和夏令时规则</td>
-</tr>
-<tr>
-<td>短文本</td>
-<td>VarChar</td>
-<td>最大字符数 字符集 比较规则 索引</td>
-</tr>
-<tr>
-<td>长文本</td>
-<td>TEXT 系列</td>
-<td>读取频率 前缀索引 排序分组</td>
-</tr>
-<tr>
-<td>固定二进制值</td>
-<td>BINARY 或 VARBINARY</td>
-<td>长度 是否需要语言学比较</td>
-</tr>
-<tr>
-<td>扩展属性</td>
-<td>JSON</td>
-<td>查询路径 约束 更新频率 版本能力</td>
-</tr>
-<tr>
-<td>未知或未发生</td>
-<td>允许 NULL</td>
-<td>业务是否需要区分空值和未知</td>
-</tr>
-</tbody></table>
-<h1><span id="常见误区核查">常见误区核查</span></h1><table>
-<thead>
-<tr>
-<th><strong>常见说法</strong></th>
-<th><strong>更准确的结论</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>字段越小查询越快</td>
-<td>更窄记录可能提高页密度和缓存命中率，收益仍取决于索引、访问模式和数据规模。</td>
-</tr>
-<tr>
-<td>INT(11) 只能保存 11 位</td>
-<td>11 是历史显示宽度，不改变 4 字节存储和整数范围。</td>
-</tr>
-<tr>
-<td>VarChar(255) 性能最好</td>
-<td>没有通用分界。最大字节数、行长度和查询用途更重要。</td>
-</tr>
-<tr>
-<td>Char 永远按最大长度占空间</td>
-<td>InnoDB 对变长字符集和不同 ROW_FORMAT 有专门存储规则。</td>
-</tr>
-<tr>
-<td>TEXT 永远保存在行外</td>
-<td>是否外置取决于行格式、值长度和整行大小。短 TEXT 可能行内。</td>
-</tr>
-<tr>
-<td>TIMESTAMP 永远优于 DATETIME</td>
-<td>二者的时区语义和范围不同，空间只差 1 字节。</td>
-</tr>
-<tr>
-<td>金额用 DOUBLE 再 ROUND 就行</td>
-<td>中间步骤已经可能产生近似误差，ROUND 不能恢复精确原值。</td>
-</tr>
-<tr>
-<td>NOT NULL 一定更快</td>
-<td>应先满足业务约束。可空列使用位图，性能需按查询和分布测试。</td>
-</tr>
-<tr>
-<td>可空列不能使用索引</td>
-<td>InnoDB 可索引 NULL，IS NULL 是否走索引由成本决定。</td>
-</tr>
-<tr>
-<td>MySQL utf8 是完整 UTF 8</td>
-<td>传统 utf8 是 utf8mb3，不能保存全部 Unicode。</td>
-</tr>
-<tr>
-<td>utf8mb4 索引最多 191 字符</td>
-<td>该数字来自旧行格式的 767 字节限制，不是所有配置的上限。</td>
-</tr>
-<tr>
-<td>8.0 修改 JSON 都是局部更新</td>
-<td>只有满足函数和空间等条件的更新才能使用局部优化。</td>
-</tr>
-</tbody></table>
-<h1><span id="迁移和上线检查">迁移和上线检查</span></h1><h2><span id="现状盘点-sql">现状盘点 SQL</span></h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">    TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME,</span><br><span class="line">    COLUMN_TYPE, IS_NULLABLE, COLUMN_DEFAULT,</span><br><span class="line">    CharACTER_SET_NAME, COLLATION_NAME</span><br><span class="line"><span class="keyword">FROM</span> information_schema.COLUMNS</span><br><span class="line"><span class="keyword">WHERE</span> TABLE_SCHEMA <span class="operator">=</span> <span class="string">&#x27;your_database&#x27;</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> TABLE_NAME, ORDINAL_POSITION;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span></span><br><span class="line">    TABLE_SCHEMA, TABLE_NAME, ENGINE, ROW_FORMAT,</span><br><span class="line">    TABLE_COLLATION, DATA_LENGTH, INDEX_LENGTH</span><br><span class="line"><span class="keyword">FROM</span> information_schema.TABLES</span><br><span class="line"><span class="keyword">WHERE</span> TABLE_SCHEMA <span class="operator">=</span> <span class="string">&#x27;your_database&#x27;</span>;</span><br></pre></td></tr></table></figure>
-
-<h2><span id="上线策略">上线策略</span></h2><p>字段类型修改可能引发表重建、长事务、复制延迟和额外临时空间。上线方案应明确所需 DDL 算法、锁级别、磁盘峰值、暂停条件和回滚路径。对大表，优先使用影子表迁移、双写校验或经过验证的在线 DDL 工具，并在真实数据分布上演练。</p>
-<h1><span id="综合改造示例">综合改造示例</span></h1><p>下面的旧表可以正常存数据，但多个字段混淆了类型语义。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> orders_bad (</span><br><span class="line">    id <span class="type">VarChar</span>(<span class="number">32</span>),</span><br><span class="line">    status <span class="type">VarChar</span>(<span class="number">255</span>),</span><br><span class="line">    amount <span class="type">FLOAT</span>,</span><br><span class="line">    created_at <span class="type">VarChar</span>(<span class="number">30</span>),</span><br><span class="line">    paid_at DATETIME <span class="keyword">NOT NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;1970-01-01 00:00:00&#x27;</span>,</span><br><span class="line">    customer_name <span class="type">VarChar</span>(<span class="number">255</span>) <span class="keyword">CharACTER SET</span> utf8,</span><br><span class="line">    attributes LONGTEXT</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-
-<p>在假设订单量需要 BIGINT、金额保留两位、时间表示事件时刻、扩展属性结构不稳定的前提下，可以改为以下定义。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> orders (</span><br><span class="line">    id <span class="type">BIGINT</span> UNSIGNED <span class="keyword">NOT NULL</span> AUTO_INCREMENT,</span><br><span class="line">    status TINYINT UNSIGNED <span class="keyword">NOT NULL</span>,</span><br><span class="line">    amount <span class="type">DECIMAL</span>(<span class="number">18</span>, <span class="number">2</span>) <span class="keyword">NOT NULL</span>,</span><br><span class="line">    created_at <span class="type">TIMESTAMP</span>(<span class="number">6</span>) <span class="keyword">NOT NULL</span>,</span><br><span class="line">    paid_at <span class="type">TIMESTAMP</span>(<span class="number">6</span>) <span class="keyword">NULL</span>,</span><br><span class="line">    customer_name <span class="type">VarChar</span>(<span class="number">100</span>)</span><br><span class="line">        <span class="keyword">CharACTER SET</span> utf8mb4</span><br><span class="line">        <span class="keyword">COLLATE</span> utf8mb4_0900_ai_ci <span class="keyword">NOT NULL</span>,</span><br><span class="line">    attributes JSON <span class="keyword">NULL</span>,</span><br><span class="line">    <span class="keyword">PRIMARY KEY</span> (id)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB ROW_FORMAT<span class="operator">=</span><span class="keyword">DYNAMIC</span>;</span><br></pre></td></tr></table></figure>
-
-<h1><span id="参考资料">参考资料</span></h1><p>0.《高性能 MySQL(第三版)》</p>
-<p>1. <a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/E17952_01/mysql-5.7-en/storage-requirements.html">MySQL 5.7 Reference Manual Data Type Storage Requirements</a></p>
-<p>2. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/storage-requirements.html">MySQL 8.0 Reference Manual Data Type Storage Requirements</a></p>
-<p>3. <a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/storage-requirements.html">MySQL 8.4 Reference Manual Data Type Storage Requirements</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
-
-</div>
-  </main>
-
-  <footer class="footer">
-    <div class="footer-inner">
-
-  <div class="copyright">
-    &copy; 
-    <span itemprop="copyrightYear">2026</span>
-    <span class="with-love">
-      <i class="fa fa-heart"></i>
-    </span>
-    <span class="author" itemprop="copyrightHolder">DarkYellowCat</span>
-  </div>
-<div class="busuanzi-count">
-    <span class="post-meta-item" id="busuanzi_container_site_uv">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-user"></i>
-      </span>
-      <span class="site-uv" title="总访客量">
-        <span id="busuanzi_value_site_uv"></span>
-      </span>
-    </span>
-    <span class="post-meta-item" id="busuanzi_container_site_pv">
-      <span class="post-meta-item-icon">
-        <i class="fa fa-eye"></i>
-      </span>
-      <span class="site-pv" title="总访问量">
-        <span id="busuanzi_value_site_pv"></span>
-      </span>
-    </span>
-</div>
-  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
-  </div>
-
-    </div>
-  </footer>
-
-  
-  <div class="toggle sidebar-toggle" role="button">
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-  </div>
-  <div class="sidebar-dimmer"></div>
-  <div class="back-to-top" role="button" aria-label="返回顶部">
-    <i class="fa fa-arrow-up fa-lg"></i>
-    <span>0%</span>
-  </div>
-  <div class="reading-progress-bar"></div>
-
-  <a href="https://github.com/darkyellowcat" class="github-corner" title="在 GitHub 上关注我" aria-label="在 GitHub 上关注我" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
-
-<noscript>
-  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
-</noscript>
-
-<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
-<script>
-  LA.init({ id: '3OnjqyPOaoYCHllV', ck: '3OnjqyPOaoYCHllV', autoTrack: true });
+</dialog>
+</div><div class="site-scripts">
+<script data-stellar-script="core" src="/js/stellar-icons.js?v=39c6ac17e854ffe2"></script>
+
+<script data-stellar-script="defines">
+  window.canonical = window.stellarClientData.canonical;
+  const ctx = window.stellarClientData.ctx;
+  window.canonical.param = {permalink: null, checklink: ctx.services.video.js};
+  ctx.date_suffix = {"just":"刚刚","min":"分钟前","hour":"小时前","day":"天前"};
+  if (ctx.search) Object.assign(ctx.search, {"more":"更多","no_more":"没有更多了"});
+  const def = window.stellarClientData.def;
+  window.ctx = ctx;
+  window.def = def;
 </script>
 
-</body>
-</html>
+
+<!-- core: 迁移期 DOM/资源兼容工具；Extension 注册与生命周期由 ESM runtime 所有 -->
+<script data-stellar-script="core" src="/js/utils.js?v=2.0.0"></script>
+<script data-stellar-script="core" src="/js/main.js?v=2.0.0" defer></script>
+<script data-stellar-script="core" defer src="/js/profile.js?v=2.0.0"></script>
+
+
+
+
+
+<script data-stellar-script="core" type="application/json" id="stellar-runtime-config">{"version":1,"root":"/","policy":{"cache":{"enabled":true,"defaultTtl":3600,"ttl":{"giscus":600,"waline":600,"artalk":600,"memos":600,"memos-user":86400,"sites":86400,"friends":86400,"friends_and_posts":86400,"siteinfo":86400},"maxEntries":200},"request":{"retries":2,"timeoutMs":5000,"idleTimeoutMs":3000,"maxCacheEntryBytes":204800},"features":{"codeCopyToastMs":2500},"providers":{"linkPrefetch":"flying_pages","lightbox":"fancybox","diagrams":"mermaid"}},"extensions":[{"id":"pin-slider","module":"/js/runtime/extensions/pin-slider.js","scope":"region","when":{"selector":".pin-slider"},"config":{}},{"id":"page-controls","module":"/js/runtime/extensions/page-controls.js","scope":"region","when":{"always":true},"config":{"highlight":"/js/search/highlight.js","tagtree":"/js/tagtree.js"}},{"id":"search","module":"/js/runtime/extensions/search.js","scope":"document","when":{"selector":".search-input"},"config":{"provider":"local","options":{"scope":"all","includeContent":true,"cacheTtlSeconds":86400},"assets":{"client":null,"provider":"/js/search/local-search.js","shortcut":"/js/search/shortcut.js"}}},{"id":"hero-parallax","module":"/js/runtime/extensions/hero-parallax.js","scope":"region","when":{"selector":".wiki-hero"},"config":{}},{"id":"hero-effect","module":"/js/runtime/extensions/hero-effect.js","scope":"region","when":{"selector":"canvas[data-hero-effect]"},"config":{}},{"id":"lazy-loading","module":"/js/runtime/extensions/lazy-loading.js","scope":"document","when":{"always":true},"config":{"asset":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"}},{"id":"deferred-icons","module":"/js/runtime/extensions/deferred-icons.js","scope":"region","when":{"selector":"svg.icon[data-icon]"},"config":{}},{"id":"dropdown","module":"/js/runtime/extensions/dropdown.js","scope":"region","when":{"selector":"details.dropdown"},"config":{}},{"id":"services","module":"/js/runtime/extensions/services.js","scope":"region","when":{"selector":"#artalk_container, #twikoo_container, #waline_container, .data-service, [class*='ds-'], a[cardlink], a[data-md-link][data-siteinfo-api], .site-card [data-siteinfo-api], .voice\u003eaudio, .video\u003evideo, .chat-file"},"config":{"marked":"https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js"}},{"id":"settings","module":"/js/runtime/extensions/settings.js","scope":"region","when":{"selector":".settings-page"},"config":{}},{"id":"lightbox","module":"/js/runtime/extensions/lightbox.js","scope":"region","when":{"selector":"[data-fancybox]:not(.error), .with-fancybox, .ds-memos, .md-text p\u003eimg"},"config":{"enabled":true,"selector":".md-text p\u003eimg","assets":{"localCss":"/css/plugins/fancybox.css","js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css"}}},{"id":"code-copy","module":"/js/runtime/extensions/code-copy.js","scope":"region","when":{"selector":".code"},"config":{"assets":{"js":"/js/plugins/copycode.js"},"messages":{"label":"复制","copied":"复制成功","denied":"未获得剪贴板权限","unsupported":"当前浏览器不支持剪贴板或页面不是 HTTPS"}}},{"id":"adaptive-text","module":"/js/runtime/extensions/adaptive-text.js","scope":"region","when":{"selector":"[data-text-adaptive]"},"config":{"assets":{"colorJs":"/js/color.js","js":"/js/plugins/adaptive-text.js"}}},{"id":"swiper","module":"/js/runtime/extensions/swiper.js","scope":"region","when":{"selector":"#swiper-api"},"config":{"assets":{"localCss":"/css/plugins/swiper.css","js":"https://unpkg.com/swiper@10.3/swiper-bundle.min.js","css":"https://unpkg.com/swiper@10.3/swiper-bundle.min.css"}}}]}</script>
+<script data-stellar-script="core" type="module" src="/js/runtime/index.js?v=2.0.0&runtime=1"></script>
+
+
+<!-- inject -->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>if (window.LA) LA.init({ id: '3OnjqyPOaoYCHllV', ck: '3OnjqyPOaoYCHllV', autoTrack: true });</script>
+
+
+<script data-stellar-script="core" defer src="/js/navigation-init.js?v=2.0.0"></script>
+</div></body></html>
+
