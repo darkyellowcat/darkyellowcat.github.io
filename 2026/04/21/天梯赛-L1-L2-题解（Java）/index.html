@@ -42,7 +42,7 @@
 <meta property="og:locale" content="zh_CN" data-stellar-page-meta="">
 <meta property="article:author" content="DarkYellowCat" data-stellar-page-meta="">
 <meta property="article:published_time" content="2026-04-21T00:01:16.000Z" data-stellar-page-meta="">
-<meta property="article:modified_time" content="2026-11-07T08:57:02.000Z" data-stellar-page-meta="">
+<meta property="article:modified_time" content="2026-11-08T08:37:34.000Z" data-stellar-page-meta="">
 <meta property="article:tag" content="Java" data-stellar-page-meta="">
 <meta property="article:tag" content="天梯赛" data-stellar-page-meta="">
 <meta property="article:tag" content="算法" data-stellar-page-meta="">
@@ -73,7 +73,7 @@
 
   
 
-  <script type="application/ld+json" data-stellar-page-meta="">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"DarkYellowCat","sameAs":[]},"dateCreated":"2026-04-21T00:01:16+00:00","dateModified":"2026-11-07T08:57:02+00:00","datePublished":"2026-04-21T00:01:16+00:00","description":"\n\n\n目录\n\n\n\n前言\n\n\nL1题解\n\n\nL2题解\n\n\n\n前言这次参加了天梯赛，赛后发现网上题解大多是 C++ / Python，Java 版本较少。气抖冷，我们Java什么时候能站起来。整理了我自己的 Java 题解，方便同样使用 Java 的同学参考。\n题解覆盖：\n\nL1：基础题（偏模拟）\nL2：进阶题（数据结构）\n\nL3 不会做，暂未补充，后续有能力再更新。\n能过，但不一定是最优解，请...","headline":"天梯赛 L1 L2 题解（Java 无L2-4）","mainEntityOfPage":{"@type":"WebPage","@id":"https://darkyellowcat.github.io/2026/04/21/%E5%A4%A9%E6%A2%AF%E8%B5%9B-L1-L2-%E9%A2%98%E8%A7%A3%EF%BC%88Java%EF%BC%89/"},"publisher":{"@type":"Organization","name":"DarkYellowCat","sameAs":[]},"url":"https://darkyellowcat.github.io/2026/04/21/%E5%A4%A9%E6%A2%AF%E8%B5%9B-L1-L2-%E9%A2%98%E8%A7%A3%EF%BC%88Java%EF%BC%89/","image":["https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg"],"keywords":"算法, 天梯赛, Java","thumbnailUrl":"https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg"}</script>
+  <script type="application/ld+json" data-stellar-page-meta="">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"DarkYellowCat","sameAs":[]},"dateCreated":"2026-04-21T00:01:16+00:00","dateModified":"2026-11-08T08:37:34+00:00","datePublished":"2026-04-21T00:01:16+00:00","description":"\n\n\n目录\n\n\n\n前言\n\n\nL1题解\n\n\nL2题解\n\n\n\n前言这次参加了天梯赛，赛后发现网上题解大多是 C++ / Python，Java 版本较少。气抖冷，我们Java什么时候能站起来。整理了我自己的 Java 题解，方便同样使用 Java 的同学参考。\n题解覆盖：\n\nL1：基础题（偏模拟）\nL2：进阶题（数据结构）\n\nL3 不会做，暂未补充，后续有能力再更新。\n能过，但不一定是最优解，请...","headline":"天梯赛 L1 L2 题解（Java 无L2-4）","mainEntityOfPage":{"@type":"WebPage","@id":"https://darkyellowcat.github.io/2026/04/21/%E5%A4%A9%E6%A2%AF%E8%B5%9B-L1-L2-%E9%A2%98%E8%A7%A3%EF%BC%88Java%EF%BC%89/"},"publisher":{"@type":"Organization","name":"DarkYellowCat","sameAs":[]},"url":"https://darkyellowcat.github.io/2026/04/21/%E5%A4%A9%E6%A2%AF%E8%B5%9B-L1-L2-%E9%A2%98%E8%A7%A3%EF%BC%88Java%EF%BC%89/","image":["https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg"],"keywords":"算法, 天梯赛, Java","thumbnailUrl":"https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg"}</script>
   <link rel="stylesheet" href="/assets/site.css">
 <meta name="theme-color" content="#f7f6f2">
 
@@ -406,7 +406,7 @@
     <div class="top bread-nav footnote"><div class="top-row"><div class="left" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
 <span class="sep"></span><a class="cap breadcrumb" id="menu" href="/topic/">专栏</a><span class="sep"></span><a class="cap breadcrumb" id="proj" href="/2026/04/21/%E5%A4%A9%E6%A2%AF%E8%B5%9B-L1-L2-%E9%A2%98%E8%A7%A3%EF%BC%88Java%EF%BC%89/">把思路写成可以运行的代码</a>
 </div><div class="right"><span class="cap reading">6634 字 · 预计阅读 23 分钟</span></div></div><div class="meta-row">
-<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-04-21T00:01:16.000Z">2026-04-21</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-11-07T08:57:02.000Z">2026-11-07</time></span></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-04-21T00:01:16.000Z">2026-04-21</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-11-08T08:37:34.000Z">2026-11-08</time></span></div>
 </div></div>
     
     <div class="bottom only-title">
