@@ -241,7 +241,18 @@
 
 <div class="listing-nav"><div class="listing-nav__surface"><div class="listing-nav__viewport"><nav class="post"><a class="active" href="/blog/">近期发布</a><a href="/categories/">分类</a><a href="/tags/">标签</a><a href="/topic/">专栏</a><a href="/archives/">归档</a></nav></div></div></div>
 
-<div class="post-list post"><div class="post-card-wrap"><a class="post-card post card-hover card-hover--spotlight card-hover--tilt" href="/2026/09/16/MYSQL%E5%AD%97%E6%AE%B5%E7%B1%BB%E5%9E%8B%E4%BC%98%E5%8C%96/">
+<div class="post-list post"><div class="post-card-wrap"><a class="post-card post card-hover card-hover--spotlight card-hover--tilt" href="/2026/09/29/HTTP%E8%AF%B7%E6%B1%82%E4%B8%8E%E5%93%8D%E5%BA%94%E6%80%8E%E4%B9%88%E7%BB%84%E6%88%90/">
+<article class="md-text"><h2 class="post-title">HTTP 请求与响应怎么组成</h2><div class="excerpt"><p>学习后端接口时，我曾把请求行叫作“状态行”，还以为只有 POST 请求才能带请求体。把一次 HTTP&#x2F;1.1 交互拆开看，这两个概念就容易分清了。
+从一次请求开始下面的示例请求 &#x2F;notes&#x2F;42，响应是一段 JSON。这里展示的是便...</p></div><div class="meta cap"><span class="cap" id="post-meta"><svg class="icon" viewBox="0 0 1 1" data-icon="default:calendar" aria-hidden="true"></svg><time datetime="2026-09-29T10:00:00.000Z">2026-09-29</time></span><span class="cap breadcrumb"><svg class="icon" viewBox="0 0 1 1" data-icon="default:category" aria-hidden="true"></svg><span>学习笔记</span></span></div></article>
+</a></div><div class="post-card-wrap"><a class="post-card post card-hover card-hover--spotlight card-hover--tilt" href="/2026/09/24/Kestra-PR-%E5%88%86%E4%BA%AB-224-%E5%A6%82%E4%BD%95%E4%BF%AE%E6%AD%A3-MySQL-serverId-%E7%9A%84%E7%BC%BA%E7%9C%81%E7%AD%96%E7%95%A5/">
+<article class="md-text"><h2 class="post-title">Kestra PR 分享: #224 如何修正 MySQL serverId 的缺省策略</h2><div class="excerpt"><p>上一篇文章记录了我向 Kestra plugin-debezium 提交 PR #221 的过程：把 MySQL serverId 从必填配置改为可选配置，并在省略时生成一个 5400 到 6400 之间的值。
+PR #221 已经解决了“必须手动配置”的问题，但它采用的随机缺省值留下了一个更隐蔽的问题：同一个逻辑连接器在不同时间构建属性时，可能得到不同的 serverId。
+对应的后续 Pull Request 是 #224 fix(mysql): stabilize generated serverId。这篇文章重点记录如何从评审意见出发，把“能用的默认值”改造成“符合连接器生命周期的默认值”。</p></div><div class="meta cap"><span class="cap" id="post-meta"><svg class="icon" viewBox="0 0 1 1" data-icon="default:calendar" aria-hidden="true"></svg><time datetime="2026-09-24T00:16:28.000Z">2026-09-24</time></span><span class="cap breadcrumb"><svg class="icon" viewBox="0 0 1 1" data-icon="default:category" aria-hidden="true"></svg><span>开源</span></span></div></article>
+</a></div><div class="post-card-wrap"><a class="post-card post card-hover card-hover--spotlight card-hover--tilt" href="/2026/09/24/Kestra-PR-%E5%88%86%E4%BA%AB%E6%8F%90%E4%BA%A4-fix-MySQL-%E8%AE%A9-Debezium-serverId-%E4%BB%8E%E5%BF%85%E5%A1%AB%E5%8F%98%E4%B8%BA%E5%8F%AF%E9%80%89/">
+<article class="md-text"><h2 class="post-title">Kestra PR 分享提交 fix(MySQL):让 Debezium serverId 从必填变为可选</h2><div class="excerpt"><p>这篇文章记录我第一次向 Kestra 的 plugin-debezium 仓库提交 MySQL 相关修复的经历。
+对应的 Pull Request 是 #221 fix(mysql): make serverId optional。它解决的问题并不复杂：MySQL Debezium 连接器的 serverId 原本是必填项，我希望把它改成可选项，并在用户未配置时自动生成一个可用值。
+但真正动手后我发现，“把必填改成可选”远不只是删除一个校验注解。配置模型、运行时逻辑、动态表达式、单元测试、集成测试、示例和文档都必须保持一致。</p></div><div class="meta cap"><span class="cap" id="post-meta"><svg class="icon" viewBox="0 0 1 1" data-icon="default:calendar" aria-hidden="true"></svg><time datetime="2026-09-24T00:16:08.000Z">2026-09-24</time></span><span class="cap breadcrumb"><svg class="icon" viewBox="0 0 1 1" data-icon="default:category" aria-hidden="true"></svg><span>开源</span></span></div></article>
+</a></div><div class="post-card-wrap"><a class="post-card post card-hover card-hover--spotlight card-hover--tilt" href="/2026/09/16/MYSQL%E5%AD%97%E6%AE%B5%E7%B1%BB%E5%9E%8B%E4%BC%98%E5%8C%96/">
 <article class="md-text"><h2 class="post-title">MYSQL字段类型优化</h2><div class="excerpt"><p>核心原则范围内选择最小的数据类型字段类型越小，意味着单行数据和索引记录更紧凑。在相同页大小下，数据库可以容纳更多记录，从而可能提高缓存命中率并减少磁盘 I&#x2F;O。
 辨析类型声明的的大小，不代表按最大长度占用空间
 1nickname Va...</p></div><div class="meta cap"><span class="cap" id="post-meta"><svg class="icon" viewBox="0 0 1 1" data-icon="default:calendar" aria-hidden="true"></svg><time datetime="2026-09-16T12:55:54.000Z">2026-09-16</time></span><span class="cap breadcrumb"><svg class="icon" viewBox="0 0 1 1" data-icon="default:category" aria-hidden="true"></svg><span>学习笔记</span></span></div></article>
@@ -261,23 +272,6 @@
 微信开发者平台微信公众平台是小程序管理入口。注册、认证、备案、成员管理、服务器域名配置、版本管理和审核发布都在这里完成。开发前建议先检查request、uploadFile等合法...</p></div><div class="meta cap"><span class="cap" id="post-meta"><svg class="icon" viewBox="0 0 1 1" data-icon="default:calendar" aria-hidden="true"></svg><time datetime="2026-08-24T22:58:22.000Z">2026-08-24</time></span></div></article>
 </a></div><div class="post-card-wrap"><a class="post-card post card-hover card-hover--spotlight card-hover--tilt" href="/2026/08/24/Java%E5%90%8E%E7%AB%AF%E5%AE%9E%E4%B9%A0%E7%BB%8F%E5%8E%86%E5%88%86%E4%BA%AB/">
 <article class="md-text"><h2 class="post-title">Java后端实习经历分享</h2><div class="excerpt"><p>一个半月的 Java 后端实习，记录系统设计、协作、上线与使用 AI 开发时遇到的问题。</p></div><div class="meta cap"><span class="cap" id="post-meta"><svg class="icon" viewBox="0 0 1 1" data-icon="default:calendar" aria-hidden="true"></svg><time datetime="2026-08-24T22:57:48.000Z">2026-08-24</time></span></div></article>
-</a></div><div class="post-card-wrap"><a class="post-card post card-hover card-hover--spotlight card-hover--tilt" href="/2026/07/21/%E3%80%8ASQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A%E3%80%8B%E5%AD%A6%E4%B9%A0%E9%9A%8F%E7%AC%94-%E8%BF%9B%E9%98%B6%E7%AF%87/">
-<article class="md-text"><h2 class="post-title">《SQL必知必会》学习随笔-进阶篇</h2><div class="excerpt"><p>前言这是《SQL必知必会》学习随笔系列的进阶篇，承接基础篇的内容，主要聚焦于数据库性能优化相关的知识点。
-进阶篇的核心内容包括：
-
-数据库调优：从多个维度分析如何提升数据库性能
-范式与反范式：理解数据库设计原则及其权衡
-索引原理与应用...</p></div><div class="meta cap"><span class="cap" id="post-meta"><svg class="icon" viewBox="0 0 1 1" data-icon="default:calendar" aria-hidden="true"></svg><time datetime="2026-07-21T17:10:49.000Z">2026-07-21</time></span><span class="cap breadcrumb"><svg class="icon" viewBox="0 0 1 1" data-icon="default:category" aria-hidden="true"></svg><span>学习笔记</span></span></div></article>
-</a></div><div class="post-card-wrap"><a class="post-card post card-hover card-hover--spotlight card-hover--tilt" href="/2026/07/19/%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E5%B7%A5%E5%85%B7%E6%8F%90%E9%AB%98%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F/">
-<article class="md-text"><h2 class="post-title">如何通过工具提高代码质量：从本地检查到 PR 审查</h2><div class="excerpt"><p>前言在学习阶段，我一般不会刻意注意代码规范或潜在漏洞。毕竟代码不正式上线，也没有人专门做审查，很多问题只要“能跑”就被我放过去了。
-但现在既然开始做正式项目，就不能再只看功能是否实现。代码能运行只是第一步，后面还要考虑：它是否容易维护...</p></div><div class="meta cap"><span class="cap" id="post-meta"><svg class="icon" viewBox="0 0 1 1" data-icon="default:calendar" aria-hidden="true"></svg><time datetime="2026-07-19T20:44:38.000Z">2026-07-19</time></span><span class="cap breadcrumb"><svg class="icon" viewBox="0 0 1 1" data-icon="default:category" aria-hidden="true"></svg><span>工具推荐</span></span></div></article>
-</a></div><div class="post-card-wrap"><a class="post-card post card-hover card-hover--spotlight card-hover--tilt" href="/2026/07/18/%E3%80%8ASQL%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A%E3%80%8B%E5%AD%A6%E4%B9%A0%E9%9A%8F%E7%AC%94-%E5%8A%A0%E9%A4%90/">
-<article class="md-text"><h2 class="post-title">《SQL必知必会》学习随笔：Text to SQL 与行业实战</h2><div class="excerpt"><p>前言专栏在完结多年后又增加了几篇加餐，主要分成两类内容：
-
-Text to SQL：使用自然语言生成 SQL；
-行业实战：银行、保险、证券、新能源车企和快消场景中的查询与优化。
-
-行业实战部分已经写得很具体，我就不重复搬运原文了。这篇...</p></div><div class="meta cap"><span class="cap" id="post-meta"><svg class="icon" viewBox="0 0 1 1" data-icon="default:calendar" aria-hidden="true"></svg><time datetime="2026-07-18T16:44:37.000Z">2026-07-18</time></span><span class="cap breadcrumb"><svg class="icon" viewBox="0 0 1 1" data-icon="default:category" aria-hidden="true"></svg><span>学习笔记</span></span></div></article>
 </a></div></div>
 
   <div class='paginator-wrap dis-select'>

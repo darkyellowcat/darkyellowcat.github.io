@@ -1,0 +1,535 @@
+
+
+<!DOCTYPE html><html lang="zh-CN" data-theme="light">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/2.0.0" theme-name="Stellar" theme-version="2.0.0">
+  
+  
+  <meta name="generator" content="Hexo 8.1.2">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  <title data-stellar-page-meta>ArceOS 实验记录：从 NotFound 到成功进入 mmap 系统调用 - DarkYellowCat's Blog</title>
+  <script data-stellar-script="core">
+    (function () {
+      var key = 'stellar:v2:leftbar-state';
+      var fallback = "expanded";
+      try {
+        var value = localStorage.getItem(key);
+        document.documentElement.dataset.leftbarState = value === 'collapsed' || value === 'expanded' ? value : fallback;
+      } catch (error) {
+        document.documentElement.dataset.leftbarState = fallback;
+      }
+    })();
+  </script>
+
+  <meta name="description" content="记录 ArceOS sys_map 实验中排查 NotFound 的全过程：从工具链环境变量缺失、测试脚本静默失败，最终成功触发 sys_mmap。" data-stellar-page-meta="">
+<meta property="og:type" content="article" data-stellar-page-meta="">
+<meta property="og:title" content="ArceOS 实验记录：从 NotFound 到成功进入 mmap 系统调用" data-stellar-page-meta="">
+<meta property="og:url" content="https://darkyellowcat.github.io/2026/11/16/ArceOS%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95-%E4%BB%8ENotFound%E5%88%B0%E6%88%90%E5%8A%9F%E8%BF%9B%E5%85%A5mmap%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" data-stellar-page-meta="">
+<meta property="og:site_name" content="DarkYellowCat's Blog" data-stellar-page-meta="">
+<meta property="og:description" content="记录 ArceOS sys_map 实验中排查 NotFound 的全过程：从工具链环境变量缺失、测试脚本静默失败，最终成功触发 sys_mmap。" data-stellar-page-meta="">
+<meta property="og:locale" content="zh_CN" data-stellar-page-meta="">
+<meta property="article:author" content="DarkYellowCat" data-stellar-page-meta="">
+<meta property="article:published_time" content="2026-11-16T17:15:00.000Z" data-stellar-page-meta="">
+<meta property="article:modified_time" content="2026-11-20T07:43:13.000Z" data-stellar-page-meta="">
+<meta property="article:tag" content="ArceOS" data-stellar-page-meta="">
+<meta property="article:tag" content="Rust" data-stellar-page-meta="">
+<meta property="article:tag" content="操作系统" data-stellar-page-meta="">
+<meta name="twitter:card" content="summary" data-stellar-page-meta=""><meta name="twitter:title" content="ArceOS 实验记录：从 NotFound 到成功进入 mmap 系统调用" data-stellar-page-meta="">
+  
+  
+  <meta name="keywords" content="ArceOS,操作系统,Rust" data-stellar-page-meta="">
+
+  <!-- feed -->
+  
+    
+
+    
+      
+        <link rel="alternate" href="/atom.xml" title="DarkYellowCat's Blog" type="application/atom+xml">
+      
+    
+  
+
+  <link rel="preload" href="/css/main.css?v=2.0.0" as="style">
+  <link rel="stylesheet" href="/css/main.css?v=2.0.0">
+  <style>:root{--text-loading:"正在加载";--text-loading-error:"加载失败，请稍后重试。"}</style>
+
+
+  
+    <link rel="shortcut icon" href="/assets/brand/cat.svg">
+  
+
+  
+
+  <script type="application/ld+json" data-stellar-page-meta="">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"DarkYellowCat","sameAs":[]},"dateCreated":"2026-11-16T17:15:00+00:00","dateModified":"2026-11-20T07:43:13+00:00","datePublished":"2026-11-16T17:15:00+00:00","description":"在做 ArceOS 第五题 sys_map 时，我遇到了一个看起来很像文件映射相关的问题：内核启动正常，用户地址空间也创建成功，但加载用户程序时却报错 NotFound。\n一开始，我怀疑是 FAT32 文件系统或者 ELF 加载器出了 bug。但顺着调用链由外向内逐步排查，才发现真正的原因非常朴素——只是 WSL 环境中 RISC-V musl 交叉编译工具链没有加入 PATH，而测试脚本又没有设置 fail-fast，把构建期的问题伪装成了运行期的内核异常。\n这里把整个排查链路和踩坑细节记录下来。","headline":"ArceOS 实验记录：从 NotFound 到成功进入 mmap 系统调用","mainEntityOfPage":{"@type":"WebPage","@id":"https://darkyellowcat.github.io/2026/11/16/ArceOS%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95-%E4%BB%8ENotFound%E5%88%B0%E6%88%90%E5%8A%9F%E8%BF%9B%E5%85%A5mmap%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/"},"publisher":{"@type":"Organization","name":"DarkYellowCat","sameAs":[]},"url":"https://darkyellowcat.github.io/2026/11/16/ArceOS%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95-%E4%BB%8ENotFound%E5%88%B0%E6%88%90%E5%8A%9F%E8%BF%9B%E5%85%A5mmap%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/","image":["https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg"],"keywords":"ArceOS, 操作系统, Rust","thumbnailUrl":"https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg"}</script>
+  <link rel="stylesheet" href="/assets/site.css">
+<meta name="theme-color" content="#f7f6f2">
+
+
+  <link rel="stylesheet" href="/css/stellar-icons.css?v=7c185ad1a9a79674">
+  <link rel="preload" as="script" href="/js/stellar-icons.js?v=39c6ac17e854ffe2">
+  
+  
+</head>
+<body data-page-type="content" data-page-layout="post" data-article-style="tech"><div data-stellar-runtime-region id="site-cover" class="site-cover"></div><div class="site-shell" id="start" data-regions="leftbar rightbar"><div class="site-workspace">
+<aside data-stellar-runtime-region id="leftbar-region" class="site-region site-region--leftbar" data-region="leftbar" aria-label="Leftbar"><div class="site-region__surface ui-surface"><div class="site-region__decoration" aria-hidden="true"></div><div class="site-region__viewport"><header class="site-region__header site-region__zone site-region__zone--top">
+    <div class="widget-instance widget-instance--brand" data-widget-id="leftbar:fixed:brand" data-presentation="leftbar" data-leftbar-rail>
+<header class="brand-header brand-header--regular brand-header--site"><div class="brand-wrap"><a class="brand-image brand-image--icon" href="&#x2F;"><img no-lazy src="&#x2F;assets&#x2F;brand&#x2F;cat.svg" alt="" onerror="this.onerror&#x3D;null;this.src&#x3D;&quot;&#x2F;images&#x2F;stellar-error.491ee870f4940739.svg&quot;"></a><a class="brand-title" href="&#x2F;"><div class="brand-name">DarkYellowCat</div><div class="brand-tagline cap">技术笔记与开源实践</div></a></div><div class="brand-search">
+
+<div class="ui-collection" data-layout="list" data-variant="nav" data-density="auto">
+  
+    
+<button class="ui-collection__item ui-interactive card-hover card-hover--spotlight search-trigger has-hover-surface" type="button" title="搜索" aria-label="搜索" data-shell-action="open-search" data-search-instance="leftbar-brand-search" data-search-domain="blog" data-search-domain-label="博客" data-search-domain-blog="true">
+  
+  <span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Adapted from Google Material Icons by Material Design Authors - https://github.com/material-icons/material-icons/blob/master/LICENSE --><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h3M3 13h3M3 18h8M16.83 13.83l3.76 3.76"/><circle cx="14" cy="11" r="4"/></g></svg></span>
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">搜索</span>
+      
+      
+    </span>
+  
+  <kbd class="search-shortcut" aria-hidden="true">⌘K</kbd>
+
+  
+</button>
+
+  
+</div>
+
+
+</div></header>
+</div>
+  </header>
+  <div class="site-region__body site-region__zone site-region__zone--body">
+    <div class="widget-instance widget-instance--menu" data-widget-id="leftbar:fixed:menu" data-presentation="leftbar" data-leftbar-rail>
+
+
+<nav class="menu dis-select">
+<div class="ui-collection" data-layout="list" data-variant="nav" data-density="auto">
+  
+    
+<a class="ui-collection__item ui-interactive card-hover card-hover--spotlight" href="&#x2F;" title="首页">
+  
+  <span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7M5 9v12h5v-7h4v7h5V9"/></svg></span>
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">首页</span>
+      
+      
+    </span>
+  
+  
+  
+</a>
+
+  
+    
+<a class="ui-collection__item ui-interactive card-hover card-hover--spotlight is-active" href="&#x2F;blog&#x2F;" title="文章" aria-current="page">
+  
+  <span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></span>
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">文章</span>
+      
+      
+    </span>
+  
+  
+  <span class="ui-collection__indicator"></span>
+</a>
+
+  
+    
+<a class="ui-collection__item ui-interactive card-hover card-hover--spotlight" href="&#x2F;topic&#x2F;" title="专题">
+  
+  <span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="m12 16.068l-3.771 3.905c-.54.559-.81.839-1.04.935c-.52.22-1.099.032-1.373-.448c-.12-.21-.158-.59-.232-1.35c-.043-.43-.064-.644-.128-.824a1.43 1.43 0 0 0-.835-.864c-.173-.067-.38-.089-.795-.133c-.734-.077-1.101-.116-1.305-.24c-.463-.284-.646-.883-.433-1.422c.094-.237.364-.517.904-1.076L5.456 12l1.238-1.238zl5.306-5.306L18.544 12l2.464 2.55c.54.56.81.84.904 1.076c.213.54.03 1.139-.433 1.423c-.204.124-.57.163-1.305.24c-.414.044-.622.066-.795.133c-.389.149-.69.462-.835.864c-.064.18-.085.394-.128.823c-.075.76-.112 1.14-.232 1.351c-.274.48-.853.669-1.374.448c-.228-.096-.498-.376-1.038-.935z" opacity=".5"/><path fill="currentColor" fill-rule="evenodd" d="M12 16a7 7 0 1 0 0-14a7 7 0 0 0 0 14m0-10c-.284 0-.474.34-.854 1.023l-.098.176c-.108.194-.162.29-.246.354c-.085.064-.19.088-.4.135l-.19.044c-.738.167-1.107.25-1.195.532s.164.577.667 1.165l.13.152c.143.167.215.25.247.354s.021.215 0 .438l-.02.203c-.076.785-.114 1.178.115 1.352c.23.174.576.015 1.267-.303l.178-.082c.197-.09.295-.135.399-.135s.202.045.399.135l.178.082c.691.319 1.037.477 1.267.303s.191-.567.115-1.352l-.02-.203c-.021-.223-.032-.334 0-.438s.104-.187.247-.354l.13-.152c.503-.588.755-.882.667-1.165c-.088-.282-.457-.365-1.195-.532l-.19-.044c-.21-.047-.315-.07-.4-.135c-.084-.064-.138-.16-.246-.354l-.098-.176C12.474 6.34 12.284 6 12 6" clip-rule="evenodd"/></svg></span>
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">专题</span>
+      
+      
+    </span>
+  
+  
+  
+</a>
+
+  
+    
+<a class="ui-collection__item ui-interactive card-hover card-hover--spotlight" href="&#x2F;archives&#x2F;" title="归档">
+  
+  <span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><g fill="currentColor"><path d="M6.94028 2C7.35614 2 7.69326 2.32421 7.69326 2.72414V4.18487C8.36117 4.17241 9.10983 4.17241 9.95219 4.17241H13.9681C14.8104 4.17241 15.5591 4.17241 16.227 4.18487V2.72414C16.227 2.32421 16.5641 2 16.98 2C17.3958 2 17.733 2.32421 17.733 2.72414V4.24894C19.178 4.36022 20.1267 4.63333 20.8236 5.30359C21.5206 5.97385 21.8046 6.88616 21.9203 8.27586L22 9H2.92456H2V8.27586C2.11571 6.88616 2.3997 5.97385 3.09665 5.30359C3.79361 4.63333 4.74226 4.36022 6.1873 4.24894V2.72414C6.1873 2.32421 6.52442 2 6.94028 2Z"/><path d="M21.9995 14.0001V12.0001C21.9995 11.161 21.9963 9.66527 21.9834 9H2.00917C1.99626 9.66527 1.99953 11.161 1.99953 12.0001V14.0001C1.99953 17.7713 1.99953 19.6569 3.1711 20.8285C4.34267 22.0001 6.22829 22.0001 9.99953 22.0001H13.9995C17.7708 22.0001 19.6564 22.0001 20.828 20.8285C21.9995 19.6569 21.9995 17.7713 21.9995 14.0001Z" opacity=".5"/><path d="M18 17C18 17.5523 17.5523 18 17 18C16.4477 18 16 17.5523 16 17C16 16.4477 16.4477 16 17 16C17.5523 16 18 16.4477 18 17Z"/><path d="M18 13C18 13.5523 17.5523 14 17 14C16.4477 14 16 13.5523 16 13C16 12.4477 16.4477 12 17 12C17.5523 12 18 12.4477 18 13Z"/><path d="M13 17C13 17.5523 12.5523 18 12 18C11.4477 18 11 17.5523 11 17C11 16.4477 11.4477 16 12 16C12.5523 16 13 16.4477 13 17Z"/><path d="M13 13C13 13.5523 12.5523 14 12 14C11.4477 14 11 13.5523 11 13C11 12.4477 11.4477 12 12 12C12.5523 12 13 12.4477 13 13Z"/><path d="M8 17C8 17.5523 7.55228 18 7 18C6.44772 18 6 17.5523 6 17C6 16.4477 6.44772 16 7 16C7.55228 16 8 16.4477 8 17Z"/><path d="M8 13C8 13.5523 7.55228 14 7 14C6.44772 14 6 13.5523 6 13C6 12.4477 6.44772 12 7 12C7.55228 12 8 12.4477 8 13Z"/></g></svg></span>
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">归档</span>
+      
+      
+    </span>
+  
+  
+  
+</a>
+
+  
+    
+<a class="ui-collection__item ui-interactive card-hover card-hover--spotlight" href="&#x2F;about&#x2F;" title="关于">
+  
+  <span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20a10 10 0 0 0 0-20" opacity=".5"/><path d="M12 6a3 3 0 1 0 0 6a3 3 0 0 0 0-6m0 7.5c-3.04 0-5.5 1.57-5.5 3.5c0 .65.28 1.26.77 1.77A7.96 7.96 0 0 0 12 20.5a7.96 7.96 0 0 0 4.73-1.73c.49-.51.77-1.12.77-1.77c0-1.93-2.46-3.5-5.5-3.5"/></g></svg></span>
+  
+  
+    <span class="ui-collection__content">
+      
+      <span class="ui-collection__title">关于</span>
+      
+      
+    </span>
+  
+  
+  
+</a>
+
+  
+</div>
+
+</nav>
+
+</div>
+    <div class="widgets widget-stack widget-stack--leftbar widget-stack--body"><div class="widget-instance widget-instance--markdown" data-widget-id="leftbar:0:explore" data-presentation="leftbar">
+<widget class="widget-wrapper markdown"><div class="widget-header dis-select"><span class="name">继续探索</span></div><div class="widget-body fs14"><p><a href="/categories/">分类</a> · <a href="/tags/">标签</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/darkyellowcat">GitHub ↗</a></p>
+</div></widget>
+</div></div>
+  </div>
+  <footer class="site-region__footer">
+    
+    <div class="site-region__system ui-collection" data-layout="inline" data-variant="nav" data-density="compact">
+      <div class="site-region__settings"><div class="widget-instance widget-instance--settings" data-widget-id="leftbar:fixed:settings" data-presentation="leftbar" data-leftbar-rail>
+<a class="settings-widget ui-collection__item ui-interactive card-hover card-hover--spotlight" href="&#x2F;settings&#x2F;" data-profile-provider="" data-profile-identity-enabled="false" data-profile-fallback-avatar="https:&#x2F;&#x2F;gcore.jsdelivr.net&#x2F;gh&#x2F;cdn-x&#x2F;placeholder@1.0.12&#x2F;avatar&#x2F;round&#x2F;3442075.svg" data-settings-placement="leftbar" data-settings-label="设置" aria-label="设置" title="设置">
+  <span class="settings-widget__avatar" aria-hidden="true">
+    <span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="currentColor"><path fill-rule="evenodd" d="M12.4277 2C11.3139 2 10.2995 2.6007 8.27081 3.80211L7.58466 4.20846C5.55594 5.40987 4.54158 6.01057 3.98466 7C3.42773 7.98943 3.42773 9.19084 3.42773 11.5937V12.4063C3.42773 14.8092 3.42773 16.0106 3.98466 17C4.54158 17.9894 5.55594 18.5901 7.58466 19.7915L8.27081 20.1979C10.2995 21.3993 11.3139 22 12.4277 22C13.5416 22 14.5559 21.3993 16.5847 20.1979L17.2708 19.7915C19.2995 18.5901 20.3139 17.9894 20.8708 17C21.4277 16.0106 21.4277 14.8092 21.4277 12.4063V11.5937C21.4277 9.19084 21.4277 7.98943 20.8708 7C20.3139 6.01057 19.2995 5.40987 17.2708 4.20846L16.5847 3.80211C14.5559 2.6007 13.5416 2 12.4277 2Z" clip-rule="evenodd" opacity=".5"/><path d="M12.4277 8.25C10.3567 8.25 8.67773 9.92893 8.67773 12C8.67773 14.0711 10.3567 15.75 12.4277 15.75C14.4988 15.75 16.1777 14.0711 16.1777 12C16.1777 9.92893 14.4988 8.25 12.4277 8.25Z"/></g></svg></span>
+  </span>
+  <span class="settings-widget__name ui-collection__title">设置</span>
+</a>
+</div></div>
+      <button type="button" class="leftbar-state-toggle ui-collection__item ui-interactive card-hover card-hover--spotlight is-icon-only" aria-label="Collapse leftbar" aria-expanded="true" data-shell-action="toggle-leftbar"><span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M3.172 4.172C2 5.343 2 7.229 2 11v2c0 3.771 0 5.657 1.172 6.828S6.229 21 10 21h5V3h-5C6.229 3 4.343 3 3.172 4.172" clip-rule="evenodd" opacity=".5"/><path fill="currentColor" d="M5.5 9.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zm1 4a.75.75 0 0 0 0 1.5h4a.75.75 0 0 0 0-1.5zM22 13v-2c0-3.771 0-5.657-1.172-6.828c-.974-.975-3.192-1.139-5.828-1.166v17.988c2.636-.027 4.854-.191 5.828-1.166C22 18.657 22 16.771 22 13"/></svg></span></button>
+    </div>
+  </footer></div></div></aside>
+<main data-stellar-runtime-region class="site-main" id="main">
+
+
+<div class="article-banner-wrap"><div class="article banner top">
+  <div class="content">
+    
+    <div class="top bread-nav footnote"><div class="top-row"><div class="left" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/blog/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E8%B8%A9%E5%9D%91/">踩坑</a>
+</div><div class="right"><span class="cap reading">2288 字 · 预计阅读 8 分钟</span></div></div><div class="meta-row">
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2026-11-16T17:15:00.000Z">2026-11-16</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2026-11-20T07:43:13.000Z">2026-11-20</time></span></div>
+</div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>ArceOS 实验记录：从 NotFound 到成功进入 mmap 系统调用</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div></div>
+<article class="md-text content"><p>在做 ArceOS 第五题 <code>sys_map</code> 时，我遇到了一个看起来很像文件映射相关的问题：内核启动正常，用户地址空间也创建成功，但加载用户程序时却报错 <code>NotFound</code>。</p>
+<p>一开始，我怀疑是 FAT32 文件系统或者 ELF 加载器出了 bug。但顺着调用链由外向内逐步排查，才发现真正的原因非常朴素——只是 WSL 环境中 RISC-V musl 交叉编译工具链没有加入 <code>PATH</code>，而测试脚本又没有设置 fail-fast，把构建期的问题伪装成了运行期的内核异常。</p>
+<p>这里把整个排查链路和踩坑细节记录下来。</p>
+<span id="more"></span>
+
+<h2 id="一、第一次运行：Cannot-load-app-NotFound"><a href="#一、第一次运行：Cannot-load-app-NotFound" class="headerlink" title="一、第一次运行：Cannot load app! NotFound"></a>一、第一次运行：Cannot load app! NotFound</h2><p>在终端执行实验测试脚本：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./scripts/test-sys_map.sh</span><br></pre></td></tr></tbody></table></figure>
+
+<p>QEMU 启动很顺利，屏幕刷过了一连串内核初始化日志，但最终却直接 panic 停住了：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">panicked at exercises/sys_map/src/main.rs:37:21:</span><br><span class="line">Cannot load app! NotFound</span><br><span class="line">sys_mmap default</span><br></pre></td></tr></tbody></table></figure>
+
+<p>定位到 <code>exercises/sys_map/src/main.rs</code> 对应的源码：</p>
+<figure class="highlight rust"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">entry</span> = <span class="keyword">match</span> <span class="title function_ invoke__">load_user_app</span>(<span class="string">"/sbin/mapfile"</span>, &amp;<span class="keyword">mut</span> uspace) {</span><br><span class="line">    <span class="title function_ invoke__">Ok</span>(e) =&gt; e,</span><br><span class="line">    <span class="title function_ invoke__">Err</span>(err) =&gt; <span class="built_in">panic!</span>(<span class="string">"Cannot load app! {:?}"</span>, err),</span><br><span class="line">};</span><br></pre></td></tr></tbody></table></figure>
+
+<p>内核尝试从虚拟磁盘的 <code>/sbin/mapfile</code> 读取 ELF 并加载到用户地址空间，但底层文件系统返回了 <code>NotFound</code>。</p>
+<ul>
+<li><code>mapfile.c</code>：用户态 C 程序的源码。</li>
+<li><code>mapfile</code>：由交叉编译器生成的 RISC-V 静态链接二进制文件。</li>
+</ul>
+<p>而内核加载器认的只有后者。</p>
+<h2 id="二、检查磁盘镜像：问题发生在写入之前"><a href="#二、检查磁盘镜像：问题发生在写入之前" class="headerlink" title="二、检查磁盘镜像：问题发生在写入之前"></a>二、检查磁盘镜像：问题发生在写入之前</h2><p>检查本地磁盘镜像文件：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> -lh disk.img</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>disk.img</code> 确实存在且刚刚被更新过。接着用 <code>mdir</code> 直接检查镜像内部的 <code>/sbin</code> 目录：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mdir -i disk.img ::/sbin</span><br></pre></td></tr></tbody></table></figure>
+
+<p>终端输出了目录内容：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Directory for ::/sbin</span><br><span class="line"></span><br><span class="line">.            &lt;DIR&gt;</span><br><span class="line">..           &lt;DIR&gt;</span><br><span class="line">origin   bin        14</span><br><span class="line"></span><br><span class="line">3 files                  14 bytes free</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>/sbin</code> 目录下只有一个原有的 <code>origin.bin</code>，根本没有 <code>mapfile</code> 的影子。</p>
+<p>这说明问题根本还没走到内核解析 ELF 的阶段，而是在更早的一步——<strong>用户程序压根就没被打包进磁盘镜像</strong>。</p>
+<h2 id="三、追踪测试脚本：静默失败与缺失的-PATH"><a href="#三、追踪测试脚本：静默失败与缺失的-PATH" class="headerlink" title="三、追踪测试脚本：静默失败与缺失的 PATH"></a>三、追踪测试脚本：静默失败与缺失的 PATH</h2><p>既然镜像里没有文件，那就看镜像是怎么生成的。打开 <code>scripts/test-sys_map.sh</code>：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> <span class="string">"<span class="subst">$(dirname <span class="string">"<span class="variable">$0</span>"</span>)</span>/../arceos"</span> || <span class="built_in">exit</span> 1</span><br><span class="line"></span><br><span class="line"><span class="built_in">rm</span> pflash.img -f</span><br><span class="line"><span class="built_in">rm</span> disk.img -f</span><br><span class="line"></span><br><span class="line">make pflash_img</span><br><span class="line">make disk_img</span><br><span class="line"></span><br><span class="line">make payload</span><br><span class="line">./update_disk.sh payload/mapfile_c/mapfile</span><br><span class="line"></span><br><span class="line">make run A=exercises/sys_map/ BLK=y</span><br></pre></td></tr></tbody></table></figure>
+
+<p>整个脚本的流程很清晰：</p>
+<ol>
+<li>清理旧镜像，重新生成固件与磁盘镜像；</li>
+<li>编译用户态程序（<code>make payload</code>）；</li>
+<li>把编译出的二进制文件写入磁盘镜像（<code>./update_disk.sh</code>）；</li>
+<li>启动 QEMU 运行 ArceOS。</li>
+</ol>
+<p>这里脚本埋了个隐蔽的小坑：<strong>脚本开头没有加 <code>set -e</code></strong>。</p>
+<p>如果第 2 步编译失败，Shell 不会中断退出，而是若无其事地继续执行第 3 步和第 4 步。写入脚本找不到文件就写了个寂寞，最终把<strong>构建期的编译错误</strong>包装成了<strong>运行期的内核 NotFound</strong>。</p>
+<p>顺藤摸瓜，查看用户程序的 Makefile（<code>arceos/payload/mapfile_c/Makefile</code>）：</p>
+<figure class="highlight makefile"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">TARGET := mapfile</span><br><span class="line"></span><br><span class="line">CC := riscv64-linux-musl-gcc</span><br><span class="line">STRIP := riscv64-linux-musl-strip</span><br><span class="line"></span><br><span class="line"><span class="section">all: <span class="variable">$(TARGET)</span></span></span><br><span class="line"></span><br><span class="line"><span class="section">%: %.c</span></span><br><span class="line">	<span class="variable">$(CC)</span> -static <span class="variable">$&lt;</span> -o <span class="variable">$@</span></span><br><span class="line">	<span class="variable">$(STRIP)</span> <span class="variable">$@</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>这里需要调用 RISC-V musl 交叉编译工具链，而不是宿主机的 GCC。</p>
+<p>在 WSL 终端里检查环境：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">which</span> riscv64-linux-musl-gcc</span><br><span class="line"><span class="built_in">which</span> riscv64-linux-musl-strip</span><br></pre></td></tr></tbody></table></figure>
+
+<p>两个命令都返回为空。</p>
+<p>但工具链真的没装吗？</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> -la /opt/riscv64-linux-musl-cross/bin/</span><br></pre></td></tr></tbody></table></figure>
+
+<p>工具链整整齐齐地躺在 <code>/opt/</code> 下，用绝对路径直接调用也能正常跑。</p>
+<p><strong>根本原因：工具链早已安装，但没有加入当前 WSL Shell 的 <code>PATH</code>。</strong></p>
+<h2 id="四、修复-PATH-并单独编译验证"><a href="#四、修复-PATH-并单独编译验证" class="headerlink" title="四、修复 PATH 并单独编译验证"></a>四、修复 PATH 并单独编译验证</h2><p>在 WSL 终端中把工具链路径追加到当前会话：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> PATH=<span class="string">"/opt/riscv64-linux-musl-cross/bin:<span class="variable">$HOME</span>/.cargo/bin:<span class="variable">$PATH</span>"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>确认环境变量生效：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">which</span> riscv64-linux-musl-gcc</span><br><span class="line"><span class="built_in">which</span> riscv64-linux-musl-strip</span><br></pre></td></tr></tbody></table></figure>
+
+<p>两个命令都能正确输出路径了。先单独编译用户态程序：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~/projects/2026a-arceos-darkyellowcat/arceos</span><br><span class="line">make -C payload/mapfile_c</span><br></pre></td></tr></tbody></table></figure>
+
+<p>可以看到工具链正常被调用：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">riscv64-linux-musl-gcc -static mapfile.c -o mapfile</span><br><span class="line">riscv64-linux-musl-strip mapfile</span><br></pre></td></tr></tbody></table></figure>
+
+<p>用 <code>file</code> 命令核对生成的文件格式：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file payload/mapfile_c/mapfile</span><br></pre></td></tr></tbody></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ELF 64-bit LSB pie executable,</span><br><span class="line">UCB RISC-V, RVC, double-float ABI,</span><br><span class="line">version 1 (SYSV), static-pie linked, stripped</span><br></pre></td></tr></tbody></table></figure>
+
+<p>确认是 RISC-V 64 位静态链接的可执行文件无误。</p>
+<h2 id="五、验证磁盘镜像写入与排查边界"><a href="#五、验证磁盘镜像写入与排查边界" class="headerlink" title="五、验证磁盘镜像写入与排查边界"></a>五、验证磁盘镜像写入与排查边界</h2><p>编译产物就位后，先单独验证打包脚本：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./update_disk.sh payload/mapfile_c/mapfile</span><br></pre></td></tr></tbody></table></figure>
+
+<p>再次用 <code>mdir</code> 检查磁盘镜像内部的 <code>/sbin</code> 目录：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mdir -i disk.img ::/sbin</span><br></pre></td></tr></tbody></table></figure>
+
+<p>输出：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Directory for ::/sbin</span><br><span class="line"></span><br><span class="line">mapfile          30432 2026-11-16  16:59</span><br><span class="line"></span><br><span class="line">1 file               30 432 bytes</span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>mapfile</code> 已经稳稳当当地进入了 FAT32 磁盘镜像。</p>
+<p>需要说明的是，手动执行 <code>update_disk.sh</code> 只是排查时的<strong>单步隔离验证</strong>，并不是实验本身的日常操作。正常情况下，只要把环境变量配置好，让测试脚本里的 <code>make payload</code> 顺利通过，后续的打包和运行都是自动串联的。</p>
+<p>把每一步的输入输出单独拉出来确认无误，再去跑全流程，排查的心态会踏实很多。</p>
+<h2 id="六、插曲：IntelliJ-IDEA-的-Unresolved-Import-“虚警”"><a href="#六、插曲：IntelliJ-IDEA-的-Unresolved-Import-“虚警”" class="headerlink" title="六、插曲：IntelliJ IDEA 的 Unresolved Import “虚警”"></a>六、插曲：IntelliJ IDEA 的 Unresolved Import “虚警”</h2><p>在顺带查看 <code>sys_map</code> 源码时，IntelliJ IDEA 飘了一片红线，提示：</p>
+<figure class="highlight rust"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> axhal::arch::UspaceContext;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>存在 <code>unresolved import</code>。</p>
+<p>第一反应是 <code>axhal</code> 是不是少导出了什么。顺着去翻 <code>arceos/modules/axhal/src/arch/riscv/mod.rs</code>：</p>
+<figure class="highlight rust"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[cfg(feature = <span class="string">"uspace"</span>)]</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">use</span> self::context::UspaceContext;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>可以看到这个类型受 <code>uspace</code> feature 门控。再看 <code>exercises/sys_map/Cargo.toml</code>：</p>
+<figure class="highlight toml"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">axhal</span> = { workspace = <span class="literal">true</span>, features = [<span class="string">"uspace"</span>] }</span><br></pre></td></tr></tbody></table></figure>
+
+<p>依赖配置里明明清清楚楚声明了 <code>features = ["uspace"]</code>。</p>
+<p>后续命令行实际构建也证明了一切正常：程序不仅编译通过，还成功创建了用户地址空间并切换到了用户态。</p>
+<p>猜测：在复杂的 Rust Workspace 中，如果存在多 target（如宿主机 x86_64 与目标机 RISC-V）和大量条件编译，IDE 默认的索引视图可能并没有激活特定的 feature 组合，从而报出虚假的未解析错误。</p>
+<h2 id="七、重新运行：成功进入-sys-mmap"><a href="#七、重新运行：成功进入-sys-mmap" class="headerlink" title="七、重新运行：成功进入 sys_mmap()"></a>七、重新运行：成功进入 sys_mmap()</h2><p>前置环境理顺后，再次执行完整的测试脚本：</p>
+<figure class="highlight bash"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./scripts/test-sys_map.sh</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这一次，控制台输出完全变了样。</p>
+<p>内核顺利完成了 ELF 的段解析与虚存映射：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">phdr: offset: 0x0=&gt;0x0 size: 0x5FAC=&gt;0x5FAC</span><br><span class="line">VA:0x0 - VA:0x6000</span><br><span class="line"></span><br><span class="line">phdr: offset: 0x6E70=&gt;0x7E70 size: 0x340=&gt;0x9B0</span><br><span class="line">VA:0x7000 - VA:0x9000</span><br><span class="line"></span><br><span class="line">entry: 0x526</span><br></pre></td></tr></tbody></table></figure>
+
+<p>随后成功分配了用户栈并建立地址空间：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Mapping user stack: VA:0x3fffff0000 -&gt; VA:0x4000000000</span><br><span class="line"></span><br><span class="line">New user address space: AddrSpace {</span><br><span class="line">    va_range: VA:0x0..VA:0x4000000000,</span><br><span class="line">    page_table_root: PA:0x8064e000,</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>进入用户态后，用户程序开始发起一系列系统调用：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">handle_syscall [96] ...</span><br><span class="line">handle_syscall [29] ...</span><br><span class="line">handle_syscall [66] ...</span><br><span class="line">MapFile ...</span><br><span class="line">handle_syscall [56] ...</span><br><span class="line">handle_syscall [64] ...</span><br><span class="line">handle_syscall [57] ...</span><br><span class="line">handle_syscall [56] ...</span><br></pre></td></tr></tbody></table></figure>
+
+<p>可以看到文件创建、写入、读取等准备动作都已跑通。最后，程序调用了 222 号系统调用：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">handle_syscall [222] ...</span><br><span class="line"></span><br><span class="line">panicked at exercises/sys_map/src/syscall.rs:143:5:</span><br><span class="line">not implemented: no sys_mmap!</span><br></pre></td></tr></tbody></table></figure>
+
+<p>翻看 <code>exercises/sys_map/src/syscall.rs</code>：</p>
+<figure class="highlight rust"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fn</span> <span class="title function_">sys_mmap</span>(</span><br><span class="line">    addr: *<span class="keyword">mut</span> <span class="type">usize</span>,</span><br><span class="line">    length: <span class="type">usize</span>,</span><br><span class="line">    prot: <span class="type">i32</span>,</span><br><span class="line">    flags: <span class="type">i32</span>,</span><br><span class="line">    fd: <span class="type">i32</span>,</span><br><span class="line">    _offset: <span class="type">isize</span>,</span><br><span class="line">) <span class="punctuation">-&gt;</span> <span class="type">isize</span> {</span><br><span class="line">    <span class="built_in">unimplemented!</span>(<span class="string">"no sys_mmap!"</span>);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这说明我们已经彻底排除了环境、编译、镜像打包、内核文件读取、ELF 解析与用户态初始化的所有干扰。外层的所有阻碍都被清扫干净，代码正式停在了本次实验的核心入口——实现 <code>sys_mmap()</code>。</p>
+<h2 id="八、总结与排查心法"><a href="#八、总结与排查心法" class="headerlink" title="八、总结与排查心法"></a>八、总结与排查心法</h2><p>梳理一下这次排查过程中遇到的各个现象：</p>
+<div class="md-table-scroll"><table>
+<thead>
+<tr>
+<th>异常现象</th>
+<th>实际原因</th>
+<th>排查与应对方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Cannot load app! NotFound</code></td>
+<td>磁盘镜像内缺少 <code>mapfile</code></td>
+<td>用 <code>mdir</code> 检查镜像内部，锁定缺失环节</td>
+</tr>
+<tr>
+<td><code>riscv64-linux-musl-gcc: not found</code></td>
+<td>工具链目录未加入当前 WSL 的 <code>PATH</code></td>
+<td>补充环境变量，检查 <code>which</code> 输出</td>
+</tr>
+<tr>
+<td>编译失败但脚本没有停下</td>
+<td>测试脚本缺少 <code>set -e</code>，缺乏 fail-fast</td>
+<td>逐行拆解测试脚本，单独执行子命令</td>
+</tr>
+<tr>
+<td>IDEA 报 <code>unresolved import</code></td>
+<td>交叉编译环境与 IDE 静态索引不一致</td>
+<td>以终端真实的 Cargo 编译结果为准</td>
+</tr>
+<tr>
+<td><code>not implemented: no sys_mmap!</code></td>
+<td>系统调用尚未实现</td>
+<td>符合预期的断点，开始编写实验代码</td>
+</tr>
+</tbody></table></div>
+<p>做操作系统实验时，最忌讳的是“头痛医头”：看到内核报 <code>NotFound</code> 就一头扎进文件系统驱动或者内核代码里。</p>
+<p>实际上，操作系统实验的运行依赖于一条非常严密的因果链：</p>
+<figure class="highlight text"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">宿主机环境变量 (PATH)</span><br><span class="line">        ↓</span><br><span class="line">用户态程序交叉编译 (payload)</span><br><span class="line">        ↓</span><br><span class="line">打包写入磁盘镜像 (disk.img)</span><br><span class="line">        ↓</span><br><span class="line">QEMU 启动与内核文件系统读取 (/sbin/mapfile)</span><br><span class="line">        ↓</span><br><span class="line">ELF 解析与用户地址空间建立</span><br><span class="line">        ↓</span><br><span class="line">用户态执行与系统调用分发 (syscall 222)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>沿着这条链路<strong>由外向内、由前向后</strong>逐步排查：前一级没有稳定产物，后一级必然报错；前一级确认正常，再把疑点留给下一级。</p>
+</article>
+<div class="article-tags"><a class="tag" href="/tags/ArceOS/"><svg class="icon" viewBox="0 0 1 1" data-icon="default:hashtag" aria-hidden="true"></svg>ArceOS</a><a class="tag" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"><svg class="icon" viewBox="0 0 1 1" data-icon="default:hashtag" aria-hidden="true"></svg>操作系统</a><a class="tag" href="/tags/Rust/"><svg class="icon" viewBox="0 0 1 1" data-icon="default:hashtag" aria-hidden="true"></svg>Rust</a></div>
+
+
+
+<div class="article-footer">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section></div>
+
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note"><svg class="icon" viewBox="0 0 1 1" data-icon="default:arrow-left" aria-hidden="true"></svg> 较新文章</div><a href="/2026/11/19/%E5%9B%BE%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%9D%E6%AD%A5/">图数据库初步</a></div><div class="item" id="next"><div class="note">较早文章 <svg class="icon" viewBox="0 0 1 1" data-icon="default:arrow-right" aria-hidden="true"></svg></div><a href="/2026/11/08/%E5%8D%9A%E5%AE%A2%E6%8D%A2%E4%B8%AA%E6%A0%B7%E5%AD%90-%E4%BB%8ENexT%E5%88%B0Stellar/">博客更新：从 NexT 到 Stellar</a></div></section></div>
+
+
+
+
+
+
+<footer class="page-footer footnote"><hr><div class="text"><p>© DarkYellowCat · 记录学习，也记录过程。
+使用 <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> 与 <a target="_blank" rel="noopener" href="https://xaoxuu.com/wiki/stellar/">Stellar</a> 构建 · <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p>
+</div></footer>
+</main>
+<aside data-stellar-runtime-region id="rightbar-region" class="site-region site-region--rightbar" data-region="rightbar" aria-label="Rightbar"><div class="site-region__surface ui-drawer-surface"><div class="site-region__viewport"><div class="widgets widget-stack widget-stack--rightbar widget-stack--rightbar"><div class="widget-instance widget-instance--toc" data-widget-id="rightbar:0:toc" data-presentation="rightbar">
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false">
+  
+    <div class="widget-header dis-select">
+      <span class="name">本文目录</span>
+      <button type="button" class="cap-action ui-interactive card-hover card-hover--spotlight" data-shell-action="toggle-toc" aria-label="Toggle table of contents" aria-pressed="false"><span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></span></button>
+    </div>
+  
+  <div class="widget-body"><ol class="toc ui-collection-adapter"><li class="toc-item toc-level-2"><a class="toc-link ui-interactive" href="#%E4%B8%80%E3%80%81%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%BF%90%E8%A1%8C%EF%BC%9ACannot-load-app-NotFound"><span class="toc-text">一、第一次运行：Cannot load app! NotFound</span></a></li><li class="toc-item toc-level-2"><a class="toc-link ui-interactive" href="#%E4%BA%8C%E3%80%81%E6%A3%80%E6%9F%A5%E7%A3%81%E7%9B%98%E9%95%9C%E5%83%8F%EF%BC%9A%E9%97%AE%E9%A2%98%E5%8F%91%E7%94%9F%E5%9C%A8%E5%86%99%E5%85%A5%E4%B9%8B%E5%89%8D"><span class="toc-text">二、检查磁盘镜像：问题发生在写入之前</span></a></li><li class="toc-item toc-level-2"><a class="toc-link ui-interactive" href="#%E4%B8%89%E3%80%81%E8%BF%BD%E8%B8%AA%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%AC%EF%BC%9A%E9%9D%99%E9%BB%98%E5%A4%B1%E8%B4%A5%E4%B8%8E%E7%BC%BA%E5%A4%B1%E7%9A%84-PATH"><span class="toc-text">三、追踪测试脚本：静默失败与缺失的 PATH</span></a></li><li class="toc-item toc-level-2"><a class="toc-link ui-interactive" href="#%E5%9B%9B%E3%80%81%E4%BF%AE%E5%A4%8D-PATH-%E5%B9%B6%E5%8D%95%E7%8B%AC%E7%BC%96%E8%AF%91%E9%AA%8C%E8%AF%81"><span class="toc-text">四、修复 PATH 并单独编译验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link ui-interactive" href="#%E4%BA%94%E3%80%81%E9%AA%8C%E8%AF%81%E7%A3%81%E7%9B%98%E9%95%9C%E5%83%8F%E5%86%99%E5%85%A5%E4%B8%8E%E6%8E%92%E6%9F%A5%E8%BE%B9%E7%95%8C"><span class="toc-text">五、验证磁盘镜像写入与排查边界</span></a></li><li class="toc-item toc-level-2"><a class="toc-link ui-interactive" href="#%E5%85%AD%E3%80%81%E6%8F%92%E6%9B%B2%EF%BC%9AIntelliJ-IDEA-%E7%9A%84-Unresolved-Import-%E2%80%9C%E8%99%9A%E8%AD%A6%E2%80%9D"><span class="toc-text">六、插曲：IntelliJ IDEA 的 Unresolved Import “虚警”</span></a></li><li class="toc-item toc-level-2"><a class="toc-link ui-interactive" href="#%E4%B8%83%E3%80%81%E9%87%8D%E6%96%B0%E8%BF%90%E8%A1%8C%EF%BC%9A%E6%88%90%E5%8A%9F%E8%BF%9B%E5%85%A5-sys-mmap"><span class="toc-text">七、重新运行：成功进入 sys_mmap()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link ui-interactive" href="#%E5%85%AB%E3%80%81%E6%80%BB%E7%BB%93%E4%B8%8E%E6%8E%92%E6%9F%A5%E5%BF%83%E6%B3%95"><span class="toc-text">八、总结与排查心法</span></a></li></ol></div>
+  <div class="widget-footer"><a class="top ui-interactive" onclick="util.scrollTop()"><span class="ui-icon"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --><path fill="currentColor" d="M20.536 3.464C22 4.93 22 7.286 22 12s0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12s0-7.071 1.464-8.536C4.93 2 7.286 2 12 2s7.071 0 8.535 1.464" opacity=".5"/><path fill="currentColor" d="M9.53 12.03a.75.75 0 0 1-1.06-1.06l3-3a.75.75 0 0 1 1.06 0l3 3a.75.75 0 1 1-1.06 1.06L12 9.56z"/><path fill="currentColor" d="M9.53 16.03a.75.75 0 0 1-1.06-1.06l3-3a.75.75 0 0 1 1.06 0l3 3a.75.75 0 1 1-1.06 1.06L12 13.56z"/></svg></span><span>回到顶部</span></a></div>
+</widget>
+
+
+</div></div></div></div></aside>
+</div><button type="button" class="site-scrim" data-shell-action="dismiss-drawer" aria-label="Close navigation" tabindex="-1"></button><div data-stellar-runtime-region class="site-dock" role="group" aria-label="Layout panels">
+  <button type="button" class="site-dock__button site-dock__button--rightbar ui-interactive" aria-label="Open rightbar" aria-controls="rightbar-region" aria-expanded="false" data-shell-action="toggle-rightbar-drawer">
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type="button" class="site-dock__button site-dock__button--leftbar ui-interactive" aria-label="Open leftbar" aria-controls="leftbar-region" aria-expanded="false" data-shell-action="toggle-leftbar-drawer">
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+
+<dialog data-stellar-runtime-region class="search-dialog" id="site-search-dialog" aria-labelledby="site-search-title">
+  <div class="search-dialog__panel search-wrapper" id="site-search-wrapper" searching="false">
+    <div class="search-dialog__header">
+      <div class="search-form" role="search">
+        <span class="search-button" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><!-- Adapted from Google Material Icons by Material Design Authors - https://github.com/material-icons/material-icons/blob/master/LICENSE --><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h3M3 13h3M3 18h8M16.83 13.83l3.76 3.76"/><circle cx="14" cy="11" r="4"/></g></svg></span>
+        <input type="search" class="search-input" id="site-search-input" aria-labelledby="site-search-title" placeholder="搜索">
+      </div>
+      <button type="button" class="search-dialog__close" data-shell-action="close-search" aria-label="关闭搜索">×</button>
+    </div>
+    
+      <div class="search-dialog__scope" role="radiogroup" aria-labelledby="site-search-title" hidden>
+        <label class="search-dialog__scope-option" data-search-scope-option="all">
+          <input class="ui-radio" type="radio" name="site-search-scope" value="all">
+          <span>全站</span>
+        </label>
+        <label class="search-dialog__scope-option" data-search-scope-option="blog" hidden>
+          <input class="ui-radio" type="radio" name="site-search-scope" value="blog">
+          <span>博客</span>
+        </label>
+        <label class="search-dialog__scope-option" data-search-scope-option="current" hidden>
+          <input class="ui-radio" type="radio" name="site-search-scope" value="current">
+          <span data-search-scope-current-label></span>
+        </label>
+      </div>
+    
+    <h2 class="search-dialog__title" id="site-search-title">站内搜索</h2>
+    <div class="search-result" id="site-search-result"></div>
+    <div class="search-no-result">没有找到内容！</div>
+  </div>
+</dialog>
+</div><div class="site-scripts">
+<script data-stellar-script="core" src="/js/stellar-icons.js?v=39c6ac17e854ffe2"></script>
+
+<script data-stellar-script="defines">
+  window.canonical = window.stellarClientData.canonical;
+  const ctx = window.stellarClientData.ctx;
+  window.canonical.param = {permalink: "https://darkyellowcat.github.io/2026/11/16/ArceOS%E5%AE%9E%E9%AA%8C%E8%AE%B0%E5%BD%95-%E4%BB%8ENotFound%E5%88%B0%E6%88%90%E5%8A%9F%E8%BF%9B%E5%85%A5mmap%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/", checklink: ctx.services.video.js};
+  ctx.date_suffix = {"just":"刚刚","min":"分钟前","hour":"小时前","day":"天前"};
+  if (ctx.search) Object.assign(ctx.search, {"more":"更多","no_more":"没有更多了"});
+  const def = window.stellarClientData.def;
+  window.ctx = ctx;
+  window.def = def;
+</script>
+
+
+<!-- core: 迁移期 DOM/资源兼容工具；Extension 注册与生命周期由 ESM runtime 所有 -->
+<script data-stellar-script="core" src="/js/utils.js?v=2.0.0"></script>
+<script data-stellar-script="core" src="/js/main.js?v=2.0.0" defer></script>
+<script data-stellar-script="core" defer src="/js/profile.js?v=2.0.0"></script>
+
+
+
+
+
+<script data-stellar-script="core" type="application/json" id="stellar-runtime-config">{"version":1,"root":"/","policy":{"cache":{"enabled":true,"defaultTtl":3600,"ttl":{"giscus":600,"waline":600,"artalk":600,"memos":600,"memos-user":86400,"sites":86400,"friends":86400,"friends_and_posts":86400,"siteinfo":86400},"maxEntries":200},"request":{"retries":2,"timeoutMs":5000,"idleTimeoutMs":3000,"maxCacheEntryBytes":204800},"features":{"codeCopyToastMs":2500},"providers":{"linkPrefetch":"flying_pages","lightbox":"fancybox","diagrams":"mermaid"}},"extensions":[{"id":"pin-slider","module":"/js/runtime/extensions/pin-slider.js","scope":"region","when":{"selector":".pin-slider"},"config":{}},{"id":"page-controls","module":"/js/runtime/extensions/page-controls.js","scope":"region","when":{"always":true},"config":{"highlight":"/js/search/highlight.js","tagtree":"/js/tagtree.js"}},{"id":"search","module":"/js/runtime/extensions/search.js","scope":"document","when":{"selector":".search-input"},"config":{"provider":"local","options":{"scope":"all","includeContent":true,"cacheTtlSeconds":86400},"assets":{"client":null,"provider":"/js/search/local-search.js","shortcut":"/js/search/shortcut.js"}}},{"id":"hero-parallax","module":"/js/runtime/extensions/hero-parallax.js","scope":"region","when":{"selector":".wiki-hero"},"config":{}},{"id":"hero-effect","module":"/js/runtime/extensions/hero-effect.js","scope":"region","when":{"selector":"canvas[data-hero-effect]"},"config":{}},{"id":"lazy-loading","module":"/js/runtime/extensions/lazy-loading.js","scope":"document","when":{"always":true},"config":{"asset":"https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"}},{"id":"deferred-icons","module":"/js/runtime/extensions/deferred-icons.js","scope":"region","when":{"selector":"svg.icon[data-icon]"},"config":{}},{"id":"dropdown","module":"/js/runtime/extensions/dropdown.js","scope":"region","when":{"selector":"details.dropdown"},"config":{}},{"id":"services","module":"/js/runtime/extensions/services.js","scope":"region","when":{"selector":"#artalk_container, #twikoo_container, #waline_container, .data-service, [class*='ds-'], a[cardlink], a[data-md-link][data-siteinfo-api], .site-card [data-siteinfo-api], .voice\u003eaudio, .video\u003evideo, .chat-file"},"config":{"marked":"https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js"}},{"id":"settings","module":"/js/runtime/extensions/settings.js","scope":"region","when":{"selector":".settings-page"},"config":{}},{"id":"lightbox","module":"/js/runtime/extensions/lightbox.js","scope":"region","when":{"selector":"[data-fancybox]:not(.error), .with-fancybox, .ds-memos, .md-text p\u003eimg"},"config":{"enabled":true,"selector":".md-text p\u003eimg","assets":{"localCss":"/css/plugins/fancybox.css","js":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js","css":"https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css"}}},{"id":"code-copy","module":"/js/runtime/extensions/code-copy.js","scope":"region","when":{"selector":".code"},"config":{"assets":{"js":"/js/plugins/copycode.js"},"messages":{"label":"复制","copied":"复制成功","denied":"未获得剪贴板权限","unsupported":"当前浏览器不支持剪贴板或页面不是 HTTPS"}}},{"id":"adaptive-text","module":"/js/runtime/extensions/adaptive-text.js","scope":"region","when":{"selector":"[data-text-adaptive]"},"config":{"assets":{"colorJs":"/js/color.js","js":"/js/plugins/adaptive-text.js"}}},{"id":"swiper","module":"/js/runtime/extensions/swiper.js","scope":"region","when":{"selector":"#swiper-api"},"config":{"assets":{"localCss":"/css/plugins/swiper.css","js":"https://unpkg.com/swiper@10.3/swiper-bundle.min.js","css":"https://unpkg.com/swiper@10.3/swiper-bundle.min.css"}}}]}</script>
+<script data-stellar-script="core" type="module" src="/js/runtime/index.js?v=2.0.0&runtime=1"></script>
+
+
+<!-- inject -->
+<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+<script>if (window.LA) LA.init({ id: '3OnjqyPOaoYCHllV', ck: '3OnjqyPOaoYCHllV', autoTrack: true });</script>
+
+
+<script data-stellar-script="core" defer src="/js/navigation-init.js?v=2.0.0"></script>
+</div></body></html>
+
